@@ -1,2 +1,2 @@
 # GEngine
-Physics Engine
+Game Engine. OpenGL. Physics.
