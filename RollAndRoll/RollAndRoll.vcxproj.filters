@@ -7,6 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\RollAndRoll.cpp" />
+    <ClCompile Include="RollAndRoll.cpp" />
   </ItemGroup>
 </Project>

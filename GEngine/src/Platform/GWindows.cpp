@@ -46,7 +46,7 @@ int GMain()
 				program.UpdateKeys();
 				// �� ����� ��� ������, ������� �����.
 
-				for (int i = 0; i < 10; ++i)//temp
+				//for (int i = 0; i < 10; ++i)//temp
 					if (!program.pause)
 					{
 						tickCount = GetTickCount();//_WIN#32

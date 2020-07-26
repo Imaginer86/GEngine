@@ -3,3 +3,14 @@
 ################################################################################
 
 /GEngine/Debug
+/.vs
+/GEngine/lib/GEngine.pdb
+/GEngine/x64/Debug
+/Gravi/.vs/Gravi/v15
+/Gravi/x64/Debug
+/RollAndRoll/.vs/RollAndRoll/v15/.suo
+/RollAndRoll/.vs/RollAndRoll/v15/Browse.VC.db
+/RollAndRoll/.vs/RollAndRoll/v15/Browse.VC.opendb
+/RollAndRoll/Debug
+/RollAndRoll/lib
+/RollAndRoll/.vs/RollAndRoll/v15/ipch/AutoPCH

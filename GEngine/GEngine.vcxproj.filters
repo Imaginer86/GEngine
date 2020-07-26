@@ -97,6 +97,9 @@
     <ClInclude Include="src\Math\Line.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="src\Lib\glaux.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -113,6 +116,9 @@
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{7ec9917a-1b9c-4100-beea-ca7e8277d7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{8e6449a3-ef96-4bc9-8ceb-4feb3006530a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

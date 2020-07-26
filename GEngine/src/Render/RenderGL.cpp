@@ -5,7 +5,7 @@
 #include <GL/gl.h>
 //#include "glext.h"
 #include <GL/glu.h>
-//#include "glaux.h"
+#include "../Lib/glaux.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 #pragma comment(lib, "GLu32.lib")
@@ -68,7 +68,7 @@ RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quater
 // Загрузка картинки и конвертирование в текстуру
 bool RenderGL::LoadGLTextures()
 {
-	/*
+	
 	// Загрузка картинки
 	AUX_RGBImageRec *texture1;
 	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
@@ -86,8 +86,7 @@ bool RenderGL::LoadGLTextures()
 
 	if (!texture1) return false;
 	delete texture1;
-	*/
-
+	
 	return true;;
 }
 
@@ -286,7 +285,7 @@ void RenderGL::killWindow()
 
 void RenderGL::init()
 {
-	//LoadGLTextures();
+	LoadGLTextures();
 
 	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
 	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹

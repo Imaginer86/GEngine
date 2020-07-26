@@ -4,7 +4,7 @@ class Tera
 {
 public:
 	static const unsigned MAP_SIZE = 1024;
-	static const unsigned STEP_SIZE = 16;
+	static const unsigned STEP_SIZE = 32;
 	unsigned char HeightMap[MAP_SIZE*MAP_SIZE];
 	unsigned Height(unsigned x, unsigned y) const;
 };

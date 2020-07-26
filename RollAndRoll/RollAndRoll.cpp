@@ -7,8 +7,10 @@
 #include "Physics\Tera.h"
 
 Render *render = nullptr;
-//Tera tera;
+Tera tera;
 Program *programPtr = nullptr;
+
+Plane plane(Vector3f(0.0f, -0.5f, 1.0f), 0.0f);
 
 struct {
 	char *title = "Roll&Roll";	
@@ -19,15 +21,15 @@ struct {
 	float moveScale = 0.1f;
 	float rotateScale = 0.1f;
 
-	Vector3f cameraPos = Vector3f(500.0f, 0.0f, 1000.0f);
+	Vector3f cameraPos = Vector3f(0.0f, -1000.0f, 1000.0f);
 	Quaternion cameraQ = Quaternion(-45.0f, Vector3f(1.0f, 0.0f, 0.0f));
 
 	Quaternion ballStartQ = Quaternion(0.0f, Vector3f(0.0f, 0.0f, 1.0f));
-	Vector3f ballStartPos = Vector3f(500.0f, 500.0f, 500.0f);
-	Vector3f ballStartVel = Vector3f(0.0f, 0.0f, 0.0f);
+	Vector3f ballStartPos = Vector3f(0.0f, 0.0f, 500.0f);
+	Vector3f ballStartVel = Vector3f(0.0f, 0.0f, -250.0f);
 	float ballStartR = 25.0f;
 
-	Quaternion ballRotate = Quaternion(1.0f, Vector3f(0.0f, 0.0f, 1.0f));
+	Quaternion ballRotate = Quaternion(1.0f, Vector3f(0.0f, 1.0f, 0.0f));
 
 } InitData;
 
@@ -44,7 +46,13 @@ Ball ball;
 
 const unsigned ball_STEP = 32;
 
-Vector3f gravi(0.0f, 0.0f, -10.0f);
+Vector3f gravi(0.0f, 0.0f, 0.0f);
+
+Quaternion qUp(1.0f, Vector3f(1.0f, 0.0f, 0.0f));
+Quaternion qDown(-1.0f, Vector3f(1.0f, 0.0f, 0.0f));
+Quaternion qLeft(1.0f, Vector3f(0.0f, 1.0f, 0.0f));
+Quaternion qRight(-1.0f, Vector3f(0.0f, 1.0f, 0.0f));
+
 
 #ifndef _DEBUG
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
@@ -69,7 +77,7 @@ bool Program::Init()
 
 	//if (!render->LoadGLTextures()) return false;
 
-	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
+	//if (!LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
 
 	ball.q = InitData.ballStartQ;
 	ball.pos = InitData.ballStartPos;
@@ -109,19 +117,52 @@ void Program::UpdateKeys()
 	}
 	if (keys[VK_UP])
 	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		if(keys[VK_SHIFT])
+			render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		else
+		{
+			Vector3f N = plane.unit();
+			qUp.rotate(N);
+			float d = plane.D;
+			plane = Plane(N, d);
+		}
 	}
 	if (keys[VK_DOWN])
 	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		if (keys[VK_SHIFT])
+			render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		else
+		{
+			Vector3f N = plane.unit();
+			qDown.rotate(N);
+			float d = plane.D;
+			plane = Plane(N, d);
+		}
 	}
 	if (keys[VK_LEFT])
 	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		if (keys[VK_SHIFT])
+			render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		else
+		{
+			Vector3f N = plane.unit();
+			qLeft.rotate(N);
+			float d = plane.D;
+			plane = Plane(N, d);
+		}
 	}
 	if (keys[VK_RIGHT])
 	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		if (keys[VK_SHIFT])
+			render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		else
+		{
+			Vector3f N = plane.unit();
+			qRight.rotate(N);
+			float d = plane.D;
+			plane = Plane(N, d);
+		}
+
 	}
 	if (keys[VK_TAB])
 	{
@@ -177,10 +218,9 @@ float Program::interect()
 
 void Program::Update(float dt)
 {
+
+	// interect();
 	/*
-	float disti = interect();
-	if ( disti > 0.0f)
-	{
 		unsigned X = toInt(ball.pos.x);
 		unsigned Y = toInt(ball.pos.y);
 
@@ -189,7 +229,7 @@ void Program::Update(float dt)
 		Vector3f p1( static_cast<float>(X - ball_STEP), static_cast<float>(Y), static_cast<float>(tera.Height(X - ball_STEP, Y)));
 		Vector3f p2(static_cast<float>(X), static_cast<float>(Y - ball_STEP), static_cast<float>(tera.Height(X , Y - ball_STEP)));
 		Vector3f p3(static_cast<float>(X + ball_STEP), static_cast<float>(Y + ball_STEP), static_cast<float>(tera.Height(X + ball_STEP, Y + ball_STEP)));
-		
+
 		Plane P(p1, p2, p3);
 		Vector3f N = P.unit();
 
@@ -206,25 +246,47 @@ void Program::Update(float dt)
 
 		ball.vel += gravi * (dt + dtd);
 		ball.pos += ball.vel * (dt + dtd);
+		*/
+
+	float dist = fabs(plane.distance(ball.pos)); 
+	if (dist < ball.r)
+	{
+		// n = plane.unit().dotProduct(ball.vel) / ball.vel.length();
+		//float dte = (ball.r - dist) / n;
+		//ball.vel -= gravi * dte;
+		//ball.pos -= ball.vel * dte;
+
+		Vector3f N = plane.unit();
+		N.unitize();
+		Vector3f I = ball.vel;
+		I.unitize();
+		Vector3f R = N * (2 * (-I.dotProduct(N))) + I;
+
+		float u = ball.vel.length();
+
+		ball.vel = R * u;
+
+		//ball.vel += gravi * dt;
+		//ball.pos += ball.vel * dt;
+
 	}
-	else
+	
 	{
 		ball.q *= InitData.ballRotate;
 		ball.vel += gravi * dt;
 		ball.pos += ball.vel * dt;
 	}
-	*/
+	
 }
 
 void DrawTera()
 {
-	render->drawTriangle(Vector3f(0, 0, 0), Vector3f(1024, 0, 0), Vector3f(1024, 1024, 0), Color4f(1.0f, 0.0f, 0.0f, 0.0f));
-	render->drawTriangle(Vector3f(1024, 1024, 0), Vector3f(0, 1024, 0), Vector3f(0, 0, 0), Color4f(1.0f, 0.0f, 0.0f, 0.0f));
+	//render->drawTriangle(Vector3f(0, 0, 0), Vector3f(1024, 0, 0), Vector3f(1024, 1024, 0), Color4f(1.0f, 0.0f, 0.0f, 0.0f));
+	//render->drawTriangle(Vector3f(1024, 1024, 0), Vector3f(0, 1024, 0), Vector3f(0, 0, 0), Color4f(1.0f, 0.0f, 0.0f, 0.0f));
 	//return
 
 
 
-	/*
 	for (unsigned X = 0; X < Tera::MAP_SIZE; X += Tera::STEP_SIZE)
 		for (unsigned Y = 0; Y < Tera::MAP_SIZE; Y += Tera::STEP_SIZE)
 		{
@@ -236,17 +298,44 @@ void DrawTera()
 			render->drawTriangle(c, d, a, Color4f(0.0f, 0.7f, 0.1f, 1.0f));
 			//render->drawQuad(a, b, c, d, Color4f(0.0f, 0.7f, 0.3f, 1.0f));
 		}
-	*/
+}
+
+void DrawPlane()
+{
+	Vector3f a(-500.0f, -500.0f, 0.0f);
+	Vector3f b(-500.0f, 500.0f, 0.0f);
+	Vector3f c(500.0f, 500.0f, 0.0f);
+	Vector3f d(500.0f, -500.0f, 0.0f);
+	Vector3f z(0.0f, 0.0f, 100.0f);
+	Line A(a, a + z);
+	Line B(b, b + z);
+	Line C(c, c + z);
+	Line D(d, d + z);
+
+	Vector3f pa = plane * A;
+	Vector3f pb = plane * B;
+	Vector3f pc = plane * C;
+	Vector3f pd = plane * D;
+
+	render->drawTriangle(pa, pb, pc, Color4f(1.0f, 0.0f, 0.0f, 0.0f));
+	render->drawTriangle(pc, pd, pa, Color4f(1.0f, 0.0f, 0.0f, 0.0f));
+
 }
 
 void Program::Draw()
 {
 	render->beginDraw();
-	DrawTera();
+	render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 10.0f, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+	render->drawSphere(Vector3f(50.0f, 0.0f, 0.0f), 10.0f, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
+	render->drawSphere(Vector3f(0.0f, 50.0f, 0.0f), 10.0f, Color4f(0.0f, 1.0f, 0.0f, 1.0f));
+	render->drawSphere(Vector3f(0.0f, 0.0f, 50.0f), 10.0f, Color4f(0.0f, 0.0f, 1.0f, 1.0f));
+	//DrawTera();
+	DrawPlane();
 	render->drawSphere(ball.pos, ball.r, ball.q, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	if (drawDebugInfo)
 	{
 		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
+		render->print(-0.45f, 0.40f, "Ball Pos %f  %f  %f", ball.pos.x, ball.pos.y, ball.pos.z);
 	}
 	render->endDraw();	
 }

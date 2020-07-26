@@ -1,18 +1,21 @@
 #pragma once
 #include "Vector3f.h"
 #include "Line.h"
+#include "gmath.h"
 
 class Plane
 {
 public:
 	float A, B, C, D;
 
+	Plane(float a, float b, float c, float d) :A(a), B(b), C(c), D(d) {}
 	Plane(const Vector3f& N, float D);
 	Plane(const Vector3f&, const Vector3f&, const Vector3f&);
 	Vector3f unit();
 	float distance(const Vector3f& p);
 
 	Line operator* (const Plane& P);
+	Vector3f operator* (const Line& L);
 
 };
 
@@ -39,7 +42,7 @@ inline Line Plane::operator*(const Plane& P)
 {
 	float d = A * P.B - B * P.A;
 	float lambda = 2;//!!!
-	float dx = (-D - C*lambda)*P.B - B*(-P.D - P.C*lambda);
+	float dx = (-D - C * lambda)*P.B - B * (-P.D - P.C*lambda);
 	float dy = A * (-P.D - P.C * lambda) - (-D - C * lambda) * P.A;
 	float x = dx / d;
 	float y = dy / d;
@@ -49,6 +52,17 @@ inline Line Plane::operator*(const Plane& P)
 	Vector3f P1 = PL + N;
 	Line L(PL, P1);
 	return L;
+}
+
+inline Vector3f Plane::operator*(const Line& L)
+{
+	Vector3f N = unit();
+	float d = -distance(L.P);
+	float e = N.dotProduct(L.L);
+	if (e)
+		return L.P + L.L * (d / e);
+	else
+		return Vector3f(); //!!!
 }
 
 inline Plane::Plane(const Vector3f& N, float D)

@@ -24,6 +24,7 @@
     <ClInclude Include="src\Core\FileReader.h" />
     <ClInclude Include="src\Core\Game.h" />
     <ClInclude Include="src\GEngine.h" />
+    <ClInclude Include="src\Lib\glaux.h" />
     <ClInclude Include="src\Math\gmath.h" />
     <ClInclude Include="src\Math\Line.h" />
     <ClInclude Include="src\Math\Matrix3.h" />
@@ -58,13 +59,13 @@
     <ProjectGuid>{CEDA5BDE-9584-4030-B7A4-C5F56D073693}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -77,7 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -134,7 +135,7 @@
     </Link>
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLAUX.LIB;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
