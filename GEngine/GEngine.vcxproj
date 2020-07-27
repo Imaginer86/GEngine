@@ -55,6 +55,9 @@
     <ClCompile Include="src\Render\ModelM.cpp" />
     <ClCompile Include="src\Render\RenderGL.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Shaders\Wave.cg" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CEDA5BDE-9584-4030-B7A4-C5F56D073693}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
