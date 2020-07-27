@@ -10,7 +10,7 @@ Render *render = nullptr;
 Tera tera;
 Program *programPtr = nullptr;
 
-Plane plane(Vector3f(0.0f, 0.0f, 1.0f), 100.0f);
+Plane plane(Vector3f(0.0f, -1.0f, 0.5f), 100.0f);
 
 struct {
 	char *title = "Roll&Roll";	
@@ -25,9 +25,9 @@ struct {
 	Quaternion cameraQ = Quaternion(-90.0f, Vector3f(1.0f, 0.0f, 0.0f));
 	
 	Quaternion ballStartQ = Quaternion(0.0f, Vector3f(0.0f, 0.0f, 1.0f));
-	Vector3f ballStartPos = Vector3f(-500.0f, 0.0f, 500.0f);
+	Vector3f ballStartPos = Vector3f(-500.0f, 300.0f, 500.0f);
 	Vector3f ballStartVel = Vector3f(50.0f, 0.0f, -50.0f);
-	float ballStartR = 25.0f;
+	float ballStartR = 50.0f;
 
 	Quaternion ballRotate = Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f));
 
@@ -36,6 +36,7 @@ struct {
 struct Ball
 {
 	Quaternion q;
+	Quaternion qa;
 	Vector3f pos;
 	Vector3f vel;
 	float r;
@@ -246,6 +247,11 @@ void Program::Update(float dt)
 				float sinA = sqrtf(1 - cosA * cosA);
 				float aCon = 5.0f * gravi.length() * sinA / 7.0f;
 				aContact = (N*G*N)*aCon;
+
+				Vector3f Q = aContact.unit() * N;
+
+				ball.q = Quaternion(0.0f, Q);
+				ball.qa = Quaternion(aCon / ball.r, Q);
 			}
 
 
@@ -274,6 +280,7 @@ void Program::Update(float dt)
 	}
 	else
 	{
+		ball.q *= ball.qa;
 		ball.vel += aContact * dt;
 		ball.pos += ball.vel * dt;
 	}
