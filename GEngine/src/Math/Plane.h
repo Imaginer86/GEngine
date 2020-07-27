@@ -8,8 +8,8 @@ class Plane
 public:
 	float A, B, C, D;
 
-	Plane(float a, float b, float c, float d) :A(a), B(b), C(c), D(d) {}
-	Plane(const Vector3f& N, float D);
+	Plane(float a, float b, float c, float d);
+	Plane(const Vector3f& N, float d);
 	Plane(const Vector3f&, const Vector3f&, const Vector3f&);
 	Vector3f unit();
 	float distance(const Vector3f& p);
@@ -65,12 +65,23 @@ inline Vector3f Plane::operator*(const Line& L)
 		return Vector3f(); //!!!
 }
 
-inline Plane::Plane(const Vector3f& N, float D)
-	:A(N.x)
-	,B(N.y)
-	,C(N.z)
-	,D(D)
-{}
+inline Plane::Plane(float a, float b, float c, float d) :D(d)
+{
+	Vector3f N(a, b, c);
+	N.unitize();
+	A = N.x;
+	B = N.y;
+	C = N.z;
+}
+
+inline Plane::Plane(const Vector3f& N, float d) :D(d)
+{
+	Vector3f NP(N.x, N.y, N.z);
+	NP.unitize();
+	A = NP.x;
+	B = NP.y;
+	C = NP.z;
+}
 
 inline Plane::Plane(const Vector3f& p1, const Vector3f& p2, const Vector3f&p3)
 {

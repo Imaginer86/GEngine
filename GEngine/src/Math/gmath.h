@@ -3,7 +3,7 @@
 //#define _USE_MATH_DEFINES
 #include <cmath>
 
-const float GEPSILON = 0.001f;
+const float GEPSILON = 0.0001f;
 const float GM_PI = 3.14159265358979323846f;   // pi
 
 inline bool closeEnough(float f1, float f2)

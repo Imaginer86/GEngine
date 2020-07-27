@@ -10,7 +10,7 @@ Render *render = nullptr;
 Tera tera;
 Program *programPtr = nullptr;
 
-Plane plane(Vector3f(0.0f, -0.5f, 1.0f), 0.0f);
+Plane plane(Vector3f(0.0f, 0.0f, 1.0f), 100.0f);
 
 struct {
 	char *title = "Roll&Roll";	
@@ -21,15 +21,15 @@ struct {
 	float moveScale = 0.1f;
 	float rotateScale = 0.1f;
 
-	Vector3f cameraPos = Vector3f(0.0f, -1000.0f, 1000.0f);
-	Quaternion cameraQ = Quaternion(-45.0f, Vector3f(1.0f, 0.0f, 0.0f));
-
+	Vector3f cameraPos = Vector3f(0.0f, -1500.0f, 50.0f);
+	Quaternion cameraQ = Quaternion(-90.0f, Vector3f(1.0f, 0.0f, 0.0f));
+	
 	Quaternion ballStartQ = Quaternion(0.0f, Vector3f(0.0f, 0.0f, 1.0f));
-	Vector3f ballStartPos = Vector3f(0.0f, 0.0f, 500.0f);
-	Vector3f ballStartVel = Vector3f(0.0f, 0.0f, -250.0f);
+	Vector3f ballStartPos = Vector3f(-500.0f, 0.0f, 500.0f);
+	Vector3f ballStartVel = Vector3f(50.0f, 0.0f, -50.0f);
 	float ballStartR = 25.0f;
 
-	Quaternion ballRotate = Quaternion(1.0f, Vector3f(0.0f, 1.0f, 0.0f));
+	Quaternion ballRotate = Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f));
 
 } InitData;
 
@@ -46,12 +46,19 @@ Ball ball;
 
 const unsigned ball_STEP = 32;
 
-Vector3f gravi(0.0f, 0.0f, 0.0f);
+Vector3f gravi(0.0f, 0.0f, -50.0f);
+float dvel = 0.25f;
 
 Quaternion qUp(1.0f, Vector3f(1.0f, 0.0f, 0.0f));
 Quaternion qDown(-1.0f, Vector3f(1.0f, 0.0f, 0.0f));
 Quaternion qLeft(1.0f, Vector3f(0.0f, 1.0f, 0.0f));
 Quaternion qRight(-1.0f, Vector3f(0.0f, 1.0f, 0.0f));
+
+
+bool contact = false;
+Vector3f aContact;
+
+float minVN = 100.0f;
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
@@ -195,81 +202,79 @@ void Program::UpdateKeys()
 	}
 }
 
-/*
-float Program::interect()
-{
-	unsigned X = toInt(ball.pos.x);
-	unsigned Y = toInt(ball.pos.y);
-	if (X < Tera::MAP_SIZE && Y < Tera::MAP_SIZE)
-	{
-		float dif = fabs(ball.pos.z - static_cast<float>(tera.Height(X, Y)));
-		return ball.r - dif;
-	}
-	else
-	{
-		return 1000.0f;
-	}
-}
-*/
-
 void Program::Update(float dt)
 {
 
-	// interect();
-	/*
-		unsigned X = toInt(ball.pos.x);
-		unsigned Y = toInt(ball.pos.y);
+	dt = 1.0f / 60.0f;
 
-		//if (!X) X++; if (!Y) Y++;
 
-		Vector3f p1( static_cast<float>(X - ball_STEP), static_cast<float>(Y), static_cast<float>(tera.Height(X - ball_STEP, Y)));
-		Vector3f p2(static_cast<float>(X), static_cast<float>(Y - ball_STEP), static_cast<float>(tera.Height(X , Y - ball_STEP)));
-		Vector3f p3(static_cast<float>(X + ball_STEP), static_cast<float>(Y + ball_STEP), static_cast<float>(tera.Height(X + ball_STEP, Y + ball_STEP)));
 
-		Plane P(p1, p2, p3);
-		Vector3f N = P.unit();
-
-		float dist = P.distance(Vector3f(ball.pos.x, ball.pos.y, ball.pos.z - ball.r));
-
-		float dtd = dist / ball.vel.length();
-		ball.pos.z = static_cast<float>(tera.Height(X, Y)) + ball.r;
-
-		Vector3f O(ball.pos.x, ball.pos.y, ball.pos.z - ball.r);
-
-		Quaternion Q(acos((N - O).dotProduct(ball.pos - O) / ( (N - O).length() * (ball.pos - O).length())), N * O);
-
-		Q.rotate(ball.vel);
-
-		ball.vel += gravi * (dt + dtd);
-		ball.pos += ball.vel * (dt + dtd);
-		*/
 
 	float dist = fabs(plane.distance(ball.pos)); 
-	if (dist < ball.r)
+	if (!contact && dist <= ball.r)
 	{
-		// n = plane.unit().dotProduct(ball.vel) / ball.vel.length();
-		//float dte = (ball.r - dist) / n;
-		//ball.vel -= gravi * dte;
-		//ball.pos -= ball.vel * dte;
-
+		
 		Vector3f N = plane.unit();
 		N.unitize();
-		Vector3f I = ball.vel;
-		I.unitize();
-		Vector3f R = N * (2 * (-I.dotProduct(N))) + I;
+		//Vector3f I = ball.vel;
+		//I.unitize();
+		//Vector3f R = N * (-I.dotProduct(N)) * 2 + I;
+		Vector3f VN = N * (ball.vel.dotProduct(N));
+		Vector3f U = ball.vel - VN;
 
-		float u = ball.vel.length();
 
-		ball.vel = R * u;
+		float Z = plane.A * ball.pos.x + plane.B * ball.pos.y + plane.C * ball.pos.z - ball.r + plane.D;
+		//if (fabsf(Z) < GEPSILON) Z = 0.0f;
+		float D = plane.A * ball.vel.x + plane.B * ball.vel.y + plane.C * ball.vel.z;
 
-		//ball.vel += gravi * dt;
-		//ball.pos += ball.vel * dt;
+		float dte = Z / D;
 
+		if (dte >= 0.0f && dte <= dt)
+		{
+			ball.pos -= ball.vel * dte;
+			float dtest = plane.distance(ball.pos);
+
+			VN *= dvel;
+
+			if (VN.length() * minVN < U.length())
+			{
+				contact = true;
+				VN = Vector3f(0.0f, 0.0f, 0.0f);
+				Vector3f N = plane.unit();
+				Vector3f G = gravi.unit();
+				float cosA = N.dotProduct(G);
+				float sinA = sqrtf(1 - cosA * cosA);
+				float aCon = 5.0f * gravi.length() * sinA / 7.0f;
+				aContact = (N*G*N)*aCon;
+			}
+
+
+
+			ball.vel = U - VN;
+			ball.pos += ball.vel * (dt - dte);
+			dtest = plane.distance(ball.pos);
+		}
+		else
+		{
+			//VN *= dvel;
+			ball.vel = U - VN;
+			ball.pos += ball.vel * dt ;
+			float dtest = plane.distance(ball.pos);
+			if (dte >= dt)
+				int ttttt = 0;
+			if (dte < 0.0f)
+				int ttttt = 0;
+		}
 	}
-	
+	else if (!contact)
 	{
 		ball.q *= InitData.ballRotate;
 		ball.vel += gravi * dt;
+		ball.pos += ball.vel * dt;
+	}
+	else
+	{
+		ball.vel += aContact * dt;
 		ball.pos += ball.vel * dt;
 	}
 	
@@ -330,8 +335,10 @@ void Program::Draw()
 	render->drawSphere(ball.pos, ball.r, ball.q, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	if (drawDebugInfo)
 	{
-		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
-		render->print(-0.45f, 0.40f, "Ball Pos %f  %f  %f", ball.pos.x, ball.pos.y, ball.pos.z);
+		render->print(-0.45f, 0.37f, "FPS: %d", FPS);
+		render->print(-0.45f, 0.35f, "Ball Pos %f  %f  %f", ball.pos.x, ball.pos.y, ball.pos.z);
+		render->print(-0.45f, 0.33f, "Ball Vel %f  %f  %f", ball.vel.x, ball.vel.y, ball.vel.z);
+		render->print(-0.45f, 0.31f, contact ? "Contact: True" : "Contact: False");
 	}
 	render->endDraw();	
 }
