@@ -15,3 +15,11 @@
 /RollAndRoll/lib
 /RollAndRoll/.vs/RollAndRoll/v15/ipch/AutoPCH
 RollAndRoll/.vs/RollAndRoll/v15/Solution.VC.db
+*.pdb
+*.db-shm
+*.db-wal
+RollAndRoll/x64/Debug/RollAndRoll.Build.CppClean.log
+*.log
+*.obj
+*.tlog
+*.idb

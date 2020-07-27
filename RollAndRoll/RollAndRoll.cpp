@@ -54,17 +54,13 @@ Quaternion qLeft(1.0f, Vector3f(0.0f, 1.0f, 0.0f));
 Quaternion qRight(-1.0f, Vector3f(0.0f, 1.0f, 0.0f));
 
 
-#ifndef _DEBUG
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hInstance);
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	UNREFERENCED_PARAMETER(nCmdShow);
-#else
-int main()
-{
-#endif
+
 	return GMain();
 }
 
