@@ -234,6 +234,7 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	SetFocus(hWnd);                // Установить фокус клавиатуры на наше окно
 
 	resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
+
 	init();
 
 	return true;

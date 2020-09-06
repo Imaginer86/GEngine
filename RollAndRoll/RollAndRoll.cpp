@@ -10,7 +10,7 @@ Render *render = nullptr;
 Tera tera;
 Program *programPtr = nullptr;
 
-Plane plane(Vector3f(0.0f, -1.0f, 0.5f), 100.0f);
+Plane plane(Vector3f(0.0f, 0.0f, 1.0f), -100.0f);
 
 struct {
 	char *title = "Roll&Roll";	
@@ -25,8 +25,8 @@ struct {
 	Quaternion cameraQ = Quaternion(-90.0f, Vector3f(1.0f, 0.0f, 0.0f));
 	
 	Quaternion ballStartQ = Quaternion(0.0f, Vector3f(0.0f, 0.0f, 1.0f));
-	Vector3f ballStartPos = Vector3f(-500.0f, 300.0f, 500.0f);
-	Vector3f ballStartVel = Vector3f(50.0f, 0.0f, -50.0f);
+	Vector3f ballStartPos = Vector3f(0.0f, 0.0f, 500.0f);
+	Vector3f ballStartVel = Vector3f(0.0f, 0.0f, 0.0f);
 	float ballStartR = 50.0f;
 
 	Quaternion ballRotate = Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f));
@@ -48,7 +48,7 @@ Ball ball;
 const unsigned ball_STEP = 32;
 
 Vector3f gravi(0.0f, 0.0f, -50.0f);
-float dvel = 0.25f;
+float dvel = 0.9f;
 
 Quaternion qUp(1.0f, Vector3f(1.0f, 0.0f, 0.0f));
 Quaternion qDown(-1.0f, Vector3f(1.0f, 0.0f, 0.0f));
@@ -59,7 +59,7 @@ Quaternion qRight(-1.0f, Vector3f(0.0f, 1.0f, 0.0f));
 bool contact = false;
 Vector3f aContact;
 
-float minVN = 100.0f;
+float minVN = 0.1f;
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
@@ -79,9 +79,7 @@ bool Program::Init()
 	// ������� ���� OpenGL ����
 	if (!render->createWindow(InitData.title, 32)) return false;
 
-	//if (!render->LoadGLTextures()) return false;
-
-	//if (!LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
+	if (!LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
 
 	ball.q = InitData.ballStartQ;
 	ball.pos = InitData.ballStartPos;
@@ -237,7 +235,7 @@ void Program::Update(float dt)
 
 			VN *= dvel;
 
-			if (VN.length() * minVN < U.length())
+			if ( VN.length() < minVN )
 			{
 				contact = true;
 				VN = Vector3f(0.0f, 0.0f, 0.0f);
@@ -294,14 +292,21 @@ void DrawTera()
 	//return
 
 
-
+	float step_size = static_cast<float>(Tera::STEP_SIZE);
 	for (unsigned X = 0; X < Tera::MAP_SIZE; X += Tera::STEP_SIZE)
 		for (unsigned Y = 0; Y < Tera::MAP_SIZE; Y += Tera::STEP_SIZE)
 		{
-			Vector3f a(X, Y, tera.Height(X, Y));
-			Vector3f b(X, Y + Tera::STEP_SIZE, tera.Height(X, Y + Tera::STEP_SIZE));
-			Vector3f c(X + Tera::STEP_SIZE, Y + Tera::STEP_SIZE, tera.Height(X + Tera::STEP_SIZE, Y + Tera::STEP_SIZE));
-			Vector3f d(X + Tera::STEP_SIZE, Y, tera.Height(X + Tera::STEP_SIZE, Y));
+			float x = static_cast<float>(X) - 512.0f;
+			float y = static_cast<float>(Y) - 512.0f;
+			float z = tera.Height(X, Y);
+			Vector3f a(x, y, z);
+			z = tera.Height(X, Y + Tera::STEP_SIZE);
+			Vector3f b(x, y + step_size, z);
+			z = tera.Height(X + Tera::STEP_SIZE, Y + Tera::STEP_SIZE);
+			Vector3f c(x + step_size, y + step_size, z);
+			z = tera.Height(X + Tera::STEP_SIZE, Y);
+			Vector3f d(x + step_size, y, z);
+			
 			render->drawTriangle(a, b, c, Color4f(0.0f, 0.7f, 0.1f, 1.0f));
 			render->drawTriangle(c, d, a, Color4f(0.0f, 0.7f, 0.1f, 1.0f));
 			//render->drawQuad(a, b, c, d, Color4f(0.0f, 0.7f, 0.3f, 1.0f));
@@ -337,7 +342,7 @@ void Program::Draw()
 	render->drawSphere(Vector3f(50.0f, 0.0f, 0.0f), 10.0f, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
 	render->drawSphere(Vector3f(0.0f, 50.0f, 0.0f), 10.0f, Color4f(0.0f, 1.0f, 0.0f, 1.0f));
 	render->drawSphere(Vector3f(0.0f, 0.0f, 50.0f), 10.0f, Color4f(0.0f, 0.0f, 1.0f, 1.0f));
-	//DrawTera();
+	DrawTera();
 	DrawPlane();
 	render->drawSphere(ball.pos, ball.r, ball.q, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	if (drawDebugInfo)
