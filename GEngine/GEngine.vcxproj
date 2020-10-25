@@ -22,9 +22,7 @@
     <ClInclude Include="src\Core\Camera.h" />
     <ClInclude Include="src\Core\Constans.h" />
     <ClInclude Include="src\Core\FileReader.h" />
-    <ClInclude Include="src\Core\Game.h" />
     <ClInclude Include="src\GEngine.h" />
-    <ClInclude Include="src\Lib\glaux.h" />
     <ClInclude Include="src\Math\gmath.h" />
     <ClInclude Include="src\Math\Line.h" />
     <ClInclude Include="src\Math\Matrix3.h" />
@@ -48,7 +46,6 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Camera.cpp" />
     <ClCompile Include="src\Core\FileReader.cpp" />
-    <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Physics\Tank.cpp" />
     <ClCompile Include="src\Platform\GWindows.cpp" />
     <ClCompile Include="src\Render\Model.cpp" />
@@ -82,7 +79,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -162,7 +159,7 @@
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;GLAUX.LIB;</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

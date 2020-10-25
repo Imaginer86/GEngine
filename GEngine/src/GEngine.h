@@ -1,12 +1,12 @@
 #pragma once
 
-#ifdef _WINDOWS
+//#ifdef _WINDOWS
 #include "Platform\GWindows.h"
-#endif
+//#endif
 
 struct Program
 {
-	DWORD lastTickCount = 0;
+	unsigned long lastTickCount = 0;
 	bool keys[256];
 	unsigned FPS = 0;
 	bool active = true;

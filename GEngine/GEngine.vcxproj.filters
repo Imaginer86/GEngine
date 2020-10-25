@@ -7,9 +7,6 @@
     <ClCompile Include="src\Core\FileReader.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Game.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\Render\RenderGL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -36,12 +33,6 @@
     </ClInclude>
     <ClInclude Include="src\Core\Constans.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Lib\glaux.h">
-      <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="src\Math\Quaternion.h">
       <Filter>Math</Filter>
@@ -104,9 +95,6 @@
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{9fb7f9d2-b00f-4fff-9042-e77fb372a76a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib">
-      <UniqueIdentifier>{049e5396-f4eb-4fa7-be34-ac69f81d0811}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{48aca5e0-9d19-48db-a469-2e93b384d3ab}</UniqueIdentifier>

@@ -113,9 +113,9 @@ void Program::UpdateKeys()
 	}
 	if (keys[VK_SPACE])
 	{
-		//if (pause)	lastTickCount = GetTickCount();
+		if (pause)	lastTickCount = GetTickCount();
 		keys[VK_SPACE] = false;
-		//pause = !pause;
+		pause = !pause;
 	}
 	if (keys[VK_ESCAPE])
 	{
@@ -124,18 +124,15 @@ void Program::UpdateKeys()
 }
 
 
-#ifndef _DEBUG
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
-#else
-int main()
-#endif 
+
 {
-#ifndef _DEBUG
+
 	UNREFERENCED_PARAMETER(hInstance);
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	UNREFERENCED_PARAMETER(nCmdShow);
-#endif
 
 	GInitProgram(programPtr);
 	GMain();

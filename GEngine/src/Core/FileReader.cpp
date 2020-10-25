@@ -71,7 +71,7 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 	{
 		Vector3f v;
 		inFile >> v.x >> v.y >> v.z;
-		model.Vertexs[i] = v;
+		model.setVertex(i, v);
 
 	}
 
@@ -84,7 +84,7 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 	{
 		Vector3f n;
 		inFile >> n.x >> n.y >> n.z;
-		model.Normals[i] = n;
+		model.setNormal(i, n);
 	}
 
 	size_t groupN;
@@ -100,7 +100,7 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 
 		size_t surfN = 0;
 		inFile >> surfN;
-		model.Groups[i].setSizeSurfaces(surfN);
+		model.setSizeSurface(i, surfN);
 
 		inFile >> model.Groups[i].color.r >> model.Groups[i].color.g >> model.Groups[i].color.b >> model.Groups[i].color.a;
 

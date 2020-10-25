@@ -13,7 +13,7 @@ int GMain()
 {
 	if (!program.Init())
 	{
-		MessageBox(NULL, "Cannot Init.", "ERROR", MB_OK | MB_ICONSTOP);
+		MessageBox(NULL, L"Cannot Init.", L"ERROR", MB_OK | MB_ICONSTOP);
 		return 1;
 	}
 

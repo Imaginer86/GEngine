@@ -25,16 +25,16 @@ struct {
 
 bool Program::Init()
 {
-	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 9000.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), InitData.fullscreen, InitData.light);
+	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(0.0f, Vector3f(0.0f, 0.0f, 1.0f)), InitData.fullscreen, InitData.light);
 
 	//tank.pos = Vector3f();
 	//tank.angle = 0.0f;
 
 	if (!render->createWindow(InitData.title, 32)) return false;
 
-	ReadModelOBJM(tank.model, "data/Tank/Tank.objm");
-	
-	if (!ReadModelOBJM(levelM, "data/Level/tale1.objm")) return false;
+	if (!ReadModelOBJM(tank.model, "data/Tank.objm")) return false;
+
+	if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
 
 	tank.q.identity();
 
@@ -43,66 +43,26 @@ bool Program::Init()
 	return true;
 }
 
-void DrawModelM(const ModelM& model)
-{
-	/*
-	float xmin = 0;
-	float ymin = 0;
-	float zmin = 0;
-	float xmax = 0;
-	float ymax = 0;
-	float zmax = 0;
-	*/
-	for (size_t i = 0; i < model.groupN; ++i)
-	{
-		Color4f color = model.Groups[i].color;
-		for (size_t j = 0; j < model.Groups[i].surfacesN; ++j)
-		{
-			Vector3f a = model.Vertexs[model.Groups[i].Surfaces[j].VertexT[0]];
-			Vector3f b = model.Vertexs[model.Groups[i].Surfaces[j].VertexT[1]];
-			Vector3f c = model.Vertexs[model.Groups[i].Surfaces[j].VertexT[2]];
 
-			Vector3f na = model.Normals[model.Groups[i].Surfaces[j].NormalT[0]];
-			Vector3f nb = model.Normals[model.Groups[i].Surfaces[j].NormalT[1]];
-			Vector3f nc = model.Normals[model.Groups[i].Surfaces[j].NormalT[2]];
-
-			render->drawTriangle(a, b, c, na, nb, nc, color);
-
-			/*
-			if (a.x < xmin) xmin = a.x;
-			if (b.x < xmin) xmin = b.x;
-			if (c.x < xmin) xmin = c.x;
-			if (a.y < ymin) ymin = a.y;
-			if (b.y < ymin) ymin = b.y;
-			if (c.y < ymin) ymin = c.y;
-			if (a.z < zmin) zmin = a.z;
-			if (b.z < zmin) zmin = b.z;
-			if (c.z < zmin) zmin = c.z;
-
-			if (a.x > xmax) xmax = a.x;
-			if (b.x > xmax) xmax = b.x;
-			if (c.x > xmax) xmax = c.x;
-			if (a.y > ymax) ymax = a.y;
-			if (b.y > ymax) ymax = b.y;
-			if (c.y > ymax) ymax = c.y;
-			if (a.z > zmax) zmax = a.z;
-			if (b.z > zmax) zmax = b.z;
-			if (c.z > zmax) zmax = c.z;
-			*/
-		}
-	}
-}
 
 void Program::Draw()
 {
 	render->beginDraw();
 
-	float mapW = 13.0f;
-	float mapH = 13.0f;
+
+
+	render->Translate(tank.pos);
+	render->Rotate(tank.q);
+	tank.model.Draw(render);
+	render->LoadIdentity();
+
+	{
+		float mapW = 13.0f;
+		float mapH = 13.0f;
 
 
 	//Vector3f vPos(-942.5f, -942.5f, 0.0f);
-	//Vector3f vPos(0.0, 0.0, 0.0f);
+	Vector3f vPos(0.0, 0.0, 0.0f);
 	Vector3f vSizeX(300.0f, 0.0f, 0.0f);
 	Vector3f vSizeY(0.0f, 300.0f, 0.0f);
 
@@ -110,29 +70,26 @@ void Program::Draw()
 	render->Translate(vSizeY*(-0.5f*(mapH)));
 	for (size_t i = 0; i < mapW; ++i)
 	{
-		//vPos += vSizeX;
+		vPos += vSizeX;
 		render->Translate(vSizeX);
 		for (size_t j = 0; j < mapH; ++j)
 		{
 			//if (level.Map[i][j] == 4)
 			{
-				//render->Translate(vPos);
-				DrawModelM(levelM);
+				render->Translate(vPos);
+				levelM.Draw(render);
+				//DrawModelM(levelM);
 				//render->LoadIdentity();
 			}
-			//vPos += vSizeY;
+			vPos += vSizeY;
 			render->Translate(vSizeY);
 		}
 		render->Translate(vSizeY*(-(mapH)));
 	}
-	
 
-	//render->Translate(tank.pos);
-	//render->Rotate(tank.q);
-	//DrawModelM(tank.model);
+	render->LoadIdentity();
+}
 
-	//DrawModelM(level.model);
-	
 	render->endDraw();
 
 	/*
@@ -284,11 +241,8 @@ void Program::UpdateKeys()
 	}
 }
 
-#ifndef _DEBUG
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
-#else
-int main()
-#endif
 {
 	#ifndef _DEBUG
 	UNREFERENCED_PARAMETER(hInstance);

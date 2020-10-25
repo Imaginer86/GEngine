@@ -1,15 +1,12 @@
+#include "../GEngine.h"
 #include "RenderGL.h"
 
-#include "../GEngine.h"
-
 #include <GL/gl.h>
-//#include "glext.h"
 #include <GL/glu.h>
-#include "../Lib/glaux.h"
 
-#pragma comment(lib, "OpenGL32.lib")
-#pragma comment(lib, "GLu32.lib")
-// comment(lib, "GLAUX.LIB")
+//#pragma comment(lib, "OpenGL32.lib")
+//#pragma comment(lib, "GLu32.lib")
+
 
 
 HDC		hDC;              // ÐŸÑ€Ð¸Ð²Ð°Ñ‚Ð½Ñ‹Ð¹ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° GDI
@@ -68,10 +65,10 @@ RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quater
 // Загрузка картинки и конвертирование в текстуру
 bool RenderGL::LoadGLTextures()
 {
-	
+	/*
 	// Загрузка картинки
 	AUX_RGBImageRec *texture1;
-	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
+	texture1 = auxDIBImageLoad(L"data/EarthMap.bmp");
 	//texture1 = auxDIBImageLoad("data/astronomy.bmp");
 
 	// Создание текстуры
@@ -86,7 +83,7 @@ bool RenderGL::LoadGLTextures()
 
 	if (!texture1) return false;
 	delete texture1;
-	
+	*/
 	return true;;
 }
 
@@ -113,10 +110,10 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);        // Загружаем указатель мышки
 	wc.hbrBackground = NULL;              // Фон не требуется для GL
 	wc.lpszMenuName = NULL;              // Меню в окне не будет
-	wc.lpszClassName = "OpenGL";            // Устанавливаем имя классу
+	wc.lpszClassName = L"OpenGL";            // Устанавливаем имя классу
 	if (!RegisterClass(&wc))              // Пытаемся зарегистрировать класс окна
 	{
-		MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Failed To Register The Window Class.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Выход и возвращение функцией значения false
 	}
 	if (fullscreen)                // Полноэкранный режим?
@@ -132,14 +129,14 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
 			// Если переключение в полноэкранный режим невозможно, будет предложено два варианта: оконный режим или выход.
-			if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
-				"GEngine GL", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
+			if (MessageBox(NULL, L"The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
+				L"GEngine GL", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
 			{
 				fullscreen = false;          // Выбор оконного режима (fullscreen = false)
 			}
 			else
 			{
-				MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
+				MessageBox(NULL, L"Program Will Now Close.", L"ERROR", MB_OK | MB_ICONSTOP);
 				return false;            // Выход и возвращение функцией false
 			}
 		}
@@ -157,8 +154,8 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	}
 	AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);      // Подбирает окну подходящие размеры
 	hWnd = CreateWindowEx(dwExStyle,          // Расширенный стиль для окна
-		"OpenGL",          // Имя класса
-		title.c_str(),            // Заголовок окна
+		L"OpenGL",          // Имя класса
+		L"GEngine",            // Заголовок окна //todo
 		WS_CLIPSIBLINGS |        // Требуемый стиль для окна
 		WS_CLIPCHILDREN |        // Требуемый стиль для окна
 		dwStyle,          // Выбираемые стили для окна
@@ -172,7 +169,7 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	if (!hWnd)          // Не передаём ничего до WM_CREATE (???)
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Window Creation Error.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	static  PIXELFORMATDESCRIPTOR pfd =            // pfd сообщает Windows каким будет вывод на экран каждого пикселя
@@ -200,33 +197,33 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	if (!hDC)              // Можем ли мы получить Контекст Устройства?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Can't Create A GL Device Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	PixelFormat = ChoosePixelFormat(hDC, &pfd);
 	if (!PixelFormat)        // Найден ли подходящий формат пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Can't Find A Suitable PixelFormat.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	if (!SetPixelFormat(hDC, PixelFormat, &pfd))          // Возможно ли установить Формат Пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Can't Set The PixelFormat.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	hRC = wglCreateContext(hDC);
 	if (!hRC)          // Возможно ли установить Контекст Рендеринга?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Can't Create A GL Rendering Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"Can't Activate The GL Rendering Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	ShowWindow(hWnd, SW_SHOW);              // Показать окно
@@ -252,30 +249,30 @@ void RenderGL::killWindow()
 	{
 		if (!wglMakeCurrent(NULL, NULL))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð´Ð¸Ñ‚ÑŒ RC Ð¸ DC?
 		{
-			MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			MessageBox(NULL, L"Release Of DC And RC Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		if (!wglDeleteContext(hRC))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ RC?
 		{
-			MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			MessageBox(NULL, L"Release Rendering Context Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		hRC = NULL;              // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ RC Ð² NULL
 	}
 
 	if (hDC && !ReleaseDC(hWnd, hDC))          // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ DC?
 	{
-		MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, L"Release Device Context Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hDC = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ DC Ð² NULL
 	}
 
 	if (hWnd && !DestroyWindow(hWnd))            // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾?
 	{
-		MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, L"Could Not Release hWnd.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hWnd = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hWnd Ð² NULL
 	}
 
-	if (!UnregisterClass("OpenGL", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
+	if (!UnregisterClass(L"OpenGL", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
 	{
-		MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, L"Could Not Unregister Class.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hInstance = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hInstance Ð² NULL
 	}
 
@@ -453,7 +450,7 @@ void RenderGL::buildFont()
 		CLIP_DEFAULT_PRECIS,    // Точность отсечения
 		ANTIALIASED_QUALITY,    // Качество вывода
 		FF_DONTCARE | DEFAULT_PITCH,  // Семейство и шаг
-		"Courier New");      // Имя шрифта
+		L"Courier New");      // Имя шрифта
 
 	SelectObject(hDC, font);        // Выбрать шрифт, созданный нами ( НОВОЕ )
 	wglUseFontBitmaps(hDC, 32, 96, base); // Построить 96 символов начиная с пробела ( НОВОЕ )
