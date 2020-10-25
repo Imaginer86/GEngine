@@ -23,3 +23,6 @@ RollAndRoll/x64/Debug/RollAndRoll.Build.CppClean.log
 *.obj
 *.tlog
 *.idb
+GEngine/.vs/GEngine/v15/.suo
+*.db
+*.opendb
