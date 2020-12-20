@@ -1,15 +1,19 @@
-#ifndef _MATH
-#define _MATH
-//#define _USE_MATH_DEFINES
-#include <cmath>
+#pragma once
 
 const float GEPSILON = 0.0001f;
 const float GM_PI = 3.14159265358979323846f;   // pi
 
-inline bool closeEnough(float f1, float f2)
-{
-	return fabs((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < GEPSILON;
-}
+float randf();
+
+bool closeEnough(float f1, float f2);
+
+float gsqrt(float f);
+
+float gatan2f(float y, float x);
+
+float gsin(float a);
+float gcos(float a);
+float gabs(float a);
 
 inline float degreesToRadians(float degrees)
 {
@@ -21,13 +25,7 @@ inline float radiansToDegrees(float radians)
 	return (radians * 180.0f) / GM_PI;
 }
 
-inline float randf()
-{
-	return float(rand()) / (float(RAND_MAX) + 1.0f);
-}
-
 inline int toInt(float val)
 {
 	return val > 0.0f ? static_cast<int>(val + 0.5f) : static_cast<int>(val - 0.5f);
 }
-#endif //_MATH

@@ -7,22 +7,22 @@
 class ModelM
 {
 public:
-	size_t vertexN;
-	size_t normalN;
+	unsigned vertexN;
+	unsigned normalN;
 	Vector3f* Vertexs;
 	Vector3f* Normals;
 	struct Triangle
 	{
-		size_t VertexT[3];
-		size_t NormalT[3];
+		unsigned VertexT[3];
+		unsigned NormalT[3];
 	};
 
 	struct Group
 	{
-		size_t surfacesN;
+		unsigned surfacesN;
 		Triangle* Surfaces;
 		Color4f color;
-		void setSizeSurfaces(size_t n)
+		void setSizeSurfaces(unsigned n)
 		{
 			surfacesN = n;
 			Surfaces = new Triangle[n];
@@ -31,7 +31,7 @@ public:
 		~Group() { delete[] Surfaces; }
 	};
 
-	size_t groupN;
+	unsigned groupN;
 	Group* Groups;
 
 
@@ -39,11 +39,11 @@ public:
 public:
 	ModelM() {}
 	~ModelM() { delete[] Groups; delete[] Normals; delete[] Vertexs; }
-	void setSizeVertex(size_t n);
-	void setVertex(size_t i, Vector3f v);
-	void setSizeNormal(size_t n);
-	void setNormal(size_t i, Vector3f n);
-	void setSizeGroup(size_t n);
-	void setSizeSurface(size_t g, size_t s);
+	void setSizeVertex(unsigned n);
+	void setVertex(unsigned i, Vector3f v);
+	void setSizeNormal(unsigned n);
+	void setNormal(unsigned i, Vector3f n);
+	void setSizeGroup(unsigned n);
+	void setSizeSurface(unsigned g, unsigned s);
 	void Draw(Render* r);
 };

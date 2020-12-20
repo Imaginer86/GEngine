@@ -26,3 +26,4 @@ RollAndRoll/x64/Debug/RollAndRoll.Build.CppClean.log
 GEngine/.vs/GEngine/v15/.suo
 *.db
 *.opendb
+*.ipch

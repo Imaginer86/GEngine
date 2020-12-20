@@ -2,6 +2,7 @@
 
 #include "Core\FileReader.h"
 #include "Render\RenderGL.h"
+#include "Math\gmath.h"
 #include "Math\Quaternion.h"
 #include "Math\Plane.h"
 #include "Physics\Tera.h"
@@ -209,7 +210,7 @@ void Program::Update(float dt)
 
 
 
-	float dist = fabs(plane.distance(ball.pos)); 
+	float dist = gabs(plane.distance(ball.pos)); 
 	if (!contact && dist <= ball.r)
 	{
 		
@@ -242,7 +243,7 @@ void Program::Update(float dt)
 				Vector3f N = plane.unit();
 				Vector3f G = gravi.unit();
 				float cosA = N.dotProduct(G);
-				float sinA = sqrtf(1 - cosA * cosA);
+				float sinA = gsqrt(1 - cosA * cosA);
 				float aCon = 5.0f * gravi.length() * sinA / 7.0f;
 				aContact = (N*G*N)*aCon;
 

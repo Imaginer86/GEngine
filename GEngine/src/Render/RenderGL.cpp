@@ -1,8 +1,17 @@
 #include "../GEngine.h"
 #include "RenderGL.h"
 
-#include <GL/gl.h>
-#include <GL/glu.h>
+//#define GL_GLEXT_PROTOTYPES
+#include <gl/gl.h>
+#include <gl/glu.h>
+#include <gl/glext.h>
+
+#include <cstdio>
+
+#include <string>
+#include <fstream>
+//#include <iostream>
+#include <vector>
 
 //#pragma comment(lib, "OpenGL32.lib")
 //#pragma comment(lib, "GLu32.lib")
@@ -22,34 +31,51 @@ GLuint  base;      // База списка отображения для фон
 
 GLUquadricObj *quadratic;
 
-GLuint texture[1];
+//GLuint texture[1];
 
-//GLAPI void APIENTRY glGenBuffers(GLsizei n, GLuint *buffers);
+//GLAPI void APIENTRY (GLsizei n, GLuint *buffers);
+
+PFNGLGENBUFFERSPROC		glGenBuffers = 0;                     // VBO Name Generation Procedure
+PFNGLBINDBUFFERPROC		glBindBuffer = 0;                     // VBO Bind Procedure
+PFNGLBUFFERDATAPROC     glBufferData = 0;
+PFNGLDELETEBUFFERSPROC glDeleteBuffers = 0;
+PFNGLGENVERTEXARRAYSPROC glGenVertexArrays = 0;
+PFNGLBINDVERTEXARRAYPROC glBindVertexArray = 0;
+PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer = 0;
+PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray = 0;
+PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray = 0;
+
+PFNGLCREATESHADERPROC glCreateShader = 0;
+PFNGLSHADERSOURCEPROC glShaderSource = 0;
+PFNGLCOMPILESHADERPROC glCompileShader = 0;
+PFNGLGETSHADERIVPROC glGetShaderiv = 0;
+PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = 0;
+PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
+PFNGLATTACHSHADERPROC glAttachShader = 0;
+PFNGLLINKPROGRAMPROC glLinkProgram = 0;
+PFNGLDELETESHADERPROC glDeleteShader = 0;
+PFNGLGETPROGRAMIVPROC glGetProgramiv = 0;
+PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = 0;
+PFNGLUSEPROGRAMPROC glUseProgram = 0;
+
+ 
+GLfloat g_vertex_buffer_data[] = {
+	-100.0f, -100.0f, -1.0f,
+	100.0f, -100.0f, -1.0f,
+	0.0f, 100.0f, -1.0f
+};
 
 
 
-/* Создаем переменную для хранения VBO идентификатора */
-GLuint triangleVBO;
+GLuint VBO;
+GLuint IBO;
+GLuint vertexbuffer;;
+GLuint VertexArrayID;
+
 
 /* Это имя программы шейдера */
 GLuint shaderProgram;
 
-/* Эти указатели будут получать адреса в памяти исходных кодов шейдера */
-//GLchar *vertexSource, *fragmentSource;
-
-/* Эти переменные используются для шейдеров */
-GLuint vertexShader, fragmentShader;
-
-const unsigned int shaderAttribute = 0;
-
-const float NUM_OF_VERTICES_IN_DATA = 3;
-
-/* Вершины треугольника (направление обхода: против часовой стрелки) */
-float data[3][3] = {
-	{ 0.0, 1.0, 0.0 },
-	{ -1.0, -1.0, 0.0 },
-	{ 1.0, -1.0, 0.0 }
-};
 
 
 
@@ -68,7 +94,7 @@ bool RenderGL::LoadGLTextures()
 	/*
 	// Загрузка картинки
 	AUX_RGBImageRec *texture1;
-	texture1 = auxDIBImageLoad(L"data/EarthMap.bmp");
+	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
 	//texture1 = auxDIBImageLoad("data/astronomy.bmp");
 
 	// Создание текстуры
@@ -87,7 +113,7 @@ bool RenderGL::LoadGLTextures()
 	return true;;
 }
 
-bool RenderGL::createWindow(std::string title, unsigned char bits)
+bool RenderGL::createWindow(const char *title, unsigned char bits)
 {
 	GLuint    PixelFormat;              // Хранит результат после поиска
 	WNDCLASS  wc;                // Структура класса окна
@@ -110,10 +136,10 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);        // Загружаем указатель мышки
 	wc.hbrBackground = NULL;              // Фон не требуется для GL
 	wc.lpszMenuName = NULL;              // Меню в окне не будет
-	wc.lpszClassName = L"OpenGL";            // Устанавливаем имя классу
+	wc.lpszClassName = "OpenGL";            // Устанавливаем имя классу
 	if (!RegisterClass(&wc))              // Пытаемся зарегистрировать класс окна
 	{
-		MessageBox(NULL, L"Failed To Register The Window Class.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Выход и возвращение функцией значения false
 	}
 	if (fullscreen)                // Полноэкранный режим?
@@ -129,14 +155,14 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
 			// Если переключение в полноэкранный режим невозможно, будет предложено два варианта: оконный режим или выход.
-			if (MessageBox(NULL, L"The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
-				L"GEngine GL", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
+			if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
+				"GEngine G", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
 			{
 				fullscreen = false;          // Выбор оконного режима (fullscreen = false)
 			}
 			else
 			{
-				MessageBox(NULL, L"Program Will Now Close.", L"ERROR", MB_OK | MB_ICONSTOP);
+				MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
 				return false;            // Выход и возвращение функцией false
 			}
 		}
@@ -154,8 +180,8 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	}
 	AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);      // Подбирает окну подходящие размеры
 	hWnd = CreateWindowEx(dwExStyle,          // Расширенный стиль для окна
-		L"OpenGL",          // Имя класса
-		L"GEngine",            // Заголовок окна //todo
+		"OpenGL",          // Имя класса
+		title,            // Заголовок окна 
 		WS_CLIPSIBLINGS |        // Требуемый стиль для окна
 		WS_CLIPCHILDREN |        // Требуемый стиль для окна
 		dwStyle,          // Выбираемые стили для окна
@@ -169,7 +195,7 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	if (!hWnd)          // Не передаём ничего до WM_CREATE (???)
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Window Creation Error.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	static  PIXELFORMATDESCRIPTOR pfd =            // pfd сообщает Windows каким будет вывод на экран каждого пикселя
@@ -197,43 +223,40 @@ bool RenderGL::createWindow(std::string title, unsigned char bits)
 	if (!hDC)              // Можем ли мы получить Контекст Устройства?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Can't Create A GL Device Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	PixelFormat = ChoosePixelFormat(hDC, &pfd);
 	if (!PixelFormat)        // Найден ли подходящий формат пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Can't Find A Suitable PixelFormat.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	if (!SetPixelFormat(hDC, PixelFormat, &pfd))          // Возможно ли установить Формат Пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Can't Set The PixelFormat.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	hRC = wglCreateContext(hDC);
 	if (!hRC)          // Возможно ли установить Контекст Рендеринга?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Can't Create A GL Rendering Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, L"Can't Activate The GL Rendering Context.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	ShowWindow(hWnd, SW_SHOW);              // Показать окно
 	SetForegroundWindow(hWnd);              // Слегка повысим приоритет
 	SetFocus(hWnd);                // Установить фокус клавиатуры на наше окно
 
-	resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
-
 	init();
-
 	return true;
 }
 
@@ -249,30 +272,30 @@ void RenderGL::killWindow()
 	{
 		if (!wglMakeCurrent(NULL, NULL))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð´Ð¸Ñ‚ÑŒ RC Ð¸ DC?
 		{
-			MessageBox(NULL, L"Release Of DC And RC Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		if (!wglDeleteContext(hRC))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ RC?
 		{
-			MessageBox(NULL, L"Release Rendering Context Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		hRC = NULL;              // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ RC Ð² NULL
 	}
 
 	if (hDC && !ReleaseDC(hWnd, hDC))          // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ DC?
 	{
-		MessageBox(NULL, L"Release Device Context Failed.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hDC = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ DC Ð² NULL
 	}
 
 	if (hWnd && !DestroyWindow(hWnd))            // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾?
 	{
-		MessageBox(NULL, L"Could Not Release hWnd.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hWnd = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hWnd Ð² NULL
 	}
 
-	if (!UnregisterClass(L"OpenGL", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
+	if (!UnregisterClass("OpenG", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
 	{
-		MessageBox(NULL, L"Could Not Unregister Class.", L"SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hInstance = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hInstance Ð² NULL
 	}
 
@@ -283,81 +306,111 @@ void RenderGL::killWindow()
 
 void RenderGL::init()
 {
-	LoadGLTextures();
 
-	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
-	glEnable(GL_DEPTH_TEST);
+	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
+	glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
+	glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
+	glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)wglGetProcAddress("glDeleteBuffers");
+	glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
+	glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
+	glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)wglGetProcAddress("glVertexAttribPointer");
+	glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glEnableVertexAttribArray");
+	glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glDisableVertexAttribArray");
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 1.0f, 50000.0f);
-	glMatrixMode(GL_MODELVIEW);
+	glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
+	glShaderSource = (PFNGLSHADERSOURCEPROC)wglGetProcAddress("glShaderSource");
+	glCompileShader = (PFNGLCOMPILESHADERPROC)wglGetProcAddress("glCompileShader");
+	glGetShaderiv = (PFNGLGETSHADERIVPROC)wglGetProcAddress("glGetShaderiv");
+	glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)wglGetProcAddress("glGetShaderInfoLog");
+	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
+	glAttachShader = (PFNGLATTACHSHADERPROC)wglGetProcAddress("glAttachShader");
+	glLinkProgram = (PFNGLLINKPROGRAMPROC)wglGetProcAddress("glLinkProgram");
+	glDeleteShader = (PFNGLDELETESHADERPROC)wglGetProcAddress("glDeleteShader");
+	glGetProgramiv = (PFNGLGETPROGRAMIVPROC)wglGetProcAddress("glGetProgramiv");
+	glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
+	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
 
-	setLight();
+	
+	//glGenVertexArray(1, &VAO);
+	//glBindVertexArray(VAO);
 
-	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_TEXTURE_2D);
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+	// Сначала генерируем OpenGL буфер и сохраняем указатель на него в vertexbuffer
+	glGenBuffers(1, &vertexbuffer);
+
+	// Биндим буфер
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+
+	// Предоставляем наши вершины в OpenGL
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	
+
+
+	//glEnableVertexAttribArray(0);
+
+	//Shaders
+	//shaderProgram = LoadShaders("../GEngine/src/shaders/vertex_shader.glsl", "../GEngine/src/shaders/fragment_shader.glsl");
+
+
+	//LoadGLTextures();
+
+	//glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	//glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	//glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
+	//glEnable(GL_DEPTH_TEST);
+
+
+	//setLight();
+
+	//glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	//glEnable(GL_TEXTURE_2D);
 
 	quadratic = gluNewQuadric();
 
-
-	/*
-//	glShadeModel(GL_SMOOTH);    // Разрешить плавное затенение
-//	glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Черный фон
-//	glClearDepth(1.0f);         // Установка буфера глубины
-//	glEnable(GL_DEPTH_TEST);    // Разрешение теста глубины
-//	glDepthFunc(GL_LEQUAL);     // Тип теста глубины
-	// Действительно хорошие вычисления перспективы
-//	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	*/
-	/*
-	//glFrontFace(GL_CW);
-	//glCullFace(GL_BACK);
-	//glEnable(GL_CULL_FACE);
-
-
-	//glEnable(GL_TEXTURE_2D);
-
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);      // Ð£Ð»ÑƒÑ‡ÑˆÐµÐ½Ð¸Ðµ Ð² Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ð¸ Ð¿ÐµÑ€ÑÐ¿ÐµÐºÑ‚Ð¸Ð²Ñ‹
-	//glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
-	//glEnable(GL_CULL_FACE);		// Do not calculate i
-	*/
+	//std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
+	//std::string vendorInfo = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
+	//std::string extensionsInfo = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
+	//std::cout << "OpenGL version: " << version << std::endl;
+	//std::cout << "OpenGL vendor: " << vendorInfo << std::endl;
+	//std::cout << "Full OpenGL extensions list: " << extensionsInfo << std::endl;
 
 	buildFont();
+
+	resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
 
 	return;
 
 }
 
-void VBO()
+void RenderGL::CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index)
 {
+	//glBindVertexArray(VAO);
+	VBOVertexN = num_vert;
+	VBOIndexN = num_index;
 
-	/*---------------------- Инициализация VBO - (делается единожды, при запуске программы) ---------------------*/
-	/* Создание новго VBO и использование переменной "triangleVBO" для сохранения VBO id */
-//	glGenBuffers(1, &triangleVBO);
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, VBOVertexN * sizeof(GLfloat), data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
 
-	/* Делаем новый VBO активным */
-//	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VBOIndexN * sizeof(unsigned), index, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
 
-	/* Выгружаем данные в видеоустройство */
-//	glBufferData(GL_ARRAY_BUFFER, NUM_OF_VERTICES_IN_DATA * 3 * sizeof(float), data, GL_STATIC_DRAW);
 
-	/* Указываем что наши данные координат в индексе атрибутов, равный 0 (shaderAttribute), и содержат 3 числа с плавающей точкой на вершину */
-//	glVertexAttribPointer(shaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glVertexAttribPointer(0, VBOIndexN, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//glBindVertexArray(0);
 
-	/* Включаем индекс атрибутов, равный 0 (shaderAttribute), как используемый */
-//	glEnableVertexAttribArray(shaderAttribute);
 
-	/* Делаем новый VBO активным */
-//	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-	/*-------------------------------------------------------------------------------------------------------*/
 
-	//const GLubyte * str = glGetString(GL_VERSION);
 }
+
 
 void RenderGL::resize(unsigned width_, unsigned height_)
 {
@@ -377,6 +430,85 @@ void RenderGL::resize(unsigned width_, unsigned height_)
 	gluPerspective(45.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 10000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
 
 	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
+}
+
+unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
+{
+	
+
+	// создаем шейдеры
+	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+	// читаем вершинный шейдер из файла
+	std::string VertexShaderCode;
+	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+	if (VertexShaderStream.is_open())
+	{
+		std::string Line = "";
+		while (getline(VertexShaderStream, Line))
+			VertexShaderCode += "\n" + Line;
+		VertexShaderStream.close();
+	}
+
+	// читаем фрагментный шейдер из файла
+	std::string FragmentShaderCode;
+	std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+	if (FragmentShaderStream.is_open()) {
+		std::string Line = "";
+		while (getline(FragmentShaderStream, Line))
+			FragmentShaderCode += "\n" + Line;
+		FragmentShaderStream.close();
+	}
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+
+	// Компилируем вершинный шейдер
+	printf("Compiling shader : %s\n", vertex_file_path);
+	char const * VertexSourcePointer = VertexShaderCode.c_str();
+	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
+	glCompileShader(VertexShaderID);
+
+	// Устанавливаем параметры
+	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+
+	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	std::vector<char> VertexShaderErrorMessage(InfoLogLength);
+	glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+	fprintf(stdout, "%s\n", &VertexShaderErrorMessage[0]);
+
+	// Компилируем фрагментный шейдер
+	printf("Compiling shader : %s\n", fragment_file_path);
+	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+	glCompileShader(FragmentShaderID);
+
+	// Устанавливаем параметры
+	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
+	glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+	fprintf(stdout, "%s\n", &FragmentShaderErrorMessage[0]);
+
+	fprintf(stdout, "Linking program\n");
+	GLuint ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, VertexShaderID);
+	glAttachShader(ProgramID, FragmentShaderID);
+	glLinkProgram(ProgramID);
+
+	// Устанавливаем параметры
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	std::vector<char> ProgramErrorMessage(max(InfoLogLength, int(1)));
+	glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+	fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
+
+	glDeleteShader(VertexShaderID);
+	glDeleteShader(FragmentShaderID);
+	return ProgramID;
+	
+	return 0;
 }
 
 void RenderGL::setLight()
@@ -406,12 +538,14 @@ void RenderGL::beginDraw() const
 	camera.q.toAngleAxis(angle, axic);
 	glRotatef(angle, axic.x, axic.y, axic.z);
 	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);	
+
+
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 
 void RenderGL::endDraw() const
 {
-	//glFlush();
+	glFlush();
 	SwapBuffers(hDC);//_WIN32					// ÐœÐµÐ½ÑÐµÐ¼ Ð±ÑƒÑ„ÐµÑ€ (Ð´Ð²Ð¾Ð¹Ð½Ð°Ñ Ð±ÑƒÑ„ÐµÑ€Ð¸Ð·Ð°Ñ†Ð¸Ñ)
 }
 
@@ -450,7 +584,7 @@ void RenderGL::buildFont()
 		CLIP_DEFAULT_PRECIS,    // Точность отсечения
 		ANTIALIASED_QUALITY,    // Качество вывода
 		FF_DONTCARE | DEFAULT_PITCH,  // Семейство и шаг
-		L"Courier New");      // Имя шрифта
+		"Courier New");      // Имя шрифта
 
 	SelectObject(hDC, font);        // Выбрать шрифт, созданный нами ( НОВОЕ )
 	wglUseFontBitmaps(hDC, 32, 96, base); // Построить 96 символов начиная с пробела ( НОВОЕ )
@@ -465,7 +599,7 @@ void RenderGL::print(float x, float y, const char * fmt, ...)
 {
 	glLoadIdentity();	
 	glTranslatef(0.0f, 0.0f, -1.0f);
-	glColor3f(0.5f, 0.8f, 0.3f);
+	//glColor3f(0.5f, 0.8f, 0.3f);
 	glRasterPos2f(x, y);
 	char    text[256];      // Место для нашей строки
 
@@ -652,7 +786,7 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 
 	gluQuadricDrawStyle(quadratic, GLU_FILL);
 	gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
-	gluQuadricTexture(quadratic, GLU_FALSE);
+	//gluQuadricTexture(quadratic, GLU_FALSE);
 
 	glPushMatrix();
 
@@ -660,16 +794,16 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	glColor4f(color.r, color.g, color.b, color.a);
 
 
-	glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	//glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
+	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 
-	glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
-	glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
+	//glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
+	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
 
 	gluSphere(quadratic, r, 16, 16);
-	glDisable(GL_TEXTURE_GEN_S);
-	glDisable(GL_TEXTURE_GEN_T);
+	//glDisable(GL_TEXTURE_GEN_S);
+	//glDisable(GL_TEXTURE_GEN_T);
 
 	
 	glPopMatrix();
@@ -690,16 +824,16 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
 
 	glColor3f(color.r, color.g, color.b);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 	float angle;
 	Vector3f axic;
 	q.toAngleAxis(angle, axic);
 	glTranslatef(pos.x, pos.y, pos.z);
 	glRotatef(-angle, q.x, q.y, q.z);
-	GLUquadric *qobj = gluNewQuadric();
-	gluQuadricDrawStyle(qobj, GLU_FILL);
-	gluQuadricNormals(qobj, GLU_SMOOTH);			// Create Smooth Normals (NEW)
+	//GLUquadric *qobj = gluNewQuadric();
+	gluQuadricDrawStyle(quadratic, GLU_FILL);
+	gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
 	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 
@@ -707,14 +841,14 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
 
 
-	gluQuadricTexture(qobj, GL_TRUE);
-	gluSphere(qobj, r, 128, 128);
-	gluDeleteQuadric(qobj);
+	//gluQuadricTexture(qobj, GL_TRUE);
+	gluSphere(quadratic, r, 128, 128);
+	//gluDeleteQuadric(qobj);
 	//glDisable(GL_TEXTURE_GEN_S);
 	//glDisable(GL_TEXTURE_GEN_T);
 
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 
 	
 	//glPushMatrix();
@@ -730,4 +864,40 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	//glPopMatrix();
 	
 	//gluDeleteQuadric(quadratic);
+}
+
+void RenderGL::drawVBO() const
+{
+	//glTranslatef(0.0f, 0.0f, -5.0f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+
+	/*
+
+	// Первый буфер атрибутов: вершины
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexAttribPointer(
+		0,                  // Атрибут 0. Сакрального смысла в нуле нет, но число должно совпадать с числом в шейдере
+		3,                  // количество
+		GL_FLOAT,           // тип
+		GL_FALSE,           // нормализировано ли?
+		0,                  // шаг
+		(void*)0            // смещение в буфере
+	);
+	*/
+
+	// Рисуем треугольник !
+	//glDrawArrays(GL_LINE_LOOP, 0, 3); //Начиная с вершины 0 и рисуем 3 штуки. Всего => 1 треугольник
+	//glisableVertexAttribArray(0);
+
+
+
+	//glUseProgram(shaderProgram);
+
+	
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glDrawElements(GL_TRIANGLES, VBOIndexN, GL_UNSIGNED_INT, 0);
 }

@@ -29,6 +29,8 @@ public:
 
 	virtual void simulate(float dt);
 
+	virtual void move(float dt);
+
 	virtual void draw() {};
 
 };
@@ -47,7 +49,12 @@ inline void Entity::init()          // Обнуляем «нашу» силу
 
 inline void Entity::simulate(float dt)
 {
-	vel += (force / m) * dt;  // Изменение в скорости добавляем к текущей скорости. Изменение пропорционально ускорению (сила/масса) и изменению времени
+	vel += (force / m) * dt;  // Изменение в скорости добавляем к текущей скорости. Изменение пропорционально ускорению (сила/масса) и изменению времени	
+	move(dt);
+}
+
+inline void Entity::move(float dt)
+{
 	pos += vel * dt;          // Изменение в положении добавляем к текущему положению. Изменение в положении Скорость*время
 }
 

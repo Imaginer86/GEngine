@@ -22,6 +22,9 @@
     <ClCompile Include="src\Render\ModelM.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\Math\gmath.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GEngine.h" />

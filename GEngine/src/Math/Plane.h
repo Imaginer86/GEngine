@@ -21,7 +21,7 @@ public:
 
 inline Vector3f Plane::unit()
 {
-	float length = sqrt(A*A + B*B + C*C);
+	float length = gsqrt(A*A + B*B + C*C);
 
 	if (length == 0)
 		return Vector3f();
@@ -31,7 +31,7 @@ inline Vector3f Plane::unit()
 
 inline float Plane::distance(const Vector3f& p)
 {
-	float length = sqrt(A*A + B*B + C*C);
+	float length = gsqrt(A*A + B*B + C*C);
 	if (length)
 		return (A*p.x + B*p.y + C*p.z + D) / length;
 	else

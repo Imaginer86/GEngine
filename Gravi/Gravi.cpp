@@ -1,11 +1,7 @@
 #include "GEngine.h"
-
 #include "Render/RenderGL.h"
-
 #include "Physics/Entity.h"
-
 #include "Math/gmath.h"
-
 #include "Math/Plane.h"
 #include "Math/Line.h"
 
@@ -27,7 +23,7 @@ struct {
 
 
 Entity *Planets = nullptr;
-unsigned numEntites = 4;
+unsigned numEntites = 2;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
 {
@@ -45,7 +41,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 bool Program::Init()
 {
-	//Quaternion q2 = Quaternion(90.0f, Vector3f(1.0f, 0.0f, 0.0f));
 	render = new RenderGL(InitData.width, InitData.height, InitData.cameraPos, InitData.cameraQ, InitData.fullscreen, InitData.light);
 	if (!render->createWindow(InitData.title, 32)) return false;
 
@@ -54,31 +49,32 @@ bool Program::Init()
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 	Planets = new Entity[numEntites];
-
 	
-	Planets[0].m = 750.0;
-	Planets[0].pos = Vector3f(5.0f, 5.0f, 0.0f);
-	Planets[0].vel = Vector3f(10.0f, 0.0f, 10.0f);
-	Planets[0].r = 1.0f;
-	Planets[0].color = Color4f(1.0f, 1.0f, 0.0f, 1.0f);
+	Planets[0].m = 7500.0;
+	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].r = 5.0f;
+	Planets[0].color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	Planets[1].m = 750.0;
-	Planets[1].pos = Vector3f(-5.0f, 5.0f, 0.0f);
-	Planets[1].vel = Vector3f(-10.0f, 10.0f, 0.0f);
+	Planets[1].m = 100.0;
+	Planets[1].pos = Vector3f(-10.0f, 3.0f, 0.0f);
+	Planets[1].vel = Vector3f(10.0f, 0.0f, 0.0f);
 	Planets[1].r = 1.0f;
-	Planets[1].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
+	Planets[1].color = Color4f(1.0f, 0.0f, 0.0f, 1.0f);
 
+	/*
 	Planets[2].m = 750.0;
 	Planets[2].pos = Vector3f(-5.0f, -5.0f, 0.0f);
-	Planets[2].vel = Vector3f(-10.0f, 0.0f, -10.0f);
+	Planets[2].vel = Vector3f(0.0f, 0.0f, 0.0f);
 	Planets[2].r = 1.0f;
 	Planets[2].color = Color4f(0.0f, 1.0f, 0.0f, 1.0f);
 
 	Planets[3].m = 750.0;
 	Planets[3].pos = Vector3f(5.0f, -5.0f, 0.0f);
-	Planets[3].vel = Vector3f(10.0f, -10.0f, 0.0f);
+	Planets[3].vel = Vector3f(0.0f, 0.0f, 0.0f);
 	Planets[3].r = 1.0f;
-	Planets[3].color = Color4f(0.0f, 1.0f, 1.0f, 1.0f);
+	Planets[3].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
+	*/
 
 	/*
 	for (unsigned i = 0; i < numEntites; i++)
@@ -202,10 +198,7 @@ void Program::UpdateKeys()
 
 void Program::Update(float dt)
 {
-	//return;
-
-	for (unsigned i = 0; i < numEntites; i++) Planets[i].init();
-
+	/*for (unsigned i = 0; i < numEntites; i++) Planets[i].init();
 	for(unsigned i = 0; i < numEntites; i++)
 		for(unsigned j = 0; j < numEntites; j++)
 			if (i != j)
@@ -215,31 +208,32 @@ void Program::Update(float dt)
 				Vector3f force = (Planets[j].pos - Planets[i].pos).unit() * f;
 				Planets[i].applyForce(force);
 				Planets[j].applyForce(-force);				
-			}
+			}*/
 	
-	for (unsigned i = 0; i < numEntites; i++) Planets[i].simulate(dt);
+	//for (unsigned i = 0; i < numEntites; i++) Planets[i].simulate(dt);
+	for (unsigned i = 0; i < numEntites; i++) Planets[i].move(dt);
 
 	for (unsigned i = 0; i < numEntites; i++)
 		for (unsigned j = i + 1; j < numEntites; j++)
 		{
-			Vector3f rAxic = Planets[i].pos - Planets[j].pos;
+ 			Vector3f rAxic = Planets[i].pos - Planets[j].pos;
 			float dr = rAxic.unitize();
 			if (dr <= (Planets[i].r + Planets[j].r))
 			{
-				int t = 1;
-				//Vector3f u1r = rAxic * (rAxic.dotProduct(Planets[i].vel));
-				//Vector3f u1p = Planets[i].vel - u1r;
+				Vector3f u1r = rAxic * (rAxic.dotProduct(Planets[i].vel));
+				Vector3f u1p = Planets[i].vel - u1r;
 
-				//Vector3f u2r = rAxic * (rAxic.dotProduct(Planets[j].vel));
-				//Vector3f u2p = Planets[j].vel - u2r;
+				Vector3f u2r = rAxic * (rAxic.dotProduct(Planets[j].vel));
+				Vector3f u2p = Planets[j].vel - u2r;
 
-				//Vector3f v1r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u1r - u2r) * Planets[j].m) / (Planets[i].m + Planets[j].m);
-				//Vector3f v2r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u2r - u1r) * Planets[i].m) / (Planets[i].m + Planets[j].m);
+				Vector3f v1r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u1r - u2r) * Planets[j].m) / (Planets[i].m + Planets[j].m);
+				Vector3f v2r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u2r - u1r) * Planets[i].m) / (Planets[i].m + Planets[j].m);
 
-				//Planets[i].vel = v1r + u1p;
-				//Planets[j].vel = v2r + u2p;
+				Planets[i].vel = v1r + u1p;
+				Planets[j].vel = v2r + u2p;
 			}
 		}
+
 }
 
 

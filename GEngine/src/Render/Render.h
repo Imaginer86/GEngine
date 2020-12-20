@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-
 #include "../Math/Vector3f.h"
 #include "../Math//Quaternion.h"
 #include "../Render/Color4f.h"
@@ -22,7 +20,7 @@ public:
 	virtual void init() = 0;
 	virtual void resize(unsigned width_, unsigned height_) = 0;
 	virtual bool LoadGLTextures() = 0;
-	virtual bool createWindow(std::string title, unsigned char bits) = 0;
+	virtual bool createWindow(const char* title, unsigned char bits) = 0;
 	virtual void killWindow() = 0;
 	virtual void setFullscreen(bool fullscreen_) { fullscreen = fullscreen_; }
 
@@ -37,6 +35,8 @@ public:
 	virtual void Rotate(const Quaternion& q) const = 0;
 	virtual void LoadIdentity() const = 0;
 
+	virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index) = 0;
+
 	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& n, const Color4f& color) const = 0;
@@ -49,6 +49,7 @@ public:
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const = 0;
+	virtual void drawVBO() const = 0;
 	//virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 
 	void RotateCamera(const Quaternion &q);
@@ -56,6 +57,8 @@ public:
 	void MoveCameraQ(float s);
 
 	//Camera& GetCamera() { return camera; }
+
+
 };
 
 inline Render::Render(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)

@@ -62,12 +62,12 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 
 	if (!inFile.is_open()) return false;
 
-	size_t vertN;
+	unsigned vertN;
 	inFile >> vertN;
 
 	model.setSizeVertex(vertN);
 
-	for (size_t i = 0; i < vertN; ++i)
+	for (unsigned i = 0; i < vertN; ++i)
 	{
 		Vector3f v;
 		inFile >> v.x >> v.y >> v.z;
@@ -75,38 +75,38 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 
 	}
 
-	size_t normN;
+	unsigned normN;
 	inFile >> normN;
 
 	model.setSizeNormal(normN);
 
-	for (size_t i = 0; i < normN; ++i)
+	for (unsigned i = 0; i < normN; ++i)
 	{
 		Vector3f n;
 		inFile >> n.x >> n.y >> n.z;
 		model.setNormal(i, n);
 	}
 
-	size_t groupN;
+	unsigned groupN;
 	inFile >> groupN;
 
 	model.setSizeGroup(groupN);
 
-	for (size_t i = 0; i < groupN; ++i)
+	for (unsigned i = 0; i < groupN; ++i)
 	{
 		char c;
 		string gName;
 		inFile >> c >> gName;
 
-		size_t surfN = 0;
+		unsigned surfN = 0;
 		inFile >> surfN;
 		model.setSizeSurface(i, surfN);
 
 		inFile >> model.Groups[i].color.r >> model.Groups[i].color.g >> model.Groups[i].color.b >> model.Groups[i].color.a;
 
-		for (size_t j = 0; j < surfN; ++j)
+		for (unsigned j = 0; j < surfN; ++j)
 		{
-			size_t nv, nt, nn;
+			unsigned nv, nt, nn;
 			inFile >> nv >> nt >> nn;
 			nv--;	nt--;	nn--;
 			model.Groups[i].Surfaces[j].VertexT[0] = nv;

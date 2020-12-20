@@ -119,7 +119,7 @@ inline float Vector3f::dotProduct(const Vector3f& v)
 
 inline float Vector3f::length()								// length() returns the length of this Vector3
 {
-	return sqrt(x*x + y*y + z*z);
+	return gsqrt(x*x + y*y + z*z);
 };
 
 inline float Vector3f::lenght2()

@@ -223,7 +223,7 @@ inline Quaternion Quaternion::inverse() const
 
 inline float Quaternion::magnitude() const
 {
-	return sqrt(w * w + x * x + y * y + z * z);
+	return gsqrt(w * w + x * x + y * y + z * z);
 }
 
 inline void Quaternion::normalize()
@@ -250,13 +250,13 @@ inline void Quaternion::toAngleAxis(float &degrees, Vector3f &axis) const
 	}
 	else
 	{
-		float invSinHalfTheta = 1.0f / sqrt(sinHalfThetaSq);
+		float invSinHalfTheta = 1.0f / gsqrt(sinHalfThetaSq);
 
 		axis.x = x * invSinHalfTheta;
 		axis.y = y * invSinHalfTheta;
 		axis.z = z * invSinHalfTheta;
 
-		degrees = radiansToDegrees(2.0f * atan2f(sqrt(sinHalfThetaSq), w));
+		degrees = radiansToDegrees(2.0f * gatan2f(gsqrt(sinHalfThetaSq), w));
 	}
 }
 
@@ -282,8 +282,8 @@ inline void Quaternion::rotate(Vector3f & v) const
 inline void Quaternion::fromAngleAxis(float degrees, const Vector3f &axis)
 {
 	float halfTheta = degreesToRadians(degrees) * 0.5f;
-	float s = sin(halfTheta);
-	w = cos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
+	float s = gsin(halfTheta);
+	w = gcos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 }
 
 inline Vector3f Quaternion::Normal(const Vector3f &p)
