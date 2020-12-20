@@ -116,7 +116,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)/../GEngine/src/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)/../GEngine/lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>GEngine.lib;OpenGL32.LIB;GLU32.lib;%(AdditionalDependencies)</AdditionalDependencies>

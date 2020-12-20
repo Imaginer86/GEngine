@@ -1,5 +1,13 @@
-#include "../GEngine.h"
 #include "RenderGL.h"
+#include "../GEngine.h"
+
+
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
+#endif
+// Файлы заголовков Windows:
+#include <Windows.h>
 
 //#define GL_GLEXT_PROTOTYPES
 #include <gl/gl.h>
@@ -16,13 +24,38 @@
 //#pragma comment(lib, "OpenGL32.lib")
 //#pragma comment(lib, "GLu32.lib")
 
+//HDC		hDC;
+//HGLRC	hRC;
+
+PFNGLGENBUFFERSPROC					glGenBuffers = 0;                     // VBO Name Generation Procedure
+PFNGLBINDBUFFERPROC					glBindBuffer = 0;                     // VBO Bind Procedure
+PFNGLBUFFERDATAPROC					glBufferData = 0;
+PFNGLDELETEBUFFERSPROC				glDeleteBuffers = 0;
+PFNGLGENVERTEXARRAYSPROC			glGenVertexArrays = 0;
+PFNGLBINDVERTEXARRAYPROC			glBindVertexArray = 0;
+PFNGLVERTEXATTRIBPOINTERPROC		glVertexAttribPointer = 0;
+PFNGLENABLEVERTEXATTRIBARRAYPROC	glEnableVertexAttribArray = 0;
+PFNGLDISABLEVERTEXATTRIBARRAYPROC	glDisableVertexAttribArray = 0;
+PFNGLCREATESHADERPROC				glCreateShader = 0;
+PFNGLSHADERSOURCEPROC				glShaderSource = 0;
+PFNGLCOMPILESHADERPROC				glCompileShader = 0;
+PFNGLGETSHADERIVPROC				glGetShaderiv = 0;
+PFNGLGETSHADERINFOLOGPROC			glGetShaderInfoLog = 0;
+PFNGLCREATEPROGRAMPROC				glCreateProgram = 0;
+PFNGLATTACHSHADERPROC				glAttachShader = 0;
+PFNGLLINKPROGRAMPROC				glLinkProgram = 0;
+PFNGLDELETESHADERPROC				glDeleteShader = 0;
+PFNGLGETPROGRAMIVPROC				glGetProgramiv = 0;
+PFNGLGETPROGRAMINFOLOGPROC			glGetProgramInfoLog = 0;
+PFNGLUSEPROGRAMPROC					glUseProgram = 0;
 
 
-HDC		hDC;              // ÐŸÑ€Ð¸Ð²Ð°Ñ‚Ð½Ñ‹Ð¹ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° GDI
-HGLRC	hRC;              // ÐŸÐ¾ÑÑ‚Ð¾ÑÐ½Ð½Ñ‹Ð¹ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ Ñ€ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³Ð°
-HWND	hWnd;              // Ð—Ð´ÐµÑÑŒ Ð±ÑƒÐ´ÐµÑ‚ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð´ÐµÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ñ€ Ð¾ÐºÐ½Ð°
-HINSTANCE  hInstance;              // Ð—Ð´ÐµÑÑŒ Ð±ÑƒÐ´ÐµÑ‚ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð´ÐµÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ñ€ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ 
+HDC		hDC;
+HGLRC	hRC;
+HWND	hWnd;
+HINSTANCE  hInstance;
 
+//Light
 GLfloat gLightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
 GLfloat gLightDiffuse[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 GLfloat gLightPosition[4] = { 0.0f, 500.0f, 0.0f, 1.0f };
@@ -33,32 +66,8 @@ GLUquadricObj *quadratic;
 
 //GLuint texture[1];
 
-//GLAPI void APIENTRY (GLsizei n, GLuint *buffers);
 
-PFNGLGENBUFFERSPROC		glGenBuffers = 0;                     // VBO Name Generation Procedure
-PFNGLBINDBUFFERPROC		glBindBuffer = 0;                     // VBO Bind Procedure
-PFNGLBUFFERDATAPROC     glBufferData = 0;
-PFNGLDELETEBUFFERSPROC glDeleteBuffers = 0;
-PFNGLGENVERTEXARRAYSPROC glGenVertexArrays = 0;
-PFNGLBINDVERTEXARRAYPROC glBindVertexArray = 0;
-PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer = 0;
-PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray = 0;
-PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray = 0;
-
-PFNGLCREATESHADERPROC glCreateShader = 0;
-PFNGLSHADERSOURCEPROC glShaderSource = 0;
-PFNGLCOMPILESHADERPROC glCompileShader = 0;
-PFNGLGETSHADERIVPROC glGetShaderiv = 0;
-PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = 0;
-PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
-PFNGLATTACHSHADERPROC glAttachShader = 0;
-PFNGLLINKPROGRAMPROC glLinkProgram = 0;
-PFNGLDELETESHADERPROC glDeleteShader = 0;
-PFNGLGETPROGRAMIVPROC glGetProgramiv = 0;
-PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = 0;
-PFNGLUSEPROGRAMPROC glUseProgram = 0;
-
- 
+//Test Triangle
 GLfloat g_vertex_buffer_data[] = {
 	-100.0f, -100.0f, -1.0f,
 	100.0f, -100.0f, -1.0f,
@@ -77,45 +86,9 @@ GLuint VertexArrayID;
 GLuint shaderProgram;
 
 
-
-
-RenderGL::~RenderGL()
+bool RenderGL::createWindow(const char *title, void *wndProc)
 {
-}
-
-RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
-:Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_)
-{
-}
-
-// Загрузка картинки и конвертирование в текстуру
-bool RenderGL::LoadGLTextures()
-{
-	/*
-	// Загрузка картинки
-	AUX_RGBImageRec *texture1;
-	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
-	//texture1 = auxDIBImageLoad("data/astronomy.bmp");
-
-	// Создание текстуры
-	glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
-
-	if (!texture1) return false;
-	delete texture1;
-	*/
-	return true;;
-}
-
-bool RenderGL::createWindow(const char *title, unsigned char bits)
-{
-	GLuint    PixelFormat;              // Хранит результат после поиска
+	unsigned int PixelFormat;              // Хранит результат после поиска
 	WNDCLASS  wc;                // Структура класса окна
 	DWORD    dwExStyle;              // Расширенный стиль окна
 	DWORD    dwStyle;              // Обычный стиль окна
@@ -124,11 +97,11 @@ bool RenderGL::createWindow(const char *title, unsigned char bits)
 	WindowRect.right = (long)width;              // Установить правую составляющую в Width
 	WindowRect.top = (long)0;                // Установить верхнюю составляющую в 0
 	WindowRect.bottom = (long)height;              // Установить нижнюю составляющую в Height
-	fullscreen = fullscreen;              // Устанавливаем значение глобальной переменной fullscreen
+	//!!!fullscreen = fullscreen;              // Устанавливаем значение глобальной переменной fullscreen
 	hInstance = GetModuleHandle(NULL);        // Считаем дескриптор нашего приложения
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;      // Перерисуем при перемещении и создаём скрытый DC
-	wc.lpfnWndProc = (WNDPROC)WndProc;          // Процедура обработки сообщений
-												//todo wc.lpfnWndProc =
+	wc.lpfnWndProc = (WNDPROC)wndProc;          // Процедура обработки сообщений
+    //todo wc.lpfnWndProc =
 	wc.cbClsExtra = 0;              // Нет дополнительной информации для окна
 	wc.cbWndExtra = 0;              // Нет дополнительной информации для окна
 	wc.hInstance = hInstance;            // Устанавливаем дескриптор
@@ -149,7 +122,7 @@ bool RenderGL::createWindow(const char *title, unsigned char bits)
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);      // Размер структуры Devmode
 		dmScreenSettings.dmPelsWidth = width;        // Ширина экрана
 		dmScreenSettings.dmPelsHeight = height;        // Высота экрана
-		dmScreenSettings.dmBitsPerPel = bits;        // Глубина цвета
+		dmScreenSettings.dmBitsPerPel = 32;        // Глубина цвета
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;// Режим Пикселя
 																				 // Пытаемся установить выбранный режим и получить результат.  Примечание: CDS_FULLSCREEN убирает панель управления.
 		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
@@ -206,7 +179,7 @@ bool RenderGL::createWindow(const char *title, unsigned char bits)
 		PFD_SUPPORT_OPENGL |              // Формат для OpenGL
 		PFD_DOUBLEBUFFER,              // Формат для двойного буфера
 		PFD_TYPE_RGBA,                // Требуется RGBA формат
-		bits,                  // Выбирается бит глубины цвета
+		32,                  // Выбирается бит глубины цвета
 		0, 0, 0, 0, 0, 0,              // Игнорирование цветовых битов
 		0,                  // Нет буфера прозрачности
 		0,                  // Сдвиговый бит игнорируется
@@ -246,19 +219,21 @@ bool RenderGL::createWindow(const char *title, unsigned char bits)
 		MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
+
 	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
 	{
 		killWindow();                // Восстановить экран
 		MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
+
 	ShowWindow(hWnd, SW_SHOW);              // Показать окно
 	SetForegroundWindow(hWnd);              // Слегка повысим приоритет
 	SetFocus(hWnd);                // Установить фокус клавиатуры на наше окно
 
-	init();
 	return true;
 }
+
 
 void RenderGL::killWindow()
 {
@@ -304,8 +279,23 @@ void RenderGL::killWindow()
 	killFont();
 }
 
-void RenderGL::init()
+
+RenderGL::~RenderGL()
 {
+}
+
+RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+:Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_)
+{
+}
+
+bool RenderGL::Init(const char* title, void* wndProc)
+{
+	if (!createWindow(title, wndProc))
+	{
+		MessageBox(NULL, "Cannot Create Window.", "ERROR", MB_OK | MB_ICONSTOP);
+		return false;
+	}
 
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 	glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
@@ -330,7 +320,7 @@ void RenderGL::init()
 	glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
 	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
 
-	
+
 	//glGenVertexArray(1, &VAO);
 	//glBindVertexArray(VAO);
 
@@ -345,7 +335,7 @@ void RenderGL::init()
 
 	// Предоставляем наши вершины в OpenGL
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-	
+
 
 
 	//glEnableVertexAttribArray(0);
@@ -380,11 +370,40 @@ void RenderGL::init()
 
 	buildFont();
 
-	resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
+	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
 
-	return;
+	return true;
 
 }
+
+// Загрузка картинки и конвертирование в текстуру
+bool RenderGL::LoadTextures()
+{
+	/*
+	// Загрузка картинки
+	AUX_RGBImageRec *texture1;
+	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
+	//texture1 = auxDIBImageLoad("data/astronomy.bmp");
+
+	// Создание текстуры
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
+
+	if (!texture1) return false;
+	delete texture1;
+	*/
+	return true;;
+}
+
+
+
+
 
 void RenderGL::CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index)
 {
@@ -412,7 +431,7 @@ void RenderGL::CreateVBO(const float *data, const unsigned num_vert, const unsig
 }
 
 
-void RenderGL::resize(unsigned width_, unsigned height_)
+void RenderGL::Resize(unsigned width_, unsigned height_)
 {
 	width = width_;
 	height = height_;
@@ -527,7 +546,8 @@ void RenderGL::setLight()
 	{
 		glDisable(GL_LIGHTING);
 	}
-}
+}	
+
 
 void RenderGL::beginDraw() const
 {

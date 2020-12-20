@@ -7,10 +7,10 @@ public:
 	RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~RenderGL();
 
-	virtual void init();
-	virtual void resize(unsigned width_, unsigned height_);
-	virtual bool LoadGLTextures();
-	virtual bool createWindow(const char* title, unsigned char bits);
+	virtual bool Init(const char* title, void *wndProc);
+	virtual void Resize(unsigned width_, unsigned height_);
+	virtual bool LoadTextures();
+	virtual bool createWindow(const char* title, void *wndProc);
 	virtual void killWindow();
 	virtual void beginDraw() const;
 	virtual void endDraw() const;

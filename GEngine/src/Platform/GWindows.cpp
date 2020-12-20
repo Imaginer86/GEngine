@@ -1,17 +1,26 @@
-﻿#include "GWindows.h"
- 
+﻿//#include "GWindows.h"
 #include "../GEngine.h"
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
+#endif
+// Файлы заголовков Windows:
+#include <Windows.h>
 
 Program program;
 
-void GInitProgram(Program* programPtr)
+
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+
+void GInitProgram(Program *&programPtr)
 {
 	programPtr = &program;
 }
 
 int GMain()
 {
-	if (!program.Init())
+	if (!program.Init(WndProc))
 	{
 		MessageBox(NULL, "Cannot Init.", "ERROR", MB_OK | MB_ICONSTOP);
 		return 1;
@@ -70,7 +79,7 @@ int GMain()
 	return 0;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -119,5 +128,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	}
 
-	return DefWindowProc(hWnd, message, wParam, lParam);//_WIN#32
+	return DefWindowProc(hWND, message, wParam, lParam);//_WIN#32
 }

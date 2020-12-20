@@ -21,11 +21,11 @@ struct {
 float angle = 0.0f;
 
 
-bool Program::Init()
+bool Program::Init(void *wndProc)
 {
 	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), InitData.fullscreen, InitData.light);
 	// ������� ���� OpenGL ����
-	if (!render->createWindow(InitData.title, 32)) return false;
+	if (!render->Init(InitData.title, wndProc)) return false;
 
 	return true;
 }
@@ -98,22 +98,22 @@ void Program::UpdateKeys()
 	if (keys[VK_F1])
 	{
 		keys[VK_F1] = false;
-		render->killWindow();
+		//!!!render->killWindow();
 		InitData.fullscreen = !InitData.fullscreen;
 
 		render->setFullscreen(InitData.fullscreen);
-		if (!render->createWindow(InitData.title, 32))
+		//!!!if (!render->createWindow(InitData.title, 32))
 		{
 			done = true;
 		}
-		else
+		//!!!else
 		{
 			Draw();
 		}
 	}
 	if (keys[VK_SPACE])
 	{
-		if (pause)	lastTickCount = GetTickCount();
+		//!!!if (pause)	lastTickCount = GetTickCount();
 		keys[VK_SPACE] = false;
 		pause = !pause;
 	}
@@ -123,17 +123,8 @@ void Program::UpdateKeys()
 	}
 }
 
-
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
-
+int main()
 {
-
-	UNREFERENCED_PARAMETER(hInstance);
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-	UNREFERENCED_PARAMETER(nCmdShow);
-
 	GInitProgram(programPtr);
 	GMain();
 	delete render;

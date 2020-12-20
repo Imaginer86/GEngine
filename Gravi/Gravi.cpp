@@ -25,13 +25,8 @@ struct {
 Entity *Planets = nullptr;
 unsigned numEntites = 2;
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
+int main ()
 {
-	UNREFERENCED_PARAMETER(hInstance);
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-	UNREFERENCED_PARAMETER(nCmdShow);
-
 	Plane P1(Vector3f(2, 1, -1), -1);
 	Plane P2(Vector3f(1, 3, -2), 0);
 	Line L = P1 * P2;
@@ -39,10 +34,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	return GMain();
 }
 
-bool Program::Init()
+bool Program::Init(void *wndProc)
 {
 	render = new RenderGL(InitData.width, InitData.height, InitData.cameraPos, InitData.cameraQ, InitData.fullscreen, InitData.light);
-	if (!render->createWindow(InitData.title, 32)) return false;
+	if (!render->Init(InitData.title, wndProc)) return false;
 
 	//if (!render->LoadGLTextures()) return false;
 
@@ -162,22 +157,22 @@ void Program::UpdateKeys()
 	if (keys[VK_F1])
 	{
 		keys[VK_F1] = false;
-		render->killWindow();
+		//render->killWindow();
 		InitData.fullscreen = !InitData.fullscreen;
 
-		render->setFullscreen(InitData.fullscreen);
-		if (!render->createWindow(InitData.title, 32))
+		//render->setFullscreen(InitData.fullscreen);
+		//if (!render->createWindow(InitData.title, 32))
 		{
 			done = true;
 		}
-		else
+		//else
 		{
 			Draw();
 		}
 	}
 	if (keys[VK_SPACE])
 	{
-		if (pause)	lastTickCount = GetTickCount();
+		//if (pause)	lastTickCount = GetTickCount();
 
 		keys[VK_SPACE] = false;
 		pause = !pause;

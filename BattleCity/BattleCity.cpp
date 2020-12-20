@@ -12,8 +12,6 @@ ModelM levelM;
 
 Program *programPtr = nullptr;
 
-//size_t *index;
-
 struct {
 	char *title = "BattleCity";
 	unsigned width = 1600;
@@ -25,14 +23,14 @@ struct {
 } InitData;
 
 
-bool Program::Init()
+bool Program::Init(void *wndProc)
 {
 	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), InitData.fullscreen, InitData.light);
 
 	//tank.pos = Vector3f();
 	//tank.angle = 0.0f;
 
-	if (!render->createWindow(InitData.title, 32)) return false;
+	if (!render->Init(InitData.title, wndProc)) return false;
 
 	//if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
 	if (!ReadModelOBJM(tank.model, "data/Tank.objm")) return false;
@@ -179,7 +177,7 @@ void Program::UpdateKeys()
 	}
 	if (keys[VK_SPACE])
 	{
-		if (pause)	lastTickCount = GetTickCount();
+		//!!!if (pause)	lastTickCount = GetTickCount();
 
 		keys[VK_SPACE] = false;
 		pause = !pause;
@@ -199,6 +197,9 @@ int main()
 {
 	
 	GInitProgram(programPtr);
+	programPtr->fullscreen = InitData.fullscreen;
+	programPtr->width = InitData.width;
+	programPtr->height =  InitData.height;
 	GMain();
 
 

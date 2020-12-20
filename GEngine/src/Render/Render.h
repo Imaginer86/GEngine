@@ -17,10 +17,10 @@ public:
 	Render(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~Render() {};
 
-	virtual void init() = 0;
-	virtual void resize(unsigned width_, unsigned height_) = 0;
-	virtual bool LoadGLTextures() = 0;
-	virtual bool createWindow(const char* title, unsigned char bits) = 0;
+	virtual bool Init(const char* title, void *wndProc) = 0;
+	virtual void Resize(unsigned width_, unsigned height_) = 0;
+	virtual bool LoadTextures() = 0;
+	virtual bool createWindow(const char* title, void *wndProc) = 0;
 	virtual void killWindow() = 0;
 	virtual void setFullscreen(bool fullscreen_) { fullscreen = fullscreen_; }
 
