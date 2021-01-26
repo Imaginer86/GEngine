@@ -58,18 +58,20 @@ bool Program::Init(void *wndProc)
 	}
 
 
-	float *data = new float[tank.model.vertexN * 3];
+	float *vertex = new float[tank.model.vertexN * 3];
 	unsigned vn = 0;
 	for (unsigned i = 0; i < tank.model.vertexN; i++)
 	{
-		data[vn] = tank.model.Vertexs[i].x;
+		vertex[vn] = tank.model.Vertexs[i].x;
 		vn++;
-		data[vn] = tank.model.Vertexs[i].y;
+		vertex[vn] = tank.model.Vertexs[i].y;
 		vn++;
-		data[vn] = tank.model.Vertexs[i].z;
+		vertex[vn] = tank.model.Vertexs[i].z;
 		vn++;
 	}
-	render->CreateVBO(data, vn, index, in);
+
+	float *normal = new float[tank.model.normalN];
+	render->CreateVBO(vertex, vn, index, in);
 
 	tank.q.identity();
 
@@ -92,7 +94,7 @@ void Program::Draw()
 	Vector3f b(-100.0f, 100.0f, 0.0f);
 	Vector3f c(100.0f, 100.0f, 0.0f);
 	Vector3f d(100.0f, -100.0f, 0.0f);
-	//render->drawQuad(a, b, c, d, Color4f(0.0f, 0.0f, 1.0f, 1.0f));
+	render->drawQuad(a, b, c, d, Color4f(0.0f, 0.0f, 1.0f, 1.0f));
 	//tank.model.Draw(render);
 	render->drawVBO();
 

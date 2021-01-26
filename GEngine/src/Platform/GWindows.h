@@ -1,13 +1,6 @@
 #pragma once
 
 
-
-
-
-
-
-
-
 // Файлы заголовков C RunTime
 /*
 #include <stdlib.h>

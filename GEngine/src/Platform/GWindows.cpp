@@ -18,6 +18,11 @@ void GInitProgram(Program *&programPtr)
 	programPtr = &program;
 }
 
+void UpdateLastTickCount()
+{
+	program.lastTickCount = GetTickCount();
+}
+
 int GMain()
 {
 	if (!program.Init(WndProc))
@@ -36,26 +41,24 @@ int GMain()
 
 	while (!program.done)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))    // ���� �� � ������� �����-������ ���������?
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			if (msg.message == WM_QUIT)        // �� ������� ��������� � ������?
+			if (msg.message == WM_QUIT)
 			{
-				program.done = true;          // ���� ���, done=true
+				program.done = true;
 			}
-			else              // ���� ���, ������������ ���������
+			else
 			{
-				TranslateMessage(&msg);        // ��������� ���������
-				DispatchMessage(&msg);        // �������� ���������
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
 			}
 		}
 		else
 		{
-			if (program.active)          // ������� �� ���������?
+			if (program.active)
 			{
 				program.UpdateKeys();
-				// �� ����� ��� ������, ������� �����.
-
-				//for (int i = 0; i < 10; ++i)//temp
+				for (int i = 0; i < 10; ++i)//temp
 					if (!program.pause)
 					{
 						tickCount = GetTickCount();//_WIN#32
@@ -83,49 +86,51 @@ LRESULT CALLBACK WndProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_ACTIVATE:            // �������� ��������� ���������� ����
+	case WM_ACTIVATE:
 	{
-		if (!HIWORD(wParam))//_WIN#32 // ��������� ��������� �����������
+		if (!HIWORD(wParam))//_WIN#32 
 		{
-			program.active = true;          // ��������� �������
+			program.active = true;
 		}
 		else
 		{
-			program.active = false;          // ��������� ������ �� �������
+			program.active = false;
 		}
 
-		return 0;            // ������������ � ���� ��������� ���������
+		return 0;
 	}
-	case WM_SYSCOMMAND:            // ������������� ��������� �������
+	case WM_SYSCOMMAND:
 	{
-		switch (wParam)            // ������������� ��������� �����
+		switch (wParam)
 		{
-		case SC_SCREENSAVE:        // �������� �� ���������� �����������?
-		case SC_MONITORPOWER:        // �������� �� ������� ������� � ����� ���������� �������?
-			return 0;          // ������������� ���
+		case SC_SCREENSAVE:
+		case SC_MONITORPOWER:
+			return 0;
 		}
-		break;              // �����
+		break;
 	}
-	case WM_CLOSE:              // �� �������� ��������� � ��������?
+	case WM_CLOSE:
 	{
-		PostQuitMessage(0);//_WIN#32          // ��������� ��������� � ������
-		return 0;            // ��������� �����
+		PostQuitMessage(0);//_WIN#32
+		return 0;
 	}
-	case WM_KEYDOWN:            // ���� �� ������ ������?
+	case WM_KEYDOWN:
 	{
-		program.keys[wParam] = true;          // ���� ���, �� ����������� ���� ������ true
-		return 0;            // ������������
+		program.keys[wParam] = true;
+		return 0;
 	}
-	case WM_KEYUP:              // ���� �� �������� �������?
+	case WM_KEYUP:
 	{
-		program.keys[wParam] = false;          //  ���� ���, �� ����������� ���� ������ false
-		return 0;            // ������������
+		program.keys[wParam] = false;
+		return 0;
 	}
-	case WM_SIZE:              // �������� ������� OpenGL ����
+	case WM_SIZE:
 	{
-		//render->resize(LOWORD(lParam), HIWORD(lParam));//_WIN#32  // ������� �����=Width, ������� �����=Height
-		return 0;            // ������������
+		//render->resize(LOWORD(lParam), HIWORD(lParam));//_WIN#32
+		return 0;
 	}
+	default:
+		return DefWindowProc(hWND, message, wParam, lParam);//_WIN#32
 	}
 
 	return DefWindowProc(hWND, message, wParam, lParam);//_WIN#32

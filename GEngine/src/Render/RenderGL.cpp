@@ -77,9 +77,10 @@ GLfloat g_vertex_buffer_data[] = {
 
 
 GLuint VBO;
+GLuint NBO;
 GLuint IBO;
-GLuint vertexbuffer;;
-GLuint VertexArrayID;
+//GLuint vertexbuffer;;
+//GLuint VertexArrayID;
 
 
 /* Это имя программы шейдера */
@@ -324,17 +325,17 @@ bool RenderGL::Init(const char* title, void* wndProc)
 	//glGenVertexArray(1, &VAO);
 	//glBindVertexArray(VAO);
 
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 
 	// Сначала генерируем OpenGL буфер и сохраняем указатель на него в vertexbuffer
-	glGenBuffers(1, &vertexbuffer);
+	//glGenBuffers(1, &vertexbuffer);
 
 	// Биндим буфер
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 
 	// Предоставляем наши вершины в OpenGL
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
 
 
@@ -346,18 +347,18 @@ bool RenderGL::Init(const char* title, void* wndProc)
 
 	//LoadGLTextures();
 
-	//glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	//glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	//glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
-	//glEnable(GL_DEPTH_TEST);
+	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
+	glEnable(GL_DEPTH_TEST);
 
 
-	//setLight();
+	UpdateLight();
 
-	//glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
-	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	//glEnable(GL_TEXTURE_2D);
+	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glEnable(GL_TEXTURE_2D);
 
 	quadratic = gluNewQuadric();
 
@@ -453,7 +454,6 @@ void RenderGL::Resize(unsigned width_, unsigned height_)
 
 unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
 {
-	
 
 	// создаем шейдеры
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -530,24 +530,22 @@ unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * f
 	return 0;
 }
 
-void RenderGL::setLight()
+void RenderGL::UpdateLight()
 {
-	glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient);    // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Ð¤Ð¾Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¡Ð²ÐµÑ‚Ð°
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse);    // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Ð”Ð¸Ñ„Ñ„ÑƒÐ·Ð½Ð¾Ð³Ð¾ Ð¡Ð²ÐµÑ‚Ð°
-	glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition);   // ÐŸÐ¾Ð·Ð¸Ñ†Ð¸Ñ ÑÐ²ÐµÑ‚Ð°
-
-	glEnable(GL_LIGHT0); // Ð Ð°Ð·Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¸ÑÑ‚Ð¾Ñ‡Ð½Ð¸ÐºÐ° ÑÐ²ÐµÑ‚Ð° Ð½Ð¾Ð¼ÐµÑ€ Ð¾Ð´Ð¸Ð½
-
 	if (lightOn)
 	{
+		glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse);
+		glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition);
+		glEnable(GL_LIGHT0);
+
 		glEnable(GL_LIGHTING);
 	}
 	else
 	{
 		glDisable(GL_LIGHTING);
 	}
-}	
-
+}
 
 void RenderGL::beginDraw() const
 {
@@ -559,14 +557,13 @@ void RenderGL::beginDraw() const
 	glRotatef(angle, axic.x, axic.y, axic.z);
 	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);	
 
-
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 
 void RenderGL::endDraw() const
 {
 	glFlush();
-	SwapBuffers(hDC);//_WIN32					// ÐœÐµÐ½ÑÐµÐ¼ Ð±ÑƒÑ„ÐµÑ€ (Ð´Ð²Ð¾Ð¹Ð½Ð°Ñ Ð±ÑƒÑ„ÐµÑ€Ð¸Ð·Ð°Ñ†Ð¸Ñ)
+	SwapBuffers(hDC);//_WIN32
 }
 
 void RenderGL::Translate(const Vector3f & t) const
@@ -619,7 +616,7 @@ void RenderGL::print(float x, float y, const char * fmt, ...)
 {
 	glLoadIdentity();	
 	glTranslatef(0.0f, 0.0f, -1.0f);
-	//glColor3f(0.5f, 0.8f, 0.3f);
+	glColor3f(0.8f, 0.8f, 0.8f);
 	glRasterPos2f(x, y);
 	char    text[256];      // Место для нашей строки
 
@@ -821,7 +818,7 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	//glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
 	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
 
-	gluSphere(quadratic, r, 16, 16);
+	gluSphere(quadratic, r, 64, 64);
 	//glDisable(GL_TEXTURE_GEN_S);
 	//glDisable(GL_TEXTURE_GEN_T);
 

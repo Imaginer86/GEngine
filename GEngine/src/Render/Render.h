@@ -23,6 +23,7 @@ public:
 	virtual bool createWindow(const char* title, void *wndProc) = 0;
 	virtual void killWindow() = 0;
 	virtual void setFullscreen(bool fullscreen_) { fullscreen = fullscreen_; }
+	virtual void UpdateLight() = 0;
 
 	virtual void buildFont() = 0;
 	virtual void killFont() = 0;
@@ -56,6 +57,9 @@ public:
 	void MoveCamera(const Vector3f &v);
 	void MoveCameraQ(float s);
 
+	void SetLight(bool light);
+	bool GetLight();
+
 	//Camera& GetCamera() { return camera; }
 
 
@@ -68,8 +72,6 @@ inline Render::Render(unsigned width_, unsigned height_, Vector3f cameraPos, Qua
 , lightOn(light_)
 , camera(cameraPos, cameraQ)
 {
-	//camera.q *= Quaternion(90, Vector3f(1.0f, 0.0f, 0.0f));
-	//camera.q *= Quaternion(180, Vector3f(0.0f, 1.0f, 0.0f));
 
 }
 
@@ -94,4 +96,14 @@ inline void Render::MoveCameraQ(float s)
 	camera.q.rotate(dif);
 	dif *= s;
 	camera.pos += dif;
+}
+
+inline void Render::SetLight(bool light)
+{
+	lightOn = light;
+}
+
+inline bool Render::GetLight()
+{
+	return lightOn;
 }

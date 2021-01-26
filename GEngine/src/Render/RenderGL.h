@@ -12,6 +12,7 @@ public:
 	virtual bool LoadTextures();
 	virtual bool createWindow(const char* title, void *wndProc);
 	virtual void killWindow();
+	virtual void UpdateLight();
 	virtual void beginDraw() const;
 	virtual void endDraw() const;
 
@@ -41,7 +42,6 @@ public:
 private:
 
 	unsigned int LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
-	void setLight();
 	unsigned VBOVertexN;
 	unsigned VBOIndexN;
 };

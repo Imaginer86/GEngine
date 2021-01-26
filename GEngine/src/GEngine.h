@@ -16,8 +16,9 @@ struct Program
 
 	float timeScale = 1.0f;
 
-	bool	fullscreen;
-	bool	lightOn;
+	bool	fullscreen = false;
+	bool	lightOn = true;
+
 	unsigned width;
 	unsigned height;
 
@@ -26,10 +27,12 @@ struct Program
 	void Draw();
 	void UpdateKeys();
 	void Update(float dt);
-	char title[11] = "BattleCity";
+	//char title[11] = "BattleCity";
 };
 
 void GInitProgram(Program *& programPtr);
+
+void UpdateLastTickCount();
 
 int GMain();
 
