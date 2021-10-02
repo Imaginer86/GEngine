@@ -27,6 +27,7 @@ struct Program
 	void Draw();
 	void UpdateKeys();
 	void Update(float dt);
+	void End();
 	//char title[11] = "BattleCity";
 };
 

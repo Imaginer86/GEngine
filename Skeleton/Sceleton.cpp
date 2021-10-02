@@ -98,18 +98,8 @@ void Program::UpdateKeys()
 	if (keys[VK_F1])
 	{
 		keys[VK_F1] = false;
-		//!!!render->killWindow();
-		InitData.fullscreen = !InitData.fullscreen;
-
-		render->setFullscreen(InitData.fullscreen);
-		//!!!if (!render->createWindow(InitData.title, 32))
-		{
-			done = true;
-		}
-		//!!!else
-		{
-			Draw();
-		}
+		if (render->swithFullscreen())	Draw();
+		else done = true;
 	}
 	if (keys[VK_SPACE])
 	{

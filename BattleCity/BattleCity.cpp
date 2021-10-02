@@ -70,8 +70,8 @@ bool Program::Init(void *wndProc)
 		vn++;
 	}
 
-	float *normal = new float[tank.model.normalN];
-	render->CreateVBO(vertex, vn, index, in);
+	//float *normal = new float[tank.model.normalN];
+	//render->CreateVBO(vertex, vn, index, in);
 
 	tank.q.identity();
 
@@ -183,6 +183,13 @@ void Program::UpdateKeys()
 
 		keys[VK_SPACE] = false;
 		pause = !pause;
+	}
+
+	if (keys[VK_F1])
+	{
+		keys[VK_F1] = false;
+		if (render->swithFullscreen()) Draw();
+		else done = true;
 	}
 }
 

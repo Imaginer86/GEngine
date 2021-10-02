@@ -10,13 +10,13 @@ public:
 	virtual bool Init(const char* title, void *wndProc);
 	virtual void Resize(unsigned width_, unsigned height_);
 	virtual bool LoadTextures();
-	virtual bool createWindow(const char* title, void *wndProc);
-	virtual void killWindow();
+	virtual bool swithFullscreen();
 	virtual void UpdateLight();
 	virtual void beginDraw() const;
 	virtual void endDraw() const;
 
 	virtual void Translate(const Vector3f& t) const;
+	virtual void Rotate(float angle, Vector3f axic) const;
 	virtual void Rotate(const Quaternion& q) const;
 	virtual void LoadIdentity() const;
 
@@ -24,7 +24,7 @@ public:
 	virtual void killFont();
 	virtual void print(float x, float y, const char * fmt, ...);
 
-	virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index);
+	//virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index);
 	
 	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const;
@@ -39,9 +39,18 @@ public:
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const;
 	virtual void drawVBO() const;
+protected:
+	virtual bool createWindow(const char* title, void* wndProc);
+	virtual void killWindow();
 private:
 
-	unsigned int LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
-	unsigned VBOVertexN;
-	unsigned VBOIndexN;
+	void InitGL();
+
+
+	size_t LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
+	size_t VBOVertexN;
+	size_t VBOIndexN;
+
+	void* ptr_wndProc;
+	char* ptr_title;
 };

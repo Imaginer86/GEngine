@@ -27,3 +27,7 @@ GEngine/.vs/GEngine/v15/.suo
 *.db
 *.opendb
 *.ipch
+*.recipe
+*.txt
+*.ilk
+GEngine/.vs/GEngine/v16/.suo

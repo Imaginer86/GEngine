@@ -11,19 +11,20 @@ struct {
 	char *title = "Gravi";
 	unsigned width = 1366;
 	unsigned height = 768;
-	bool fullscreen = false;
+	bool fullscreen = true;
 	bool light = true;
 	float moveScale = 0.1f;
 	float rotateScale = 0.1f;
 
-	Vector3f cameraPos = Vector3f(0.0f, 0.0f, 50.0f);
+	Vector3f cameraPos = Vector3f(0.0f, 0.0f, 1000.0f);
 	Quaternion cameraQ = Quaternion(0.0f, Vector3f(1.0f, 0.0f, 0.0f));
 
 } InitData;
 
+const float G = 667.3848080808080808080f * 0.5f;
 
 Entity *Planets = nullptr;
-unsigned numEntites = 51;
+unsigned numEntites = 2;// 51;
 
 int main ()
 {
@@ -38,12 +39,22 @@ bool Program::Init(void *wndProc)
 {
 	render = new RenderGL(InitData.width, InitData.height, InitData.cameraPos, InitData.cameraQ, InitData.fullscreen, InitData.light);
 	if (!render->Init(InitData.title, wndProc)) return false;
-
-	//if (!render->LoadGLTextures()) return false;
-
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
+
 	Planets = new Entity[numEntites];
+
+	Planets[0].m = 597.370f;
+	Planets[0].pos = Vector3f(0, 0, 0);
+	Planets[0].vel = Vector3f(0, 0, 0);
+	Planets[0].r = 100;
+	Planets[0].color = Color4f(0.5f, 1.0f, 0, 1);
+
+	Planets[1].m = 7.3477f;
+	Planets[1].pos = Vector3f(0, 384.399f, 0);
+	Planets[1].vel = Vector3f(23.605915f, 0, 0);
+	Planets[1].r = 10;
+	Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
 	
 	/*
 	Planets[0].m = 5000.0;
@@ -73,7 +84,7 @@ bool Program::Init(void *wndProc)
 	Planets[3].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
 	*/
 
-
+	/*
 	Planets[0].m = 10000.0f;
 	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
 	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
@@ -93,6 +104,7 @@ bool Program::Init(void *wndProc)
 		Planets[i].r = 10.0f;
 		Planets[i].color = Color4f(randf(), randf(), randf(), 1.0f);
 	}
+	*/
 	
 	
 	/*
@@ -169,18 +181,9 @@ void Program::UpdateKeys()
 	if (keys[VK_F1])
 	{
 		keys[VK_F1] = false;
-		//render->killWindow();
-		InitData.fullscreen = !InitData.fullscreen;
-
-		//render->setFullscreen(InitData.fullscreen);
-		//if (!render->createWindow(InitData.title, 32))
-		{
-			done = true;
-		}
-		//else
-		{
-			Draw();
-		}
+		//TODO render->killWindow();
+		if (render->swithFullscreen()) Draw();
+		else done = true;
 	}
 	if (keys[VK_SPACE])
 	{
@@ -195,11 +198,11 @@ void Program::UpdateKeys()
 	}
 	if (keys[VK_ADD])
 	{
-		timeScale *= 1.1f;
+		timeScale += 0.1f;
 	}
 	if (keys[VK_SUBTRACT])
 	{
-		timeScale /= 1.1f;
+		timeScale -= 0.1f;
 	}
 
 	if (keys['L'])
@@ -218,7 +221,7 @@ void Program::Update(float dt)
 			if (i != j)
 			{
 				float r2 = (Planets[i].pos - Planets[j].pos).lenght2();
-				float f = Planets[i].m * Planets[j].m / r2;
+				float f = G * Planets[i].m * Planets[j].m / r2;
 				Vector3f force = (Planets[j].pos - Planets[i].pos).unit() * f;
 				Planets[i].applyForce(force);
 				Planets[j].applyForce(-force);				
@@ -227,7 +230,7 @@ void Program::Update(float dt)
 	for (unsigned i = 0; i < numEntites; i++) Planets[i].simulate(dt);
 	for (unsigned i = 0; i < numEntites; i++) Planets[i].move(dt);
 
-	/*
+	
 	for (unsigned i = 0; i < numEntites; i++)
 		for (unsigned j = i + 1; j < numEntites; j++)
 		{
@@ -248,10 +251,7 @@ void Program::Update(float dt)
 				Planets[j].vel = v2r + u2p;
 			}
 		}
-	*/
-
 }
-
 
 void Program::Draw()
 {
@@ -265,7 +265,21 @@ void Program::Draw()
 	if (drawDebugInfo)
 	{
 		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
+		render->print(-0.25f, 0.35f, "Time Scale: %f", timeScale);
+
+		//Debug Vel
+		render->print(-0.60f, 0.37f, "P0 V: %f %f %f", Planets[0].vel.x, Planets[0].vel.y, Planets[0].vel.z);
+		render->print(-0.10f, 0.37f, "P1 V: %f %f %f", Planets[1].vel.x, Planets[1].vel.y, Planets[1].vel.z);
+		
+		//Debug Pos
+		render->print(-0.60f, 0.39f, "P0 P: %f %f %f", Planets[0].pos.x, Planets[0].pos.y, Planets[0].pos.z);
+		render->print(-0.10f, 0.39f, "P1 P: %f %f %f", Planets[1].pos.x, Planets[1].pos.y, Planets[1].pos.z);
+
 	}
 	render->endDraw();
 }
 
+void Program::End()
+{
+	delete[] Planets;
+}

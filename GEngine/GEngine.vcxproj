@@ -29,11 +29,7 @@
     <ClInclude Include="src\Math\Plane.h" />
     <ClInclude Include="src\Math\Quaternion.h" />
     <ClInclude Include="src\Math\Vector3f.h" />
-    <ClInclude Include="src\Physics\ConstantVelocity.h" />
     <ClInclude Include="src\Physics\Entity.h" />
-    <ClInclude Include="src\Physics\MassConnectedWithSpring.h" />
-    <ClInclude Include="src\Physics\MotionUnderGravitation.h" />
-    <ClInclude Include="src\Physics\Simulation.h" />
     <ClInclude Include="src\Physics\Tank.h" />
     <ClInclude Include="src\Physics\Tera.h" />
     <ClInclude Include="src\Platform\GWindows.h" />
@@ -60,13 +56,13 @@
     <ProjectGuid>{CEDA5BDE-9584-4030-B7A4-C5F56D073693}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -79,7 +75,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

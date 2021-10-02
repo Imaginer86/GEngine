@@ -1,32 +1,15 @@
 #include "RenderGL.h"
-#include "../GEngine.h"
-
-
-
+//WWWin Файлы заголовков Windows:
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
 #endif
-// Файлы заголовков Windows:
+
 #include <Windows.h>
 
 //#define GL_GLEXT_PROTOTYPES
 #include <gl/gl.h>
 #include <gl/glu.h>
-#include <gl/glext.h>
-
-#include <cstdio>
-
-#include <string>
-#include <fstream>
-//#include <iostream>
-#include <vector>
-
-//#pragma comment(lib, "OpenGL32.lib")
-//#pragma comment(lib, "GLu32.lib")
-
-//HDC		hDC;
-//HGLRC	hRC;
-
+/*#include <gl/glext.h>
 PFNGLGENBUFFERSPROC					glGenBuffers = 0;                     // VBO Name Generation Procedure
 PFNGLBINDBUFFERPROC					glBindBuffer = 0;                     // VBO Bind Procedure
 PFNGLBUFFERDATAPROC					glBufferData = 0;
@@ -48,6 +31,17 @@ PFNGLDELETESHADERPROC				glDeleteShader = 0;
 PFNGLGETPROGRAMIVPROC				glGetProgramiv = 0;
 PFNGLGETPROGRAMINFOLOGPROC			glGetProgramInfoLog = 0;
 PFNGLUSEPROGRAMPROC					glUseProgram = 0;
+*/
+//#pragma comment(lib, "OpenGL32.lib")
+//#pragma comment(lib, "GLu32.lib")
+
+#include <cstdio>
+//#include <stdarg.h>
+
+//#include <string>
+//#include <fstream>
+//#include <iostream>
+//#include <vector>
 
 
 HDC		hDC;
@@ -102,7 +96,7 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 	hInstance = GetModuleHandle(NULL);        // Считаем дескриптор нашего приложения
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;      // Перерисуем при перемещении и создаём скрытый DC
 	wc.lpfnWndProc = (WNDPROC)wndProc;          // Процедура обработки сообщений
-    //todo wc.lpfnWndProc =
+    //TODO wc.lpfnWndProc =
 	wc.cbClsExtra = 0;              // Нет дополнительной информации для окна
 	wc.cbWndExtra = 0;              // Нет дополнительной информации для окна
 	wc.hInstance = hInstance;            // Устанавливаем дескриптор
@@ -281,6 +275,8 @@ void RenderGL::killWindow()
 }
 
 
+
+
 RenderGL::~RenderGL()
 {
 }
@@ -292,12 +288,37 @@ RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quater
 
 bool RenderGL::Init(const char* title, void* wndProc)
 {
-	if (!createWindow(title, wndProc))
+	ptr_wndProc = wndProc;
+
+	size_t length = strlen(title);
+	ptr_title = new char[length + 1];
+	strncpy_s(ptr_title, length + 1,  title, length);
+	if (!createWindow(title, ptr_wndProc))
 	{
 		MessageBox(NULL, "Cannot Create Window.", "ERROR", MB_OK | MB_ICONSTOP);
 		return false;
 	}
 
+	InitGL();
+	return true;
+
+}
+
+bool RenderGL::swithFullscreen()
+{
+	return false;
+	fullscreen = !fullscreen;
+	if (!createWindow(ptr_title, ptr_wndProc))
+	{
+		MessageBox(NULL, "Cannot Switch FullScreen.", "ERROR", MB_OK | MB_ICONSTOP);
+		return false;
+	}
+	return true;
+}
+
+void RenderGL::InitGL()
+{
+	/*
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 	glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
 	glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
@@ -320,7 +341,7 @@ bool RenderGL::Init(const char* title, void* wndProc)
 	glGetProgramiv = (PFNGLGETPROGRAMIVPROC)wglGetProcAddress("glGetProgramiv");
 	glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
 	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
-
+	*/
 
 	//glGenVertexArray(1, &VAO);
 	//glBindVertexArray(VAO);
@@ -372,9 +393,6 @@ bool RenderGL::Init(const char* title, void* wndProc)
 	buildFont();
 
 	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
-
-	return true;
-
 }
 
 // Загрузка картинки и конвертирование в текстуру
@@ -402,36 +420,6 @@ bool RenderGL::LoadTextures()
 	return true;;
 }
 
-
-
-
-
-void RenderGL::CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index)
-{
-	//glBindVertexArray(VAO);
-	VBOVertexN = num_vert;
-	VBOIndexN = num_index;
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, VBOVertexN * sizeof(GLfloat), data, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VBOIndexN * sizeof(unsigned), index, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-
-
-	//glVertexAttribPointer(0, VBOIndexN, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
-	//glEnableVertexAttribArray(0);
-	//glBindVertexArray(0);
-
-
-
-}
-
-
 void RenderGL::Resize(unsigned width_, unsigned height_)
 {
 	width = width_;
@@ -452,9 +440,34 @@ void RenderGL::Resize(unsigned width_, unsigned height_)
 	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
 }
 
+/*void RenderGL::CreateVBO(const float* data, const unsigned num_vert, const unsigned* index, const unsigned num_index)
+{
+	
+	//glBindVertexArray(VAO);
+	VBOVertexN = num_vert;
+	VBOIndexN = num_index;
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, VBOVertexN * sizeof(GLfloat), data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VBOIndexN * sizeof(unsigned), index, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+
+
+	//glVertexAttribPointer(0, VBOIndexN, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//glBindVertexArray(0);
+}
+*/
+
+
+/*
 unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
 {
-
 	// создаем шейдеры
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -529,6 +542,7 @@ unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * f
 	
 	return 0;
 }
+*/
 
 void RenderGL::UpdateLight()
 {
@@ -569,6 +583,11 @@ void RenderGL::endDraw() const
 void RenderGL::Translate(const Vector3f & t) const
 {
 	glTranslatef(t.x, t.y, t.z);
+}
+
+void RenderGL::Rotate(float angle, Vector3f axic) const
+{
+	glRotatef(angle, axic.x, axic.y, axic.z);
 }
 
 void RenderGL::Rotate(const Quaternion & q) const
@@ -621,8 +640,7 @@ void RenderGL::print(float x, float y, const char * fmt, ...)
 	char    text[256];      // Место для нашей строки
 
 	va_list    ap;          // Указатель на список аргументов
-	if (fmt == NULL)     // Если нет текста
-		return;            // Ничего не делать
+	if (fmt == NULL)	return;// Если нет текста Ничего не делать
 
 	va_start(ap, fmt);           // Разбор строки переменных
 	vsprintf_s(text, fmt, ap); // И конвертирование символов в реальные коды
@@ -885,23 +903,24 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 
 void RenderGL::drawVBO() const
 {
+	/*
 	//glTranslatef(0.0f, 0.0f, -5.0f);
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-	/*
+	
 
 	// Первый буфер атрибутов: вершины
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // Атрибут 0. Сакрального смысла в нуле нет, но число должно совпадать с числом в шейдере
-		3,                  // количество
-		GL_FLOAT,           // тип
-		GL_FALSE,           // нормализировано ли?
-		0,                  // шаг
-		(void*)0            // смещение в буфере
-	);
-	*/
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//glVertexAttribPointer(
+		//0,                  // Атрибут 0. Сакрального смысла в нуле нет, но число должно совпадать с числом в шейдере
+		//3,                  // количество
+		//GL_FLOAT,           // тип
+		//GL_FALSE,           // нормализировано ли?
+		//0,                  // шаг
+		//(void*)0            // смещение в буфере
+	//);
+	
 
 	// Рисуем треугольник !
 	//glDrawArrays(GL_LINE_LOOP, 0, 3); //Начиная с вершины 0 и рисуем 3 штуки. Всего => 1 треугольник
@@ -917,4 +936,5 @@ void RenderGL::drawVBO() const
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glDrawElements(GL_TRIANGLES, VBOIndexN, GL_UNSIGNED_INT, 0);
+	*/
 }

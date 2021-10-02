@@ -58,28 +58,13 @@
     <ClInclude Include="src\Render\Render.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="src\Render\RenderGL.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\GWindows.h">
       <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Tera.h">
-      <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Physics\Tank.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Physics\Simulation.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\MotionUnderGravitation.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Physics\Entity.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\ConstantVelocity.h">
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Render\Model.h">
@@ -88,10 +73,13 @@
     <ClInclude Include="src\Render\ModelM.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="src\Physics\MassConnectedWithSpring.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Render\Color4f.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Render\RenderGL.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Tera.h">
       <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>

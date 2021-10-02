@@ -1,6 +1,7 @@
 #pragma once
+#include "Entity.h"
 
-class Tera
+class Tera : public Entity
 {
 public:
 	static const unsigned MAP_SIZE = 1024;

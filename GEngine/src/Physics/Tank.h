@@ -1,10 +1,11 @@
 #pragma once
+#include "Entity.h"
 #include "../Math/Vector3f.h"
 #include "../Math/Quaternion.h"
 //#include "Model.h"
 #include "../Render/ModelM.h"
 
-class Tank
+class Tank : public Entity
 {
 public:
 	Vector3f pos;

@@ -20,9 +20,7 @@ public:
 	virtual bool Init(const char* title, void *wndProc) = 0;
 	virtual void Resize(unsigned width_, unsigned height_) = 0;
 	virtual bool LoadTextures() = 0;
-	virtual bool createWindow(const char* title, void *wndProc) = 0;
-	virtual void killWindow() = 0;
-	virtual void setFullscreen(bool fullscreen_) { fullscreen = fullscreen_; }
+	virtual bool swithFullscreen() = 0;
 	virtual void UpdateLight() = 0;
 
 	virtual void buildFont() = 0;
@@ -33,10 +31,11 @@ public:
 	virtual void endDraw() const = 0;
 
 	virtual void Translate(const Vector3f& t) const = 0;
+	virtual void Rotate(float angle, Vector3f axic) const = 0;
 	virtual void Rotate(const Quaternion& q) const = 0;
 	virtual void LoadIdentity() const = 0;
 
-	virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index) = 0;
+	//virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index) = 0;
 
 	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const = 0;
@@ -62,7 +61,9 @@ public:
 
 	//Camera& GetCamera() { return camera; }
 
-
+protected:
+	virtual bool createWindow(const char* title, void* wndProc) = 0;
+	virtual void killWindow() = 0;
 };
 
 inline Render::Render(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)

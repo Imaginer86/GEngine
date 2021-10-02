@@ -14,14 +14,13 @@ public:
 	Vector3f  force;    // Воздействующая сила.
 	Color4f   color;
 
+	//Entity():m(1.0f), r(1.0f)
+	//{
+	//}
 
-	Entity():m(1.0f), r(1.0f)
-	{
-	}
-
-	virtual ~Entity()
-	{
-	}
+	//virtual ~Entity()
+	//{
+	//}
 
 	virtual void applyForce(Vector3f _force);
 
