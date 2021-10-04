@@ -9,8 +9,8 @@ Render *render = nullptr;
 
 struct {
 	char *title = "Gravi";
-	unsigned width = 1366;
-	unsigned height = 768;
+	float width = 1920;
+	float height = 1080;
 	bool fullscreen = true;
 	bool light = true;
 	float moveScale = 0.1f;

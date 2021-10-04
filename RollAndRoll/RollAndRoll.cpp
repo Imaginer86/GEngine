@@ -15,8 +15,8 @@ Plane plane(Vector3f(0.0f, 0.0f, 1.0f), -100.0f);
 
 struct {
 	char *title = "Roll&Roll";	
-	unsigned width = 1366;
-	unsigned height = 768;
+	float width = 1366;
+	float height = 768;
 	bool fullscreen = false;
 	bool light = true;
 	float moveScale = 0.1f;

@@ -4,12 +4,12 @@
 
 class Quaternion
 {
-	friend Quaternion operator*(float lhs, const Quaternion &rhs);
+	//friend Quaternion operator*(float lhs, const Quaternion &rhs);
 
 public:
 	float w, x, y, z;
 
-	Quaternion() {}
+	Quaternion():w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
 	Quaternion(float _w, float _x, float _y, float _z);
 	Quaternion(float angleD, const Vector3f &axic)
 	{
@@ -60,7 +60,7 @@ public:
 	//oid fromHeadPitchRoll(float headDegrees, float pitchDegrees, float rollDegrees);
 };
 
-const Quaternion QIDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
+//const Quaternion QIDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 
 inline Quaternion operator*(float lhs, const Quaternion &rhs)
 {
@@ -310,8 +310,6 @@ inline Vector3f Quaternion::Normal(const Vector3f &p)
 	res.unitize();
 	return res;
 }
-
-
 
 /*
 inline Matrix4 Quaternion::toMatrix4() const

@@ -14,8 +14,8 @@ Program *programPtr = nullptr;
 
 struct {
 	char *title = "BattleCity";
-	unsigned width = 1600;
-	unsigned height = 900;
+	float width = 1600;
+	float height = 900;
 	bool fullscreen = false;
 	bool light = true;
 	float moveScale = 0.1f;
@@ -206,9 +206,10 @@ int main()
 {
 	
 	GInitProgram(programPtr);
-	programPtr->fullscreen = InitData.fullscreen;
-	programPtr->width = InitData.width;
-	programPtr->height =  InitData.height;
+	//programPtr->fullscreen = InitData.fullscreen;
+	//programPtr->width = InitData.width;
+	//programPtr->height =  InitData.height;
+
 	GMain();
 
 

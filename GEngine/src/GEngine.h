@@ -16,11 +16,11 @@ struct Program
 
 	float timeScale = 1.0f;
 
-	bool	fullscreen = false;
-	bool	lightOn = true;
+	//bool	fullscreen = false;
+	//bool	lightOn = true;
 
-	unsigned width;
-	unsigned height;
+	//float width;
+	//float height;
 
 	
 	bool Init(void *wndProc);

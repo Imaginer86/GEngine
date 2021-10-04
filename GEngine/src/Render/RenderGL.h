@@ -4,11 +4,11 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	RenderGL(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~RenderGL();
 
 	virtual bool Init(const char* title, void *wndProc);
-	virtual void Resize(unsigned width_, unsigned height_);
+	virtual void Resize(float width_, float height_);
 	virtual bool LoadTextures();
 	virtual bool swithFullscreen();
 	virtual void UpdateLight();

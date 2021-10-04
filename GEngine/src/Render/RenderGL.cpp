@@ -3,7 +3,6 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
 #endif
-
 #include <Windows.h>
 
 //#define GL_GLEXT_PROTOTYPES
@@ -115,8 +114,8 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 		DEVMODE dmScreenSettings;            // Режим устройства
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));    // Очистка для хранения установок
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);      // Размер структуры Devmode
-		dmScreenSettings.dmPelsWidth = width;        // Ширина экрана
-		dmScreenSettings.dmPelsHeight = height;        // Высота экрана
+		dmScreenSettings.dmPelsWidth = (DWORD)width;        // Ширина экрана
+		dmScreenSettings.dmPelsHeight = (DWORD)height;        // Высота экрана
 		dmScreenSettings.dmBitsPerPel = 32;        // Глубина цвета
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;// Режим Пикселя
 																				 // Пытаемся установить выбранный режим и получить результат.  Примечание: CDS_FULLSCREEN убирает панель управления.
@@ -281,7 +280,7 @@ RenderGL::~RenderGL()
 {
 }
 
-RenderGL::RenderGL(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+RenderGL::RenderGL(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
 :Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_)
 {
 }
@@ -307,6 +306,7 @@ bool RenderGL::Init(const char* title, void* wndProc)
 bool RenderGL::swithFullscreen()
 {
 	return false;
+	/*
 	fullscreen = !fullscreen;
 	if (!createWindow(ptr_title, ptr_wndProc))
 	{
@@ -314,6 +314,7 @@ bool RenderGL::swithFullscreen()
 		return false;
 	}
 	return true;
+	*/
 }
 
 void RenderGL::InitGL()
@@ -420,7 +421,7 @@ bool RenderGL::LoadTextures()
 	return true;;
 }
 
-void RenderGL::Resize(unsigned width_, unsigned height_)
+void RenderGL::Resize(float width_, float height_)
 {
 	width = width_;
 	height = height_;
@@ -435,7 +436,7 @@ void RenderGL::Resize(unsigned width_, unsigned height_)
 	glMatrixMode(GL_PROJECTION);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¹
 	glLoadIdentity();              // Ð¡Ð±Ñ€Ð¾Ñ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¸
 
-	gluPerspective(45.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 10000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
+	gluPerspective(60.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 10000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
 
 	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
 }

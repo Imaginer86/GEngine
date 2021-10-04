@@ -10,6 +10,7 @@
 using namespace std;
 
 /*       Функция для чтения текстового файла в выделенный буфер char       */
+/*
 char* filetobuf(char *file)
 {
 	char* buf = nullptr;
@@ -27,6 +28,7 @@ char* filetobuf(char *file)
 	}
 	return buf;
 }
+*/
 
 bool LoadRawFile(const char * fileName, unsigned char * pHeightMap)
 {

@@ -10,15 +10,15 @@ protected:
 	Camera	camera;
 	bool	fullscreen;
 	bool	lightOn;
-	unsigned width;
-	unsigned height;
+	float width;
+	float height;
 public:	
 	
-	Render(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	Render(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~Render() {};
 
 	virtual bool Init(const char* title, void *wndProc) = 0;
-	virtual void Resize(unsigned width_, unsigned height_) = 0;
+	virtual void Resize(float width_, float height_) = 0;
 	virtual bool LoadTextures() = 0;
 	virtual bool swithFullscreen() = 0;
 	virtual void UpdateLight() = 0;
@@ -66,7 +66,7 @@ protected:
 	virtual void killWindow() = 0;
 };
 
-inline Render::Render(unsigned width_, unsigned height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+inline Render::Render(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
 : width(width_)
 , height (height_)
 , fullscreen(fullscreen_)
