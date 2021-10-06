@@ -1,34 +1,44 @@
 #include "ModelM.h"
 
-void ModelM::setSizeVertex(unsigned n)
+void ModelM::setSizeVertex(size_t n)
 {
 	vertexN = n;
 	Vertexs = new Vector3f[n];
 }
 
-void ModelM::setVertex(unsigned i, Vector3f v)
+void ModelM::setVertex(size_t i, Vector3f v)
 {
 	Vertexs[i] = v;
 }
 
-void ModelM::setSizeNormal(unsigned n)
+void ModelM::setSizeNormal(size_t n)
 {
 	normalN = n;
 	Normals = new Vector3f[n];
 }
 
-void ModelM::setNormal(unsigned i, Vector3f n)
+void ModelM::setNormal(size_t i, Vector3f n)
 {
 	Normals[i] = n;
 }
 
-void ModelM::setSizeGroup(unsigned n)
+void ModelM::setSizeTextures(size_t n)
+{
+	texturesN = n;
+	Textures = new Vector3f[n];
+}
+
+void ModelM::setTexture(size_t i, Vector3f t)
+{
+	Textures[i] = t;
+}
+void ModelM::setSizeGroup(size_t n)
 {
 	groupN = n;
 	Groups = new Group[n];
 }
 
-void ModelM::setSizeSurface(unsigned g, unsigned s)
+void ModelM::setSizeSurface(size_t g, size_t s)
 {
 	Groups[g].setSizeSurfaces(s);
 }

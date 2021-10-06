@@ -62,12 +62,12 @@ int GMain()
 					if (!program.pause)
 					{
 						tickCount = GetTickCount();//_WIN#32
-						DWORD milliseconds = tickCount - program.lastTickCount;//_WIN#32
+						DWORD milliseconds = tickCount - static_cast<DWORD>(program.lastTickCount);//_WIN#32
 						program.lastTickCount = tickCount;
 						float dt = static_cast<float>(milliseconds) / 1000.0f;//slow
 
 						if (program.drawDebugInfo && dt > 0.0f)
-							program.FPS = static_cast<unsigned>(1.0f / dt);
+							program.FPS = static_cast<size_t>(1.0f / dt);
 
 
 						if (dt) program.Update(dt*program.timeScale);

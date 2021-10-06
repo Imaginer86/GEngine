@@ -10,15 +10,15 @@ protected:
 	Camera	camera;
 	bool	fullscreen;
 	bool	lightOn;
-	float width;
-	float height;
+	size_t width;
+	size_t height;
 public:	
 	
-	Render(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~Render() {};
 
 	virtual bool Init(const char* title, void *wndProc) = 0;
-	virtual void Resize(float width_, float height_) = 0;
+	virtual void Resize(size_t width_, size_t height_) = 0;
 	virtual bool LoadTextures() = 0;
 	virtual bool swithFullscreen() = 0;
 	virtual void UpdateLight() = 0;
@@ -35,7 +35,7 @@ public:
 	virtual void Rotate(const Quaternion& q) const = 0;
 	virtual void LoadIdentity() const = 0;
 
-	//virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index) = 0;
+	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index) = 0;
 
 	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const = 0;
@@ -66,7 +66,7 @@ protected:
 	virtual void killWindow() = 0;
 };
 
-inline Render::Render(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+inline Render::Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
 : width(width_)
 , height (height_)
 , fullscreen(fullscreen_)

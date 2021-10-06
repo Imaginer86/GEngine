@@ -14,8 +14,8 @@ Program *programPtr = nullptr;
 
 struct {
 	char *title = "BattleCity";
-	float width = 1600;
-	float height = 900;
+	size_t width = 1600;
+	size_t height = 900;
 	bool fullscreen = false;
 	bool light = true;
 	float moveScale = 0.1f;
@@ -35,18 +35,18 @@ bool Program::Init(void *wndProc)
 	//if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
 	if (!ReadModelOBJM(tank.model, "data/Tank.objm")) return false;
 
-	unsigned indexN = 0;
-	for (unsigned i = 0; i < tank.model.groupN; i++)
+	size_t indexN = 0;
+	for (size_t i = 0; i < tank.model.groupN; i++)
 	{
 		indexN += tank.model.Groups[i].surfacesN;
 	}
 
 	
-	unsigned *index = new unsigned[indexN * 3];
-	unsigned in = 0;
-	for (unsigned i = 0; i < tank.model.groupN; i++)
+	size_t *index = new size_t[indexN * 3];
+	size_t in = 0;
+	for (size_t i = 0; i < tank.model.groupN; i++)
 	{
-		for (unsigned j = 0; j < tank.model.Groups[i].surfacesN; j++)
+		for (size_t j = 0; j < tank.model.Groups[i].surfacesN; j++)
 		{
 			index[in] = tank.model.Groups[i].Surfaces[j].VertexT[0];
 			in++;
@@ -59,8 +59,8 @@ bool Program::Init(void *wndProc)
 
 
 	float *vertex = new float[tank.model.vertexN * 3];
-	unsigned vn = 0;
-	for (unsigned i = 0; i < tank.model.vertexN; i++)
+	size_t vn = 0;
+	for (size_t i = 0; i < tank.model.vertexN; i++)
 	{
 		vertex[vn] = tank.model.Vertexs[i].x;
 		vn++;
@@ -115,7 +115,7 @@ void Program::Draw()
 
 void Program::Update(float dt)
 {
-
+	dt += dt;//TTT;
 }
 
 

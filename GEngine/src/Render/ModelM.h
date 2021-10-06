@@ -7,22 +7,26 @@
 class ModelM
 {
 public:
-	unsigned vertexN;
-	unsigned normalN;
-	Vector3f* Vertexs;
-	Vector3f* Normals;
+	size_t	vertexN;
+	Vector3f*	Vertexs;
+	size_t	normalN;
+	Vector3f*	Normals;
+	size_t	texturesN;
+	Vector3f* Textures;
+
 	struct Triangle
 	{
-		unsigned VertexT[3];
-		unsigned NormalT[3];
+		size_t	VertexT[4];
+		size_t	NormalT[4];
+		size_t	TexturesT[4];
 	};
 
 	struct Group
 	{
-		unsigned surfacesN;
+		size_t	surfacesN;
 		Triangle* Surfaces;
 		Color4f color;
-		void setSizeSurfaces(unsigned n)
+		void setSizeSurfaces(size_t n)
 		{
 			surfacesN = n;
 			Surfaces = new Triangle[n];
@@ -31,19 +35,21 @@ public:
 		~Group() { delete[] Surfaces; }
 	};
 
-	unsigned groupN;
+	size_t	groupN;
 	Group* Groups;
 
 
 
 public:
 	ModelM() {}
-	~ModelM() { delete[] Groups; delete[] Normals; delete[] Vertexs; }
-	void setSizeVertex(unsigned n);
-	void setVertex(unsigned i, Vector3f v);
-	void setSizeNormal(unsigned n);
-	void setNormal(unsigned i, Vector3f n);
-	void setSizeGroup(unsigned n);
-	void setSizeSurface(unsigned g, unsigned s);
+	~ModelM() { delete[] Groups; delete[] Normals; delete[] Vertexs; delete[] Textures; }
+	void setSizeVertex(size_t n);
+	void setVertex(size_t i, Vector3f v);
+	void setSizeNormal(size_t n);
+	void setNormal(size_t i, Vector3f n);
+	void setSizeTextures(size_t n);
+	void setTexture(size_t i, Vector3f n);
+	void setSizeGroup(size_t n);
+	void setSizeSurface(size_t g, size_t s);
 	void Draw(Render* r);
 };

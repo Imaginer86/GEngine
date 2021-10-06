@@ -9,8 +9,8 @@ Render *render = nullptr;
 
 struct {
 	char *title = "Gravi";
-	float width = 1920;
-	float height = 1080;
+	size_t width = 1920;
+	size_t height = 1080;
 	bool fullscreen = true;
 	bool light = true;
 	float moveScale = 0.1f;
@@ -24,7 +24,7 @@ struct {
 const float G = 667.3848080808080808080f * 0.5f;
 
 Entity *Planets = nullptr;
-unsigned numEntites = 2;// 51;
+size_t numEntites = 2;// 51;
 
 int main ()
 {
@@ -91,7 +91,7 @@ bool Program::Init(void *wndProc)
 	Planets[0].r = 5.0f;
 	Planets[0].color = Color4f(0.2f, 0.2f, 0.2f, 1.0f);
 
-	for (unsigned i = 1; i < numEntites; i++)
+	for (size_t i = 1; i < numEntites; i++)
 	{
 		Planets[i].m = 10.0f + randf() * 90.0f;
 		Planets[i].pos = Vector3f(randf()*200.0f - 100.0f, randf()*200.0f - 100.0f, randf()*200.0f - 100.0f);
@@ -215,9 +215,9 @@ void Program::UpdateKeys()
 
 void Program::Update(float dt)
 {
-	for (unsigned i = 0; i < numEntites; i++) Planets[i].init();
-	for(unsigned i = 0; i < numEntites; i++)
-		for(unsigned j = 0; j < numEntites; j++)
+	for (size_t i = 0; i < numEntites; i++) Planets[i].init();
+	for(size_t i = 0; i < numEntites; i++)
+		for(size_t j = 0; j < numEntites; j++)
 			if (i != j)
 			{
 				float r2 = (Planets[i].pos - Planets[j].pos).lenght2();
@@ -227,12 +227,12 @@ void Program::Update(float dt)
 				Planets[j].applyForce(-force);				
 			}
 	
-	for (unsigned i = 0; i < numEntites; i++) Planets[i].simulate(dt);
-	for (unsigned i = 0; i < numEntites; i++) Planets[i].move(dt);
+	for (size_t i = 0; i < numEntites; i++) Planets[i].simulate(dt);
+	for (size_t i = 0; i < numEntites; i++) Planets[i].move(dt);
 
 	
-	for (unsigned i = 0; i < numEntites; i++)
-		for (unsigned j = i + 1; j < numEntites; j++)
+	for (size_t i = 0; i < numEntites; i++)
+		for (size_t j = i + 1; j < numEntites; j++)
 		{
  			Vector3f rAxic = Planets[i].pos - Planets[j].pos;
 			float dr = rAxic.unitize();
@@ -258,7 +258,7 @@ void Program::Draw()
 	render->beginDraw();
 	//render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 50.0, Quaternion(0, Vector3f(0.0f, 0.0f, 1.0f)), Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 
-	for (unsigned i = 0; i < numEntites; i++)
+	for (size_t i = 0; i < numEntites; i++)
 	{
 		render->drawSphere(Planets[i].pos, Planets[i].r, Planets[i].color);
 	}

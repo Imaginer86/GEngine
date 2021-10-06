@@ -9,8 +9,8 @@ Program *programPtr = nullptr;
 
 struct {
 	char *title = "Roll&Roll";
-	float width = 800;
-	float height = 600;
+	size_t width = 800;
+	size_t height = 600;
 	bool fullscreen = false;
 	bool light = true;
 	float moveScale = 0.1f;

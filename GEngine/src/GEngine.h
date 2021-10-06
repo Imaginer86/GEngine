@@ -6,9 +6,9 @@
 
 struct Program
 {
-	unsigned long lastTickCount = 0;
+	long long lastTickCount = 0;
 	bool keys[256];
-	unsigned FPS = 0;
+	size_t FPS = 0;
 	bool active = true;
 	bool done = false;
 	bool pause = true;

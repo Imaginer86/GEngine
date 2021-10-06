@@ -30,7 +30,7 @@ char* filetobuf(char *file)
 }
 */
 
-bool LoadRawFile(const char * fileName, unsigned char * pHeightMap)
+bool LoadRawFile(const char* fileName, char* pHeightMap)
 {
 	fstream in;
 	in.open(fileName, ios::in | ios::binary | ios::ate);
@@ -64,12 +64,12 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 
 	if (!inFile.is_open()) return false;
 
-	unsigned vertN;
+	size_t vertN;
 	inFile >> vertN;
 
 	model.setSizeVertex(vertN);
 
-	for (unsigned i = 0; i < vertN; ++i)
+	for (size_t i = 0; i < vertN; ++i)
 	{
 		Vector3f v;
 		inFile >> v.x >> v.y >> v.z;
@@ -77,38 +77,38 @@ bool ReadModelOBJM(ModelM & model, const char * fileName)
 
 	}
 
-	unsigned normN;
+	size_t normN;
 	inFile >> normN;
 
 	model.setSizeNormal(normN);
 
-	for (unsigned i = 0; i < normN; ++i)
+	for (size_t i = 0; i < normN; ++i)
 	{
 		Vector3f n;
 		inFile >> n.x >> n.y >> n.z;
 		model.setNormal(i, n);
 	}
 
-	unsigned groupN;
+	size_t groupN;
 	inFile >> groupN;
 
 	model.setSizeGroup(groupN);
 
-	for (unsigned i = 0; i < groupN; ++i)
+	for (size_t i = 0; i < groupN; ++i)
 	{
 		char c;
 		string gName;
 		inFile >> c >> gName;
 
-		unsigned surfN = 0;
+		size_t surfN = 0;
 		inFile >> surfN;
 		model.setSizeSurface(i, surfN);
 
 		inFile >> model.Groups[i].color.r >> model.Groups[i].color.g >> model.Groups[i].color.b >> model.Groups[i].color.a;
 
-		for (unsigned j = 0; j < surfN; ++j)
+		for (size_t j = 0; j < surfN; ++j)
 		{
-			unsigned nv, nt, nn;
+			size_t nv, nt, nn;
 			inFile >> nv >> nt >> nn;
 			nv--;	nt--;	nn--;
 			model.Groups[i].Surfaces[j].VertexT[0] = nv;
@@ -228,7 +228,7 @@ void FileReader::ReadModelOBJ(Model &model, const char *fileName)
 			Surface surface;
 			list<size_t> vert;
 			list<size_t> norm;
-			unsigned v, t, n;
+			size_t v, t, n;
 			char ch;
 			bool finish = false;
 			while (!finish && !sstr.eof())

@@ -82,7 +82,7 @@ GLuint shaderProgram;
 
 bool RenderGL::createWindow(const char *title, void *wndProc)
 {
-	unsigned int PixelFormat;              // Хранит результат после поиска
+	int PixelFormat;              // Хранит результат после поиска
 	WNDCLASS  wc;                // Структура класса окна
 	DWORD    dwExStyle;              // Расширенный стиль окна
 	DWORD    dwStyle;              // Обычный стиль окна
@@ -280,7 +280,7 @@ RenderGL::~RenderGL()
 {
 }
 
-RenderGL::RenderGL(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+RenderGL::RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
 :Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_)
 {
 }
@@ -413,7 +413,7 @@ bool RenderGL::LoadTextures()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, texture1->data);
+		GL_RGB, GL_size_t_BYTE, texture1->data);
 
 	if (!texture1) return false;
 	delete texture1;
@@ -421,7 +421,7 @@ bool RenderGL::LoadTextures()
 	return true;;
 }
 
-void RenderGL::Resize(float width_, float height_)
+void RenderGL::Resize(size_t width_, size_t height_)
 {
 	width = width_;
 	height = height_;
@@ -431,7 +431,7 @@ void RenderGL::Resize(float width_, float height_)
 		height = 1;              // ÐŸÑ€ÐµÐ´Ð¾Ñ‚Ð²Ñ€Ð°Ñ‰ÐµÐ½Ð¸Ðµ Ð´ÐµÐ»ÐµÐ½Ð¸Ñ Ð½Ð° Ð½Ð¾Ð»ÑŒ
 	}
 
-	glViewport(0, 0, width, height);          // Ð¡Ð±Ñ€Ð¾Ñ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ Ð²Ñ‹Ð²Ð¾Ð´Ð°
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));          // Ð¡Ð±Ñ€Ð¾Ñ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ Ð²Ñ‹Ð²Ð¾Ð´Ð°
 
 	glMatrixMode(GL_PROJECTION);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¹
 	glLoadIdentity();              // Ð¡Ð±Ñ€Ð¾Ñ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¸
@@ -441,7 +441,8 @@ void RenderGL::Resize(float width_, float height_)
 	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
 }
 
-/*void RenderGL::CreateVBO(const float* data, const unsigned num_vert, const unsigned* index, const unsigned num_index)
+/*void RenderGL::CreateVBO(const float* data, const 
+num_vert, const size_t* index, const size_t num_index)
 {
 	
 	//glBindVertexArray(VAO);
@@ -455,7 +456,7 @@ void RenderGL::Resize(float width_, float height_)
 
 	glGenBuffers(1, &IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VBOIndexN * sizeof(unsigned), index, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VBOIndexN * sizeof(size_t), index, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 
 
@@ -467,7 +468,7 @@ void RenderGL::Resize(float width_, float height_)
 
 
 /*
-unsigned int RenderGL::LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
+size_t int RenderGL::LoadShaders(const char * vertex_file_path, const char * fragment_file_path)
 {
 	// создаем шейдеры
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -936,6 +937,6 @@ void RenderGL::drawVBO() const
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glDrawElements(GL_TRIANGLES, VBOIndexN, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, VBOIndexN, GL_size_t_INT, 0);
 	*/
 }

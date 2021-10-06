@@ -4,11 +4,11 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(float width_, float height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
 	virtual ~RenderGL();
 
 	virtual bool Init(const char* title, void *wndProc);
-	virtual void Resize(float width_, float height_);
+	virtual void Resize(size_t  width_, size_t height_);
 	virtual bool LoadTextures();
 	virtual bool swithFullscreen();
 	virtual void UpdateLight();
@@ -24,7 +24,7 @@ public:
 	virtual void killFont();
 	virtual void print(float x, float y, const char * fmt, ...);
 
-	//virtual void CreateVBO(const float *data, const unsigned num_vert, const unsigned *index, const unsigned num_index);
+	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index);
 	
 	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const;

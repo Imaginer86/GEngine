@@ -15,8 +15,8 @@ Plane plane(Vector3f(0.0f, 0.0f, 1.0f), -100.0f);
 
 struct {
 	char *title = "Roll&Roll";	
-	float width = 1366;
-	float height = 768;
+	size_t width = 1366;
+	size_t height = 768;
 	bool fullscreen = false;
 	bool light = true;
 	float moveScale = 0.1f;
@@ -46,7 +46,7 @@ struct Ball
 Ball ball;
 
 
-const unsigned ball_STEP = 32;
+const size_t ball_STEP = 32;
 
 Vector3f gravi(0.0f, 0.0f, -50.0f);
 float dvel = 0.9f;
@@ -279,8 +279,8 @@ void DrawTera()
 
 
 	float step_size = static_cast<float>(Tera::STEP_SIZE);
-	for (unsigned X = 0; X < Tera::MAP_SIZE; X += Tera::STEP_SIZE)
-		for (unsigned Y = 0; Y < Tera::MAP_SIZE; Y += Tera::STEP_SIZE)
+	for (size_t X = 0; X < Tera::MAP_SIZE; X += Tera::STEP_SIZE)
+		for (size_t Y = 0; Y < Tera::MAP_SIZE; Y += Tera::STEP_SIZE)
 		{
 			float x = static_cast<float>(X) - 512.0f;
 			float y = static_cast<float>(Y) - 512.0f;
