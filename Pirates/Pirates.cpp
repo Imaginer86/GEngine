@@ -1,11 +1,11 @@
 #include "GEngine.h"
 #include "Render/RenderGL.h"
-#include "Render/ModelM.h"
-#include "Physics/Entity.h"
+#include "Render/ModelOBJ.h"
+//#include "Physics/Entity.h"
 
 
 Render* render = nullptr;
-ModelM* Manovar = nullptr;
+ModelOBJ* Manovar = nullptr;
 
 struct {
 	const char* title = "Pirates";
@@ -16,15 +16,13 @@ struct {
 	float moveScale = 0.1f;
 	float rotateScale = 0.1f;
 
-	Vector3f cameraPos = Vector3f(0.0f, 0.0f, 1750.0f);
+	Vector3f cameraPos = Vector3f(0.0f, 40000.0f, 75000.0f);
 	Quaternion cameraQ = Quaternion(0.0f, Vector3f(1.0f, 0.0f, 0.0f));
 
 } InitData;
 
-const float G = 667.3848080808080808080f * 0.5f;
-
-Entity* Planets = nullptr;
-size_t numEntites = 2;// 51;
+//Entity* Planets = nullptr;
+//size_t numEntites = 2;// 51;
 
 int main()
 {
@@ -42,7 +40,11 @@ bool Program::Init(void* wndProc)
 	if (!render->Init( InitData.title, wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
+	Manovar = new ModelOBJ;
+	if(!Manovar->Load("data//Manovar//Manovar.obj")) return false;
+	//Manovar->Load("data//Cube.obj");
 
+	/*
 	Planets = new Entity[numEntites];
 
 	Planets[0].m = 597.370f;
@@ -56,6 +58,8 @@ bool Program::Init(void* wndProc)
 	Planets[1].vel = Vector3f(23.605915f, 0, 0);
 	Planets[1].r = 10;
 	Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
+
+	*/
 
 	return true;
 }
@@ -147,6 +151,7 @@ void Program::UpdateKeys()
 
 void Program::Update(float dt)
 {
+	/*
 	for (size_t i = 0; i < numEntites; i++) Planets[i].init();
 	for (size_t i = 0; i < numEntites; i++)
 		for (size_t j = 0; j < numEntites; j++)
@@ -183,12 +188,18 @@ void Program::Update(float dt)
 				Planets[j].vel = v2r + u2p;
 			}
 		}
+		*/
 }
 
 void Program::Draw()
 {
 	render->beginDraw();
 	//render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 50.0, Quaternion(0, Vector3f(0.0f, 0.0f, 1.0f)), Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+
+	render->Rotate(Quaternion(90.0f, Vector3f(0.0f, 1.0f, 0.0f)));
+	Manovar->Draw(render);
+
+	/*
 
 	for (size_t i = 0; i < numEntites; i++)
 	{
@@ -208,10 +219,14 @@ void Program::Draw()
 		render->print(-0.10f, 0.39f, "P1 P: %f %f %f", Planets[1].pos.x, Planets[1].pos.y, Planets[1].pos.z);
 
 	}
+
+	*/
 	render->endDraw();
 }
 
 void Program::End()
 {
-	delete[] Planets;
+	//delete[] Planets;
+
+	delete Manovar;
 }

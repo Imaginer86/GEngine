@@ -1,5 +1,7 @@
 #pragma once
 #include "gmath.h"
+
+#include <iostream>
 struct Vector3f
 {
 	float x;
@@ -10,6 +12,8 @@ struct Vector3f
 	Vector3f(float _x, float _y, float _z):x(_x) ,y(_y) ,z(_z)	{}
 	~Vector3f()	{}
 
+	bool operator !=(const  Vector3f& v);
+	bool operator ==(const  Vector3f& v);
 	Vector3f operator+ (const Vector3f& v);	// operator+ is used to add two Vector3's. operator+ returns a new Vector3
 	const Vector3f operator+ (const Vector3f& v) const;
 	Vector3f operator- (const Vector3f& v);	// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
@@ -33,7 +37,37 @@ struct Vector3f
 	float lenght2();
 	float unitize();	// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 	Vector3f unit();	// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
+
+	//istream& operator>> (istream& is);
+
+	std::istream& operator>> (std::istream& is);
 };
+const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
+
+
+
+inline std::istream& operator>> (std::istream& is, Vector3f& v)
+{
+	is >> v.x >> v.y >> v.z;
+	return is;
+}
+
+inline std::istream& Vector3f::operator>> (std::istream& is)
+{
+	is >> this->x >> this->y >> this->z;
+	return is;
+}
+
+inline bool Vector3f::operator!=(const Vector3f& v)
+{
+	return x != v.x || y != v.y || z != v.z;
+}
+
+inline bool Vector3f::operator==(const Vector3f& v)
+{
+	x == v.x && y == v.y && z == v.z;
+	return false;
+}
 
 inline Vector3f Vector3f::operator+ (const Vector3f& v)				// operator+ is used to add two Vector3's. operator+ returns a new Vector3
 {

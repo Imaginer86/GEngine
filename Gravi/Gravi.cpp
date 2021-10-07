@@ -21,8 +21,6 @@ struct {
 
 } InitData;
 
-const float G = 667.3848080808080808080f * 0.5f;
-
 Entity *Planets = nullptr;
 size_t numEntites = 2;// 51;
 

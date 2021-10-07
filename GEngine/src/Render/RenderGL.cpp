@@ -382,7 +382,7 @@ void RenderGL::InitGL()
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_TEXTURE_2D);
 
-	quadratic = gluNewQuadric();
+	//TODO quadratic = gluNewQuadric();
 
 	//std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 	//std::string vendorInfo = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -436,7 +436,7 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	glMatrixMode(GL_PROJECTION);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¹
 	glLoadIdentity();              // Ð¡Ð±Ñ€Ð¾Ñ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¸
 
-	gluPerspective(60.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 10000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
+	gluPerspective(60.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 100000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
 
 	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
 }

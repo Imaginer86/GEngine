@@ -16,14 +16,14 @@
     <ClCompile Include="src\Physics\Tank.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Render\Model.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\ModelM.cpp">
+    <ClCompile Include="src\Render\ModelOBJ.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="src\Math\gmath.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\ModelOBJM.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,10 +67,10 @@
     <ClInclude Include="src\Physics\Entity.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Render\Model.h">
+    <ClInclude Include="src\Render\ModelOBJM.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="src\Render\ModelM.h">
+    <ClInclude Include="src\Render\ModelOBJ.h">
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="src\Render\Color4f.h">

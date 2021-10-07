@@ -6,9 +6,9 @@
 #include "Physics\Tank.h"
 
 Render *render = nullptr;
-Tank tank;
-ModelM modelM;
-ModelM levelM;
+Tank* tank = nullptr;;
+//ModelOBJ ModelOBJ;
+//ModelOBJ levelM;
 
 Program *programPtr = nullptr;
 
@@ -26,6 +26,7 @@ struct {
 bool Program::Init(void *wndProc)
 {
 	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), InitData.fullscreen, InitData.light);
+	tank = new Tank;
 
 	//tank.pos = Vector3f();
 	//tank.angle = 0.0f;
@@ -33,49 +34,49 @@ bool Program::Init(void *wndProc)
 	if (!render->Init(InitData.title, wndProc)) return false;
 
 	//if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
-	if (!ReadModelOBJM(tank.model, "data/Tank.objm")) return false;
+	if (!tank->model.Load("data/Tank.objm")) return false;
 
 	size_t indexN = 0;
-	for (size_t i = 0; i < tank.model.groupN; i++)
+	for (size_t i = 0; i < tank->model.triangleN; i++)
 	{
-		indexN += tank.model.Groups[i].surfacesN;
+		//TTT indexN += tank->model.Quads[i];
 	}
 
 	
 	size_t *index = new size_t[indexN * 3];
 	size_t in = 0;
-	for (size_t i = 0; i < tank.model.groupN; i++)
+	for (size_t i = 0; i < tank->model.triangleN; i++)
 	{
-		for (size_t j = 0; j < tank.model.Groups[i].surfacesN; j++)
+		//TTT for (size_t j = 0; j < tank->model.Quads[i]; j++)
 		{
-			index[in] = tank.model.Groups[i].Surfaces[j].VertexT[0];
+			index[in] = tank->model.Triangles[i].VertexT[0];
 			in++;
-			index[in] = tank.model.Groups[i].Surfaces[j].VertexT[1];
+			index[in] = tank->model.Triangles[i].VertexT[1];
 			in++;
-			index[in] = tank.model.Groups[i].Surfaces[j].VertexT[2];
+			index[in] = tank->model.Triangles[i].VertexT[2];
 			in++;
 		}
 	}
 
 
-	float *vertex = new float[tank.model.vertexN * 3];
+	float *vertex = new float[tank->model.vertexN * 3];
 	size_t vn = 0;
-	for (size_t i = 0; i < tank.model.vertexN; i++)
+	for (size_t i = 0; i < tank->model.vertexN; i++)
 	{
-		vertex[vn] = tank.model.Vertexs[i].x;
+		vertex[vn] = tank->model.Vertexs[i].x;
 		vn++;
-		vertex[vn] = tank.model.Vertexs[i].y;
+		vertex[vn] = tank->model.Vertexs[i].y;
 		vn++;
-		vertex[vn] = tank.model.Vertexs[i].z;
+		vertex[vn] = tank->model.Vertexs[i].z;
 		vn++;
 	}
 
 	//float *normal = new float[tank.model.normalN];
 	//render->CreateVBO(vertex, vn, index, in);
 
-	tank.q.identity();
+	tank->q.identity();
 
-	tank.q *= Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f));
+	tank->q *= Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -214,5 +215,6 @@ int main()
 
 
 	delete render;
+	delete tank;
 	return 0;
 }

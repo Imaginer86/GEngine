@@ -3,18 +3,18 @@
 #include "../Math/Vector3f.h"
 #include "../Math/Quaternion.h"
 //#include "Model.h"
-#include "../Render/ModelM.h"
+#include "../Render/ModelOBJ.h"
 
 class Tank : public Entity
 {
 public:
 	Vector3f pos;
 	Quaternion q;
-	ModelM model;
+	ModelOBJ model;
 
 	enum {Stoped, Left, Up, Right, Down} move;
 
 	Tank();
 	~Tank();
-	Tank(const Vector3f& pos_, const Quaternion& q_, const ModelM& model_);
+	Tank(const Vector3f& pos_, const Quaternion& q_, const ModelOBJ& model_);
 };

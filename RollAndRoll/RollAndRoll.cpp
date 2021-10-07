@@ -199,12 +199,12 @@ void Program::Update(float dt)
 	if (!contact && dist <= ball.r)
 	{
 		
-		Vector3f N = plane.unit();
-		N.unitize();
+		Vector3f NN = plane.unit();
+		NN.unitize();
 		//Vector3f I = ball.vel;
 		//I.unitize();
 		//Vector3f R = N * (-I.dotProduct(N)) * 2 + I;
-		Vector3f VN = N * (ball.vel.dotProduct(N));
+		Vector3f VN = NN * (ball.vel.dotProduct(NN));
 		Vector3f U = ball.vel - VN;
 
 
