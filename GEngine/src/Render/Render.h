@@ -1,4 +1,6 @@
 #pragma once
+#include "../GEngine.h"
+
 #include "../Math/Vector3f.h"
 #include "../Math//Quaternion.h"
 #include "../Render/Color4f.h"
@@ -6,15 +8,17 @@
 
 class Render
 {
-protected:
+public:
 	Camera	camera;
 	bool	fullscreen;
-	bool	lightOn;
+	bool	light;
 	size_t width;
 	size_t height;
-public:	
+	float moveScale;
+	float rotateScale;
 	
-	Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_, float moveScale_, float rotateScale_);
+	Render(InitData& initData);
 	virtual ~Render() {};
 
 	virtual bool Init(const char* title, void *wndProc) = 0;
@@ -56,24 +60,46 @@ public:
 	void MoveCamera(const Vector3f &v);
 	void MoveCameraQ(float s);
 
-	void SetLight(bool light);
+	void SetLight(bool light_);
 	bool GetLight();
 
 	//Camera& GetCamera() { return camera; }
+public:
+
 
 protected:
 	virtual bool createWindow(const char* title, void* wndProc) = 0;
 	virtual void killWindow() = 0;
+
+	static Render* p_instance;
+
+private:
+	Render(const Render& r);
+	Render& operator=(Render&);
+
 };
 
-inline Render::Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
+inline Render::Render(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
 : width(width_)
 , height (height_)
 , fullscreen(fullscreen_)
-, lightOn(light_)
+, light(light_)
 , camera(cameraPos, cameraQ)
+, moveScale(moveScale_)
+, rotateScale(rotateScale_)
 {
 
+}
+
+inline Render::Render(InitData& initData)
+: width(initData.width)
+, height(initData.height)
+, fullscreen(initData.fullscreen)
+, light(initData.light)
+, camera(initData.cameraPos, initData.cameraQ)
+, moveScale(initData.moveScale)
+, rotateScale(initData.rotateScale)
+{
 }
 
 inline void Render::RotateCamera(const Quaternion &q)
@@ -99,12 +125,12 @@ inline void Render::MoveCameraQ(float s)
 	camera.pos += dif;
 }
 
-inline void Render::SetLight(bool light)
+inline void Render::SetLight(bool light_)
 {
-	lightOn = light;
+	light = light_;
 }
 
 inline bool Render::GetLight()
 {
-	return lightOn;
+	return light;
 }

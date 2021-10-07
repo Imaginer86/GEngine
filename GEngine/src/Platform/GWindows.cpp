@@ -1,5 +1,6 @@
 ﻿//#include "GWindows.h"
 #include "../GEngine.h"
+#include "../Render/RenderGL.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
@@ -18,10 +19,97 @@ void GInitProgram(Program *&programPtr)
 	programPtr = &program;
 }
 
-void UpdateLastTickCount()
+void GUpdateLastTickCount()
 {
 	program.lastTickCount = GetTickCount();
 }
+
+
+void GUpdateKeys()
+{
+	if (program.keys[VK_PRIOR])
+	{
+		RenderGL::getInstance()->MoveCameraQ(100.0f * RenderGL::getInstance()->moveScale);
+	}
+	if (program.keys[VK_NEXT])
+	{
+		RenderGL::getInstance()->MoveCameraQ(-100.0f * RenderGL::getInstance()->moveScale);
+	}
+	if (program.keys['W'])
+	{
+		//RenderGL::getInstance()->MoveCameraQ(10.0f * moveScale);
+		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, 25.0f * RenderGL::getInstance()->moveScale, 0.0f));
+	}
+	if (program.keys['S'])
+	{
+		//RenderGL::getInstance()->MoveCameraQ(-10.0f*moveScale);
+		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, -25.0f * RenderGL::getInstance()->moveScale, 0.0f));
+	}
+	if (program.keys['A'])
+	{
+		RenderGL::getInstance()->MoveCamera(Vector3f(-25.0f * RenderGL::getInstance()->moveScale, 0.0f, 0.0f));
+	}
+	if (program.keys['D'])
+	{
+		RenderGL::getInstance()->MoveCamera(Vector3f(25.0f * RenderGL::getInstance()->moveScale, 0.0f, 0.0f));
+	}
+	if (program.keys[VK_UP])
+	{
+		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+	}
+	if (program.keys[VK_DOWN])
+	{
+		RenderGL::getInstance()->RotateCamera(Quaternion(-1.0f * RenderGL::getInstance()->rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+	}
+	if (program.keys[VK_LEFT])
+	{
+		RenderGL::getInstance()->RotateCamera(Quaternion(-1.0f * RenderGL::getInstance()->rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+	}
+	if (program.keys[VK_RIGHT])
+	{
+		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+	}
+	if (program.keys[VK_TAB])
+	{
+		program.keys[VK_TAB] = false;
+		program.drawDebugInfo = !program.drawDebugInfo;
+	}
+
+	if (program.keys[VK_F1])
+	{
+		program.keys[VK_F1] = false;
+		//TODO RenderGL::getInstance()->killWindow();
+		if (RenderGL::getInstance()->swithFullscreen()) program.Draw();
+		else program.done = true;
+	}
+	if (program.keys[VK_SPACE])
+	{
+		if (program.pause) GUpdateLastTickCount();
+
+		program.keys[VK_SPACE] = false;
+		program.pause = !program.pause;
+	}
+	if (program.keys[VK_ESCAPE])
+	{
+		program.done = true;
+	}
+	if (program.keys[VK_ADD])
+	{
+		program.timeScale += 0.1f;
+	}
+	if (program.keys[VK_SUBTRACT])
+	{
+		program.timeScale -= 0.1f;
+	}
+
+	if (program.keys['L'])
+	{
+		RenderGL::getInstance()->SetLight(!RenderGL::getInstance()->GetLight());
+		RenderGL::getInstance()->UpdateLight();
+		program.keys['L'] = false;
+	}
+}
+
 
 int GMain()
 {
@@ -57,7 +145,7 @@ int GMain()
 		{
 			if (program.active)
 			{
-				program.UpdateKeys();
+				GUpdateKeys();
 				for (int i = 0; i < 10; ++i)//temp
 					if (!program.pause)
 					{
@@ -126,7 +214,7 @@ LRESULT CALLBACK WndProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_SIZE:
 	{
-		//render->resize(LOWORD(lParam), HIWORD(lParam));//_WIN#32
+		//RenderGL::getInstance()->resize(LOWORD(lParam), HIWORD(lParam));//_WIN#32
 		return 0;
 	}
 	default:

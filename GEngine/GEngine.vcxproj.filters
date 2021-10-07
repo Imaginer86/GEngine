@@ -22,8 +22,8 @@
     <ClCompile Include="src\Math\gmath.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Render\ModelOBJM.cpp">
-      <Filter>Render</Filter>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,9 +67,6 @@
     <ClInclude Include="src\Physics\Entity.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Render\ModelOBJM.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="src\Render\ModelOBJ.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -81,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="src\Physics\Tera.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\Input.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +101,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{8e6dd8e7-7352-4719-9a89-c10eb42cf426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{23bbc6cd-d4ae-48bb-9116-a5b465d78396}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

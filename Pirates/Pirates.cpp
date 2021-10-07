@@ -6,42 +6,25 @@
 
 Render* render = nullptr;
 ModelOBJ* Manovar = nullptr;
+//ModelOBJ* Tree = nullptr;
 
-struct {
-	const char* title = "Pirates";
-	size_t width = 1920;
-	size_t height = 1080;
-	bool fullscreen = false;
-	bool light = true;
-	float moveScale = 0.1f;
-	float rotateScale = 0.1f;
 
-	Vector3f cameraPos = Vector3f(0.0f, 40000.0f, 75000.0f);
-	Quaternion cameraQ = Quaternion(0.0f, Vector3f(1.0f, 0.0f, 0.0f));
-
-} InitData;
 
 //Entity* Planets = nullptr;
 //size_t numEntites = 2;// 51;
 
-int main()
-{
-	//InitData.title = "Pirates";
-	//Plane P1(Vector3f(2, 1, -1), -1);
-	//Plane P2(Vector3f(1, 3, -2), 0);
-	//Line L = P1 * P2;
-
-	return GMain();
-}
-
 bool Program::Init(void* wndProc)
 {
-	render = new RenderGL(InitData.width, InitData.height, InitData.cameraPos, InitData.cameraQ, InitData.fullscreen, InitData.light);
-	if (!render->Init( InitData.title, wndProc)) return false;
+	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, 50000.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), false, true, 0.1f, 0.1f);
+	if (!render->Init( "Pirates", wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 	Manovar = new ModelOBJ;
-	if(!Manovar->Load("data//Manovar//Manovar.obj")) return false;
+	//Tree = new ModelOBJ;
+	//if (!Tree->Load("data//Tree1//Tree1.obj", true)) return false;
+	if (!Manovar->Load("data//Victoria//Victoria.obj")) return false;
+	//if (!Manovar->LoadM("data//Manovar//Manovar_mod.obj")) return false;
+	//if(!Manovar->Load("data//Manovar//Manovar.obj")) return false;
 	//Manovar->Load("data//Cube.obj");
 
 	/*
@@ -62,91 +45,6 @@ bool Program::Init(void* wndProc)
 	*/
 
 	return true;
-}
-
-void Program::UpdateKeys()
-{
-	if (keys[VK_PRIOR])
-	{
-		render->MoveCameraQ(100.0f * InitData.moveScale);
-	}
-	if (keys[VK_NEXT])
-	{
-		render->MoveCameraQ(-100.0f * InitData.moveScale);
-	}
-	if (keys['W'])
-	{
-		//render->MoveCameraQ(10.0f * moveScale);
-		render->MoveCamera(Vector3f(0.0f, 25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['S'])
-	{
-		//render->MoveCameraQ(-10.0f*moveScale);
-		render->MoveCamera(Vector3f(0.0f, -25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['A'])
-	{
-		render->MoveCamera(Vector3f(-25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys['D'])
-	{
-		render->MoveCamera(Vector3f(25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys[VK_UP])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-	}
-	if (keys[VK_DOWN])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-	}
-	if (keys[VK_LEFT])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-	}
-	if (keys[VK_RIGHT])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-	}
-	if (keys[VK_TAB])
-	{
-		keys[VK_TAB] = false;
-		drawDebugInfo = !drawDebugInfo;
-	}
-
-	if (keys[VK_F1])
-	{
-		keys[VK_F1] = false;
-		//TODO render->killWindow();
-		if (render->swithFullscreen()) Draw();
-		else done = true;
-	}
-	if (keys[VK_SPACE])
-	{
-		if (pause) UpdateLastTickCount();
-
-		keys[VK_SPACE] = false;
-		pause = !pause;
-	}
-	if (keys[VK_ESCAPE])
-	{
-		done = true;
-	}
-	if (keys[VK_ADD])
-	{
-		timeScale += 0.1f;
-	}
-	if (keys[VK_SUBTRACT])
-	{
-		timeScale -= 0.1f;
-	}
-
-	if (keys['L'])
-	{
-		render->SetLight(!render->GetLight());
-		render->UpdateLight();
-		keys['L'] = false;
-	}
 }
 
 void Program::Update(float dt)
@@ -196,8 +94,9 @@ void Program::Draw()
 	render->beginDraw();
 	//render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 50.0, Quaternion(0, Vector3f(0.0f, 0.0f, 1.0f)), Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 
-	render->Rotate(Quaternion(90.0f, Vector3f(0.0f, 1.0f, 0.0f)));
+	//render->Rotate(Quaternion(90.0f, Vector3f(0.0f, 1.0f, 0.0f)));
 	Manovar->Draw(render);
+	//Tree->Draw(render);
 
 	/*
 
@@ -229,4 +128,10 @@ void Program::End()
 	//delete[] Planets;
 
 	delete Manovar;
+	//delete Tree;
+}
+
+int main()
+{
+	return GMain();
 }

@@ -12,26 +12,16 @@ Tank* tank = nullptr;;
 
 Program *programPtr = nullptr;
 
-struct {
-	char *title = "BattleCity";
-	size_t width = 1600;
-	size_t height = 900;
-	bool fullscreen = false;
-	bool light = true;
-	float moveScale = 0.1f;
-	float rotateScale = 0.1f;
-} InitData;
-
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), InitData.fullscreen, InitData.light);
+	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), false, true, 0.1f, 0.1f);
 	tank = new Tank;
 
 	//tank.pos = Vector3f();
 	//tank.angle = 0.0f;
 
-	if (!render->Init(InitData.title, wndProc)) return false;
+	if (!render->Init("BattleCity", wndProc)) return false;
 
 	//if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
 	if (!tank->model.Load("data/Tank.objm")) return false;
@@ -119,7 +109,7 @@ void Program::Update(float dt)
 	dt += dt;//TTT;
 }
 
-
+/*
 void Program::UpdateKeys()
 {
 	if (keys[VK_PRIOR])
@@ -193,6 +183,13 @@ void Program::UpdateKeys()
 		else done = true;
 	}
 }
+*/
+
+void Program::End()
+{
+	delete render;
+	delete tank;
+}
 
 
 //int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
@@ -205,16 +202,6 @@ void Program::UpdateKeys()
 	//#endif
 int main()
 {
-	
-	GInitProgram(programPtr);
-	//programPtr->fullscreen = InitData.fullscreen;
-	//programPtr->width = InitData.width;
-	//programPtr->height =  InitData.height;
-
 	GMain();
-
-
-	delete render;
-	delete tank;
 	return 0;
 }

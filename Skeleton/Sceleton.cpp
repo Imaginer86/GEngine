@@ -7,25 +7,14 @@ Render *render = nullptr;
 
 Program *programPtr = nullptr;
 
-struct {
-	char *title = "Roll&Roll";
-	size_t width = 800;
-	size_t height = 600;
-	bool fullscreen = false;
-	bool light = true;
-	float moveScale = 0.1f;
-	float rotateScale = 0.1f;
-} InitData;
-
-
 float angle = 0.0f;
 
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(InitData.width, InitData.height, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), InitData.fullscreen, InitData.light);
+	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), false, true, 0.1f, 0.1f);
 	// ������� ���� OpenGL ����
-	if (!render->Init(InitData.title, wndProc)) return false;
+	if (!render->Init("Skeleton", wndProc)) return false;
 
 	return true;
 }
@@ -45,6 +34,12 @@ void Program::Update(float dt)
 	angle += dt * 10.0f;
 }
 
+void Program::End()
+{
+	delete render;
+}
+
+/*
 void Program::UpdateKeys()
 {
 	if (keys[VK_PRIOR])
@@ -112,12 +107,11 @@ void Program::UpdateKeys()
 		done = true;
 	}
 }
+*/
 
 int main()
 {
-	GInitProgram(programPtr);
+	//GInitProgram(programPtr);
 	GMain();
-	delete render;
-
 	return 0;
 }

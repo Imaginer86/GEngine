@@ -23,6 +23,7 @@
     <ClInclude Include="src\Core\Constans.h" />
     <ClInclude Include="src\Core\FileReader.h" />
     <ClInclude Include="src\GEngine.h" />
+    <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Math\gmath.h" />
     <ClInclude Include="src\Math\Line.h" />
     <ClInclude Include="src\Math\Matrix3.h" />
@@ -34,7 +35,6 @@
     <ClInclude Include="src\Physics\Tera.h" />
     <ClInclude Include="src\Platform\GWindows.h" />
     <ClInclude Include="src\Render\Color4f.h" />
-    <ClInclude Include="src\Render\ModelOBJM.h" />
     <ClInclude Include="src\Render\ModelOBJ.h" />
     <ClInclude Include="src\Render\Render.h" />
     <ClInclude Include="src\Render\RenderGL.h" />
@@ -42,11 +42,11 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Camera.cpp" />
     <ClCompile Include="src\Core\FileReader.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Math\gmath.cpp" />
     <ClCompile Include="src\Physics\Tank.cpp" />
     <ClCompile Include="src\Platform\GWindows.cpp" />
     <ClCompile Include="src\Render\ModelOBJ.cpp" />
-    <ClCompile Include="src\Render\ModelOBJM.cpp" />
     <ClCompile Include="src\Render\RenderGL.cpp" />
   </ItemGroup>
   <ItemGroup>

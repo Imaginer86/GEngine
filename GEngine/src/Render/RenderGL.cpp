@@ -42,6 +42,8 @@ PFNGLUSEPROGRAMPROC					glUseProgram = 0;
 //#include <iostream>
 //#include <vector>
 
+Render* Render::p_instance = nullptr;
+
 
 HDC		hDC;
 HGLRC	hRC;
@@ -280,8 +282,8 @@ RenderGL::~RenderGL()
 {
 }
 
-RenderGL::RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_)
-:Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_)
+RenderGL::RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+:Render(width_, height_, cameraPos, cameraQ, fullscreen_, light_, moveScale_, rotateScale_)
 {
 }
 
@@ -382,7 +384,7 @@ void RenderGL::InitGL()
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_TEXTURE_2D);
 
-	//TODO quadratic = gluNewQuadric();
+	quadratic = gluNewQuadric();
 
 	//std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 	//std::string vendorInfo = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -548,7 +550,7 @@ size_t int RenderGL::LoadShaders(const char * vertex_file_path, const char * fra
 
 void RenderGL::UpdateLight()
 {
-	if (lightOn)
+	if (light)
 	{
 		glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse);
@@ -823,7 +825,7 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 
 	gluQuadricDrawStyle(quadratic, GLU_FILL);
 	gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
-	//gluQuadricTexture(quadratic, GLU_FALSE);
+	gluQuadricTexture(quadratic, GLU_FALSE);
 
 	glPushMatrix();
 

@@ -50,7 +50,7 @@ void ModelOBJ::setSizeTriangles(size_t n)
 //	Quads[g].setSizeSurfaces(s);
 //}
 
-bool ModelOBJ::Load(const char* fileName)
+bool ModelOBJ::Load(const char* fileName, bool toUV)
 {
 	std::ifstream inFile;
 	inFile.open(fileName, std::ios::in);
@@ -76,6 +76,10 @@ bool ModelOBJ::Load(const char* fileName)
 		char c;
 		sstr >> c;
 		if (c == '#') continue;
+		else if (c == 'o')
+		{
+			continue;
+		}
 		else if (c == 'v')
 		{
 			Vector3f v;
@@ -101,39 +105,44 @@ bool ModelOBJ::Load(const char* fileName)
 					}
 					else
 					{
-						continue;
-						//std::cerr << "Eror Load Obj File " << fileName << std::endl;
+						std::cerr << "Eror Load Normals Obj File " << fileName << std::endl;
+						continue;						
 					}
 				}
 				else if (c1 == 't')
 				{
 					Vector3f t;
-					sstr >> t;
-					if (t != VETOR3f_ZERO)//TODO
+					if (toUV)
 					{
-						textN++;
-						TexturesL.push_back(t);
+						sstr >> t.x >> t.y;
+						t.z = 0.0f;
 					}
 					else
 					{
-						continue;
-						//std::cerr << "Eror Load Obj File " << fileName << std::endl;
+						sstr >> t;
+					}
+					textN++;
+					TexturesL.push_back(t);
+					if (t != VETOR3f_ZERO)//TODO
+					{
+
+					}
+					else
+					{
+						std::cerr << "Eror Load Textures UV Obj File " << fileName << std::endl;
+						continue;						
 					}
 				}
 				else
 				{
-					continue;
 					std::cerr << "Eror Load Obj File " << fileName << std::endl;
+					continue;					
 				}
 
 			}
 
 		}
 		else if (c == 'm')
-		{
-			continue;
-		}
-		else if (c == 'o')
 		{
 			continue;
 		}
@@ -207,6 +216,119 @@ bool ModelOBJ::Load(const char* fileName)
 
 }
 
+bool ModelOBJ::LoadM(const char* fileName)
+{
+	std::ifstream inFile;
+	inFile.open(fileName, std::ios::in);
+
+	if (!inFile.is_open()) return false;
+
+	std::string str;
+	getline(inFile, str);
+	getline(inFile, str);
+	getline(inFile, str);//TODO
+	getline(inFile, str);
+	getline(inFile, str);
+	getline(inFile, str);
+	size_t vertN;
+	inFile >> vertN;
+	if (!vertN) return false;
+
+	setSizeVertex(vertN);
+	for (size_t i = 0; i < vertN; ++i)
+	{
+		char c;
+		inFile >> c;
+		if (c != 'v') {
+			std::cerr << "Failed Loaf OBJ model vertexs" << std::endl;
+			return false;
+		}
+		Vector3f v;
+		inFile >> v;
+		setVertex(i, v);
+	}
+
+	size_t normN;
+	inFile >> normN;
+	if (!normN) return false;
+
+	setSizeNormal(normN);
+	for (size_t i = 0; i < normN; ++i)
+	{
+		char c1, c2;
+		inFile >> c1 >> c2;
+		if (c1 != 'v' || c2 != 'n') {
+			std::cerr << "Failed Loaf OBJ model normals" << std::endl;
+			return false;
+		}
+		Vector3f n;
+		inFile >> n;
+		setNormal(i, n);
+	}
+
+	size_t textN;
+	inFile >> textN;
+	if (!textN) return false;
+
+	setSizeTextures(textN);
+	for (size_t i = 0; i < textN; ++i)
+	{
+		char c1, c2;
+		inFile >> c1 >> c2;
+		if (c1 != 'v' || c2 != 't') {
+			std::cerr << "Failed Loaf OBJ model textures" << std::endl;
+			return false;
+		}
+		Vector3f t;
+		inFile >> t.x >> t.y >> t.z;
+		setTexture(i, t);
+	}
+
+
+	size_t qqadsN;
+	inFile >> qqadsN;
+	if (!qqadsN) return false;
+	getline(inFile, str);
+	std::cout << str << std::endl; //TODO
+	getline(inFile, str);
+	getline(inFile, str);
+	getline(inFile, str);
+	std::cout << str << std::endl; //TODO
+
+
+	setSizeTriangles(qqadsN);
+
+	for (size_t i = 0; i < qqadsN; ++i)
+	{
+		char c;
+		//string gName;
+		inFile >> c;// >> gName;
+		if (c == 's')
+		{
+			--i;
+			size_t t;
+			inFile >> t;
+			continue;
+		}
+
+		char cc;
+		size_t cv, ct, cn;
+		inFile >> cv >> cc >> ct >> cc >> cn;
+		--cv; --ct; --cn;
+		Triangles[i].VertexT[0] = cv; Triangles[i].TexturesT[0] = ct; Triangles[i].NormalT[0] = cn;
+		inFile >> cv >> cc >> ct >> cc >> cn;
+		--cv; --ct; --cn;
+		Triangles[i].VertexT[1] = cv; Triangles[i].TexturesT[1] = ct; Triangles[i].NormalT[1] = cn;
+		inFile >> cv >> cc >> ct >> cc >> cn;
+		--cv; --ct; --cn;
+		Triangles[i].VertexT[2] = cv; Triangles[i].TexturesT[2] = ct; Triangles[i].NormalT[2] = cn;
+
+	}
+	inFile.close();
+	std::cout << "Vertexs: " << vertexN << " Normals: " << normalN << " Textures: " << texturesN << " Triangles: " << triangleN << std::endl;
+	return true;
+}
+
 void ModelOBJ::Draw(Render* r)
 {
 
@@ -226,17 +348,18 @@ void ModelOBJ::Draw(Render* r)
 		Vector3f c = Vertexs[vc];
 		//Vector3f d = Vertexs[vd];
 
-		size_t naq = Triangles[i].NormalT[0];
-		size_t nbq = Triangles[i].NormalT[1];
-		size_t ncq = Triangles[i].NormalT[2];
+		//size_t naq = Triangles[i].NormalT[0];
+		//size_t nbq = Triangles[i].NormalT[1];
+		//size_t ncq = Triangles[i].NormalT[2];
 		//size_t ndq = Quads[i].NormalT[3];
 
-		Vector3f na = Normals[naq];
-		Vector3f nb = Normals[nbq];
-		Vector3f nc = Normals[ncq];
+		//Vector3f na = Normals[naq];
+		//Vector3f nb = Normals[nbq];
+		//Vector3f nc = Normals[ncq];
 		//Vector3f nd = Normals[ndq];
 		
-		r->drawTriangle(a, b, c, na, nb, nc, color);
+		//r->drawTriangle(a, b, c, na, nb, nc, color);
+		r->drawTriangle(a, b, c, color);
 		//r->drawTriangle(c, d, a, nc, nd, na, color);
 	}
 }

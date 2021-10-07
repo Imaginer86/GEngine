@@ -7,20 +7,6 @@
 
 Render *render = nullptr;
 
-struct {
-	char *title = "Gravi";
-	size_t width = 1920;
-	size_t height = 1080;
-	bool fullscreen = true;
-	bool light = true;
-	float moveScale = 0.1f;
-	float rotateScale = 0.1f;
-
-	Vector3f cameraPos = Vector3f(0.0f, 0.0f, 1000.0f);
-	Quaternion cameraQ = Quaternion(0.0f, Vector3f(1.0f, 0.0f, 0.0f));
-
-} InitData;
-
 Entity *Planets = nullptr;
 size_t numEntites = 2;// 51;
 
@@ -35,8 +21,8 @@ int main ()
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(InitData.width, InitData.height, InitData.cameraPos, InitData.cameraQ, InitData.fullscreen, InitData.light);
-	if (!render->Init(InitData.title, wndProc)) return false;
+	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), false, true, 0.1f, 0.1f);
+	if (!render->Init("Gravi", wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 
@@ -126,6 +112,7 @@ bool Program::Init(void *wndProc)
 	return true;
 }
 
+/*
 void Program::UpdateKeys()
 {
 	if (keys[VK_PRIOR])
@@ -185,7 +172,7 @@ void Program::UpdateKeys()
 	}
 	if (keys[VK_SPACE])
 	{
-		if (pause) UpdateLastTickCount();
+		if (pause) GUpdateLastTickCount();
 
 		keys[VK_SPACE] = false;
 		pause = !pause;
@@ -210,7 +197,7 @@ void Program::UpdateKeys()
 		keys['L'] = false;
 	}
 }
-
+*/
 void Program::Update(float dt)
 {
 	for (size_t i = 0; i < numEntites; i++) Planets[i].init();

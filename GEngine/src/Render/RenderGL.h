@@ -4,7 +4,7 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_);
+	RenderGL(size_t width_, size_t height_, Vector3f cameraPos, Quaternion cameraQ, bool fullscreen_, bool light_, float moveScale_, float rotateScale_);
 	virtual ~RenderGL();
 
 	virtual bool Init(const char* title, void *wndProc);
@@ -39,6 +39,13 @@ public:
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const;
 	virtual void drawVBO() const;
+
+	static Render* getInstance() {
+		if (!p_instance)
+			p_instance = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 50.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), false, true, 0.1f, 0.1f);
+		return p_instance;
+	}
+
 protected:
 	virtual bool createWindow(const char* title, void* wndProc);
 	virtual void killWindow();
