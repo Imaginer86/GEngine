@@ -101,15 +101,12 @@ bool ModelOBJ::Load(const char* fileName, bool toUV)
 				{
 					Vector3f n;
 					sstr >> n;
-					if (n != VETOR3f_ZERO) //TODO
-					{
-						normN++;
-						NormalsL.push_back(n);
-					}
-					else
+					normN++;
+					NormalsL.push_back(n);
+					if (n == VETOR3f_ZERO) //TODO
 					{
 						std::cerr << "Eror Load Normals Obj File " << fileName << std::endl;
-						continue;						
+						continue;
 					}
 				}
 				else if (c1 == 't')
@@ -124,26 +121,20 @@ bool ModelOBJ::Load(const char* fileName, bool toUV)
 					{
 						sstr >> t;
 					}
-					textN++;
-					TexturesL.push_back(t);
-					if (t != VETOR3f_ZERO)//TODO
-					{
-
-					}
-					else
+					normN++;
+					NormalsL.push_back(t);
+					if (t == VETOR3f_ZERO)//TODO
 					{
 						std::cerr << "Eror Load Textures UV Obj File " << fileName << std::endl;
-						continue;						
+						continue;
 					}
 				}
 				else
 				{
 					std::cerr << "Eror Load Obj File " << fileName << std::endl;
-					continue;					
+					continue;
 				}
-
-			}
-
+			}			
 		}
 		else if (c == 'm')
 		{
@@ -181,8 +172,8 @@ bool ModelOBJ::Load(const char* fileName, bool toUV)
 			tTriangle.VertexT[2] = cv; tTriangle.NormalT[2] = cn; tTriangle.TexturesT[2] = ct;
 			TrianglesL.push_back(tTriangle);
 		}
-	}
-	//TTT str.clear();
+		}
+		//TTT str.clear();
 
 	setSizeVertex(vertN);
 	for (size_t i = 0; i < vertN; ++i)
@@ -218,6 +209,7 @@ bool ModelOBJ::Load(const char* fileName, bool toUV)
 	return true;
 
 }
+
 
 bool ModelOBJ::LoadM(const char* fileName)
 {

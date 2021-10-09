@@ -10,14 +10,14 @@ ModelOBJ Manovar;// = nullptr;
 
 bool Program::Init(void* wndProc)
 {
-	render = new RenderGL(1920, 1080, Vector3f(10000.0f, -20000.0f, -50000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 10.0f);
+	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, -50.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 10.0f);
 	if (!render->Init( "Pirates", wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 	//Manovar = new ModelOBJ;
 	//if (!Manovar->Load("data//Victoria//Victoria.obj")) return false;
 	//if (!Manovar->LoadM("data//Manovar//Manovar_mod.obj")) return false;
-	if (!Manovar.Load("data/Manovar.obj")) return false;
+	if (!Manovar.Load("data/Tree1.obj", true)) return false;
 	//Tree = new ModelOBJ;
 	//if (!Tree.Load("data/Bricks/bricks.obj", true)) return false;
 
@@ -39,10 +39,11 @@ void Program::Draw()
 	Manovar.Draw(render);
 	//Tree.Draw(render);
 
+	render->LoadIdentity();
 	if (drawDebugInfo)
 	{
-		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
-		render->print(-0.25f, 0.35f, "Time Scale: %f", timeScale);
+		render->print(-0.15f, 0.15f, "FPS: %d", FPS);
+		render->print(-0.15f, 0.25f, "Time Scale: %f", timeScale);
 	}
 	render->endDraw();
 }
