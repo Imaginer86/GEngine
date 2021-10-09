@@ -5,8 +5,8 @@
 
 
 Render* render = nullptr;
-ModelOBJ Manovar;// = nullptr;
-//ModelOBJ Tree;// = nullptr;
+//ModelOBJ Manovar;// = nullptr;
+ModelOBJ Tree;// = nullptr;
 
 bool Program::Init(void* wndProc)
 {
@@ -14,13 +14,7 @@ bool Program::Init(void* wndProc)
 	if (!render->Init( "Pirates", wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
-	//Manovar = new ModelOBJ;
-	//if (!Manovar->Load("data//Victoria//Victoria.obj")) return false;
-	//if (!Manovar->LoadM("data//Manovar//Manovar_mod.obj")) return false;
-	if (!Manovar.Load("data/Tree1.obj", true)) return false;
-	//Tree = new ModelOBJ;
-	//if (!Tree.Load("data/Bricks/bricks.obj", true)) return false;
-
+	if (!Tree.Load("data/Tree.obj", true)) return false;
 	return true;
 }
 
@@ -36,14 +30,14 @@ void Program::Draw()
 	render->beginDraw();
 
 	render->Rotate(alpha, Vector3f(0.0f, 1.0f, 0.0f));
-	Manovar.Draw(render);
-	//Tree.Draw(render);
+	//Manovar.Draw(render);
+	Tree.Draw(render);
 
 	render->LoadIdentity();
 	if (drawDebugInfo)
 	{
-		render->print(-0.15f, 0.15f, "FPS: %d", FPS);
-		render->print(-0.15f, 0.25f, "Time Scale: %f", timeScale);
+		render->print(-0.75f, 0.3f, "FPS: %d", FPS);
+		render->print(-0.5f, 0.3f, "Time Scale: %f", timeScale);
 	}
 	render->endDraw();
 }
