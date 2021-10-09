@@ -50,7 +50,7 @@ void ModelOBJ::setSizeTriangles(size_t n)
 //	Quads[g].setSizeSurfaces(s);
 //}
 
-bool ModelOBJ::Load(const char* fileName, bool toUV)
+bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
 {
 	std::ifstream inFile;
 	inFile.open(fileName, std::ios::in);
@@ -161,13 +161,13 @@ bool ModelOBJ::Load(const char* fileName, bool toUV)
 			triN++;
 			char cc;
 			size_t cv, ct, cn;
-			sstr >> cv >> cc >> cn >> cc >> ct;
+			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct; sstr >> cc >> cn;
 			cv--; ct--; cn--;
-			tTriangle.VertexT[0] = cv; tTriangle.NormalT[0] = cn; tTriangle.TexturesT[0] = ct;
-			sstr >> cv >> cc >> cn >> cc >> ct;
+			tTriangle.VertexT[0] = cv; tTriangle.NormalT[0] = ct; tTriangle.TexturesT[0] = ct;
+			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct; sstr >> cc >> cn;
 			cv--; ct--; cn--;
 			tTriangle.VertexT[1] = cv; tTriangle.NormalT[1] = cn; tTriangle.TexturesT[1] = ct;
-			sstr >> cv >> cc >> cn >> cc >> ct;
+			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct;  sstr >> cc >> cn;
 			cv--; ct--; cn--;
 			tTriangle.VertexT[2] = cv; tTriangle.NormalT[2] = cn; tTriangle.TexturesT[2] = ct;
 			TrianglesL.push_back(tTriangle);

@@ -111,7 +111,7 @@ public:
 	void setTexture(size_t i, Vector3f n);
 	void setSizeTriangles(size_t n);
 	//void setSizeQuad(size_t g, size_t s);
-	bool Load(const char* fileName, bool toUV = false);
+	bool Load(const char* fileName, bool twoUV = false, bool noTextIndexs = false);
 	bool LoadM(const char* fileName);
 	void Draw(Render* r);
 };
