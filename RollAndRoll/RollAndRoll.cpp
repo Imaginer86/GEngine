@@ -55,11 +55,11 @@ float minVN = 0.1f;
 bool Program::Init(void *wndProc)
 {
 	//Quaternion q2 = Quaternion(90.0f, Vector3f(1.0f, 0.0f, 0.0f));
-	render = new RenderGL(1920, 1080, Vector3f(0.0f, -1500.0f, 50.0f), Quaternion(-90.0f, Vector3f(1.0f, 0.0f, 0.0f)), false, true, 0.1f, 0.1f);
+	render = new RenderGL(1920, 1080, Vector3f(0.0f, -1500.0f, 50.0f), -90.0f, Vector3f(1.0f, 0.0f, 0.0f), false, true, 0.1f, 0.1f);
 	// ������� ���� OpenGL ����
 	if (!render->Init("RollAndRoll", wndProc)) return false;
 
-	if (!LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
+	if (!Core::LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
 
 	ball.q = BallData.ballStartQ;
 	ball.pos = BallData.ballStartPos;
@@ -70,16 +70,11 @@ bool Program::Init(void *wndProc)
 }
 void Program::Update(float dt)
 {
-
 	dt = 1.0f / 60.0f;
 
-
-
-
-	float dist = gabs(plane.distance(ball.pos)); 
+	float dist = abs(plane.distance(ball.pos)); 
 	if (!contact && dist <= ball.r)
-	{
-		
+	{		
 		Vector3f NN = plane.unit();
 		NN.unitize();
 		//Vector3f I = ball.vel;
@@ -87,21 +82,15 @@ void Program::Update(float dt)
 		//Vector3f R = N * (-I.dotProduct(N)) * 2 + I;
 		Vector3f VN = NN * (ball.vel.dotProduct(NN));
 		Vector3f U = ball.vel - VN;
-
-
 		float Z = plane.A * ball.pos.x + plane.B * ball.pos.y + plane.C * ball.pos.z - ball.r + plane.D;
 		//if (fabsf(Z) < GEPSILON) Z = 0.0f;
 		float D = plane.A * ball.vel.x + plane.B * ball.vel.y + plane.C * ball.vel.z;
-
 		float dte = Z / D;
-
 		if (dte >= 0.0f && dte <= dt)
 		{
 			ball.pos -= ball.vel * dte;
 			float dtest = plane.distance(ball.pos);
-
 			VN *= dvel;
-
 			if ( VN.length() < minVN )
 			{
 				contact = true;
@@ -109,18 +98,13 @@ void Program::Update(float dt)
 				Vector3f N = plane.unit();
 				Vector3f Gr = gravi.unit();
 				float cosA = N.dotProduct(Gr);
-				float sinA = gsqrt(1 - cosA * cosA);
+				float sinA = sqrt(1 - cosA * cosA);
 				float aCon = 5.0f * gravi.length() * sinA / 7.0f;
 				aContact = (N*Gr*N)*aCon;
-
 				Vector3f Q = aContact.unit() * N;
-
 				ball.q = Quaternion(0.0f, Q);
 				ball.qa = Quaternion(aCon / ball.r, Q);
 			}
-
-
-
 			ball.vel = U - VN;
 			ball.pos += ball.vel * (dt - dte);
 			dtest = plane.distance(ball.pos);

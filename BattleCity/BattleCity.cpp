@@ -15,7 +15,7 @@ Program *programPtr = nullptr;
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), false, true, 0.1f, 0.1f);
+	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
 	tank = new Tank;
 
 	//tank.pos = Vector3f();

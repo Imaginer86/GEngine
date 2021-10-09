@@ -12,7 +12,7 @@ float angle = 0.0f;
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(0.0f, Vector3f(0.0f, 1.0f, 0.0f)), false, true, 0.1f, 0.1f);
+	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
 	// ������� ���� OpenGL ����
 	if (!render->Init("Skeleton", wndProc)) return false;
 

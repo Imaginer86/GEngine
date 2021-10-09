@@ -21,7 +21,7 @@ int main ()
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, 500.0f), Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f)), false, true, 0.1f, 0.1f);
+	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
 	if (!render->Init("Gravi", wndProc)) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
@@ -206,7 +206,7 @@ void Program::Update(float dt)
 			if (i != j)
 			{
 				float r2 = (Planets[i].pos - Planets[j].pos).lenght2();
-				float f = G * Planets[i].m * Planets[j].m / r2;
+				float f = Math::G * Planets[i].m * Planets[j].m / r2;
 				Vector3f force = (Planets[j].pos - Planets[i].pos).unit() * f;
 				Planets[i].applyForce(force);
 				Planets[j].applyForce(-force);				
