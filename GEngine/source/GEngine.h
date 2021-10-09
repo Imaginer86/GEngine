@@ -28,32 +28,20 @@ struct InitData {
 class Program
 {
 public:
+	long long tick;
 	long long lastTickCount = 0;
 	bool keys[256];
 	size_t FPS = 0;
 	bool active = true;
 	bool done = false;
-	bool pause = true;
+	bool pause = false;
 	bool drawDebugInfo = true;
-
 	float timeScale = 1.0f;
-
-	//bool	fullscreen = false;
-	//bool	lightOn = true;
-
-	//float width;
-	//float height;
-
-	
+public:
 	bool Init(void *wndProc);
 	void Draw();
-	//void UpdateKeys();
 	void Update(float dt);
 	void End();
-	//char title[11] = "BattleCity";
-
-	//TODO
-	//ModelOBJ Tree;
 };
 
 void GInitProgram(Program *& programPtr);

@@ -1,5 +1,6 @@
 ﻿//#include "GWindows.h"
 #include "../GEngine.h"
+#include "../Core/Time.h"
 #include "../Render/RenderGL.h"
 
 #include <iostream>
@@ -24,7 +25,7 @@ void GInitProgram(Program *&programPtr)
 
 void GUpdateLastTickCount()
 {
-	program.lastTickCount = GetTickCount();
+	program.lastTickCount = Core::GetTickCount();
 }
 
 
@@ -32,45 +33,45 @@ void GUpdateKeys()
 {
 	if (program.keys[VK_PRIOR])
 	{
-		RenderGL::getInstance()->MoveCameraQ(100.0f * RenderGL::getInstance()->moveScale);
+		RenderGL::getInstance()->MoveCameraQ(100.0f * RenderGL::getInstance()->getMoveScale());
 	}
 	if (program.keys[VK_NEXT])
 	{
-		RenderGL::getInstance()->MoveCameraQ(-100.0f * RenderGL::getInstance()->moveScale);
+		RenderGL::getInstance()->MoveCameraQ(-100.0f * RenderGL::getInstance()->getMoveScale());
 	}
 	if (program.keys['W'])
 	{
-		//RenderGL::getInstance()->MoveCameraQ(10.0f * moveScale);
-		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, 25.0f * RenderGL::getInstance()->moveScale, 0.0f));
+		//RenderGL::getInstance()->MoveCameraQ(10.0f * getMoveScale());
+		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, 25.0f * RenderGL::getInstance()->getMoveScale(), 0.0f));
 	}
 	if (program.keys['S'])
 	{
-		//RenderGL::getInstance()->MoveCameraQ(-10.0f*moveScale);
-		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, -25.0f * RenderGL::getInstance()->moveScale, 0.0f));
+		//RenderGL::getInstance()->MoveCameraQ(-10.0f*getMoveScale());
+		RenderGL::getInstance()->MoveCamera(Vector3f(0.0f, -25.0f * RenderGL::getInstance()->getMoveScale(), 0.0f));
 	}
 	if (program.keys['A'])
 	{
-		RenderGL::getInstance()->MoveCamera(Vector3f(-25.0f * RenderGL::getInstance()->moveScale, 0.0f, 0.0f));
+		RenderGL::getInstance()->MoveCamera(Vector3f(-25.0f * RenderGL::getInstance()->getMoveScale(), 0.0f, 0.0f));
 	}
 	if (program.keys['D'])
 	{
-		RenderGL::getInstance()->MoveCamera(Vector3f(25.0f * RenderGL::getInstance()->moveScale, 0.0f, 0.0f));
+		RenderGL::getInstance()->MoveCamera(Vector3f(25.0f * RenderGL::getInstance()->getMoveScale(), 0.0f, 0.0f));
 	}
 	if (program.keys[VK_UP])
 	{
-		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(1.0f, 0.0f, 0.0f)));
 	}
 	if (program.keys[VK_DOWN])
 	{
-		RenderGL::getInstance()->RotateCamera(Quaternion(-1.0f * RenderGL::getInstance()->rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
+		RenderGL::getInstance()->RotateCamera(Quaternion(-1.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(1.0f, 0.0f, 0.0f)));
 	}
 	if (program.keys[VK_LEFT])
 	{
-		RenderGL::getInstance()->RotateCamera(Quaternion(-100.0f * RenderGL::getInstance()->rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		RenderGL::getInstance()->RotateCamera(Quaternion(-100.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(0.0f, 1.0f, 0.0f)));
 	}
 	if (program.keys[VK_RIGHT])
 	{
-		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
+		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(0.0f, 1.0f, 0.0f)));
 	}
 	if (program.keys[VK_TAB])
 	{
@@ -128,7 +129,7 @@ int GMain()
 	MSG msg;//WWWin
 	memset(&msg, 0, sizeof(MSG));
 	DWORD tickCount = 0;//_WIN#32
-	program.lastTickCount = GetTickCount();//_WIN#32
+	program.lastTickCount = Core::GetTickCount();//_WIN#32
 
 
 	while (!program.done)
@@ -153,7 +154,7 @@ int GMain()
 				for (size_t i = 0; i < 10; ++i)//temp
 					if (!program.pause)
 					{
-						tickCount = GetTickCount();//WWWin
+						tickCount = Core::GetTickCount();//WWWin
 						DWORD milliseconds = tickCount - static_cast<DWORD>(program.lastTickCount);//_WIN#32
 						program.lastTickCount = tickCount;
 						float dt = static_cast<float>(milliseconds) / 1000.0f;//slow

@@ -82,7 +82,7 @@ GLuint IBO;
 GLuint shaderProgram;
 
 
-bool RenderGL::createWindow(const char *title, void *wndProc)
+bool RenderGL::createWindow()
 {
 	int PixelFormat;              // Хранит результат после поиска
 	WNDCLASS  wc;                // Структура класса окна
@@ -96,7 +96,7 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 	//!!!fullscreen = fullscreen;              // Устанавливаем значение глобальной переменной fullscreen
 	hInstance = GetModuleHandle(NULL);        // Считаем дескриптор нашего приложения
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;      // Перерисуем при перемещении и создаём скрытый DC
-	wc.lpfnWndProc = (WNDPROC)wndProc;          // Процедура обработки сообщений
+	wc.lpfnWndProc = (WNDPROC)ptr_wndProc;          // Процедура обработки сообщений
     //TODO wc.lpfnWndProc =
 	wc.cbClsExtra = 0;              // Нет дополнительной информации для окна
 	wc.cbWndExtra = 0;              // Нет дополнительной информации для окна
@@ -108,7 +108,8 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 	wc.lpszClassName = "OpenGL";            // Устанавливаем имя классу
 	if (!RegisterClass(&wc))              // Пытаемся зарегистрировать класс окна
 	{
-		MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Failed To Register The Window Class." << std::endl;
+		//MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Выход и возвращение функцией значения false
 	}
 	if (fullscreen)                // Полноэкранный режим?
@@ -123,6 +124,7 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 																				 // Пытаемся установить выбранный режим и получить результат.  Примечание: CDS_FULLSCREEN убирает панель управления.
 		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
+			//TODO
 			// Если переключение в полноэкранный режим невозможно, будет предложено два варианта: оконный режим или выход.
 			if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
 				"GEngine G", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
@@ -131,7 +133,8 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 			}
 			else
 			{
-				MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
+				std::cerr << "Program Will Now Close." << std::endl;
+				//MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
 				return false;            // Выход и возвращение функцией false
 			}
 		}
@@ -164,7 +167,8 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 	if (!hWnd)          // Не передаём ничего до WM_CREATE (???)
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Window Creation Error." << std::endl;
+		//MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	static  PIXELFORMATDESCRIPTOR pfd =            // pfd сообщает Windows каким будет вывод на экран каждого пикселя
@@ -192,34 +196,39 @@ bool RenderGL::createWindow(const char *title, void *wndProc)
 	if (!hDC)              // Можем ли мы получить Контекст Устройства?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Can't Create A GL Device Context." << std::endl;
+		//MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	PixelFormat = ChoosePixelFormat(hDC, &pfd);
 	if (!PixelFormat)        // Найден ли подходящий формат пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Can't Find A Suitable PixelFormat." << std::endl;
+		//MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	if (!SetPixelFormat(hDC, PixelFormat, &pfd))          // Возможно ли установить Формат Пикселя?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Can't Set The PixelFormat." << std::endl;
+		//MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 	hRC = wglCreateContext(hDC);
 	if (!hRC)          // Возможно ли установить Контекст Рендеринга?
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Can't Create A GL Rendering Context." << std::endl;
+		//MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 
 	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
 	{
 		killWindow();                // Восстановить экран
-		MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		std::cerr << "Can't Activate The GL Rendering Context." << std::endl;
+		//MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
 		return false;                // Вернуть false
 	}
 
@@ -243,30 +252,35 @@ void RenderGL::killWindow()
 	{
 		if (!wglMakeCurrent(NULL, NULL))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð´Ð¸Ñ‚ÑŒ RC Ð¸ DC?
 		{
-			MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			std::cerr << "Release Of DC And RC Failed." << std::endl;
+			//MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		if (!wglDeleteContext(hRC))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ RC?
 		{
-			MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+			std::cerr << "Release Rendering Context Failed." << std::endl;
+			//MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		}
 		hRC = NULL;              // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ RC Ð² NULL
 	}
 
 	if (hDC && !ReleaseDC(hWnd, hDC))          // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ DC?
 	{
-		MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		std::cerr << "Release Device Context Failed." << std::endl;
+		//MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hDC = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ DC Ð² NULL
 	}
 
 	if (hWnd && !DestroyWindow(hWnd))            // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾?
 	{
-		MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		std::cerr << "Could Not Release hWnd." << std::endl;
+		//MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hWnd = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hWnd Ð² NULL
 	}
 
 	if (!UnregisterClass("OpenG", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
 	{
-		MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		std::cerr << "Could Not Unregister Class." << std::endl;
+		//MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hInstance = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hInstance Ð² NULL
 	}
 
@@ -275,36 +289,31 @@ void RenderGL::killWindow()
 	killFont();
 }
 
-bool RenderGL::Init(const char* title, void* wndProc)
+bool RenderGL::Init()
 {
-	ptr_wndProc = wndProc;
-
-	size_t length = strlen(title);
-	ptr_title = new char[length + 1];
-	strncpy_s(ptr_title, length + 1,  title, length);
-	if (!createWindow(title, ptr_wndProc))
+	//ptr_wndProc = wndProc;
+	if (!createWindow())
 	{
-		MessageBox(NULL, "Cannot Create Window.", "ERROR", MB_OK | MB_ICONSTOP);
+		//MessageBox(NULL, "Cannot Create Window.", "ERROR", MB_OK | MB_ICONSTOP);
+		std::cerr << "Cannot Create Window." << std::endl;
 		return false;
 	}
-
 	InitGL();
 	return true;
-
 }
 
 bool RenderGL::swithFullscreen()
 {
-	return false;
-	/*
+	//return false;
+
 	fullscreen = !fullscreen;
-	if (!createWindow(ptr_title, ptr_wndProc))
+	if (!createWindow())
 	{
-		MessageBox(NULL, "Cannot Switch FullScreen.", "ERROR", MB_OK | MB_ICONSTOP);
+		std::cerr << "Cannot Switch FullScreen.";
+		//MessageBox(NULL, "Cannot Switch FullScreen.", "ERROR", MB_OK | MB_ICONSTOP);
 		return false;
 	}
 	return true;
-	*/
 }
 
 void RenderGL::InitGL()
@@ -587,6 +596,11 @@ void RenderGL::Rotate(const Quaternion & q) const
 	glRotatef(angle, axic.x, axic.y, axic.z);
 }
 
+void RenderGL::Color(const Color4f& color)
+{
+	glColor4f(color.a, color.g, color.b, color.a);
+}
+
 void RenderGL::LoadIdentity() const
 {
 	glLoadIdentity();
@@ -667,9 +681,9 @@ void RenderGL::drawTriangle(const Vector3f & a, const Vector3f & b, const Vector
 
 void RenderGL::drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& n, const Color4f& color) const
 {
-	glNormal3f(n.x, n.y, n.z);
-	glColor4f(color.r, color.g, color.b, color.a);
 	glBegin(GL_TRIANGLES);
+	glColor4f(color.r, color.g, color.b, color.a);
+		glNormal3f(n.x, n.y, n.z);
 		glVertex3f(a.x, a.y, a.z);
 		glVertex3f(b.x, b.y, b.z);
 		glVertex3f(c.x, c.y, c.z);
@@ -679,22 +693,23 @@ void RenderGL::drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f
 void RenderGL::drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& na, const Vector3f& nb, const Vector3f& nc, const Color4f& color) const
 {	
 	glBegin(GL_TRIANGLES);
-	glColor4f(color.r, color.g, color.b, color.a);
-	glNormal3f(na.x, na.y, na.z);
-	glVertex3f(a.x, a.y, a.z);
-	glNormal3f(nb.x, nb.y, nb.z);
-	glVertex3f(b.x, b.y, b.z);
-	glNormal3f(nc.x, nc.y, nc.z);
-	glVertex3f(c.x, c.y, c.z);
+		glColor4f(color.r, color.g, color.b, color.a);
+		glNormal3f(na.x, na.y, na.z);
+		glVertex3f(a.x, a.y, a.z);
+		glNormal3f(nb.x, nb.y, nb.z);
+		glVertex3f(b.x, b.y, b.z);
+		glNormal3f(nc.x, nc.y, nc.z);
+		glVertex3f(c.x, c.y, c.z);
 	glEnd();
 }
 
 
 void RenderGL::drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Vector3f& n, const Color4f& color) const
 {
-	glNormal3f(n.x, n.y, n.z);
+	
 	glColor4f(color.r, color.g, color.b, color.a);
 	glBegin(GL_QUADS);
+		glNormal3f(n.x, n.y, n.z);
 		glVertex3f(a.x, a.y, a.z);
 		glVertex3f(b.x, b.y, b.z);
 		glVertex3f(c.x, c.y, c.z);

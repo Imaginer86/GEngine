@@ -4,12 +4,12 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		:Render(width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {}
+	RenderGL(const char* title_, void* wndProc_, size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+		:Render(title_, wndProc_, width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {}
 
 	virtual ~RenderGL() {};
 
-	virtual bool Init(const char* title, void *wndProc);
+	virtual bool Init();
 	virtual void Resize(size_t  width_, size_t height_);
 	virtual bool LoadTextures();
 	virtual bool swithFullscreen();
@@ -20,6 +20,7 @@ public:
 	virtual void Translate(const Vector3f& t) const;
 	virtual void Rotate(float angle, Vector3f axic) const;
 	virtual void Rotate(const Quaternion& q) const;
+	virtual void Color(const Color4f& color);
 	virtual void LoadIdentity() const;
 
 	virtual void buildFont();
@@ -43,13 +44,13 @@ public:
 	virtual void drawVBO() const;
 
 	static Render* getInstance() {
-		if (!p_instance)
-			p_instance = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
+		if (!p_instance) //TODO
+			p_instance = new RenderGL("GEngine", nullptr, 1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
 		return p_instance;
 	}
 
 protected:
-	virtual bool createWindow(const char* title, void* wndProc);
+	virtual bool createWindow();
 	virtual void killWindow();
 private:
 
@@ -59,7 +60,4 @@ private:
 	size_t LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
 	size_t VBOVertexN;
 	size_t VBOIndexN;
-
-	void* ptr_wndProc;
-	char* ptr_title;
 };

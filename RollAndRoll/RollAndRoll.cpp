@@ -55,9 +55,9 @@ float minVN = 0.1f;
 bool Program::Init(void *wndProc)
 {
 	//Quaternion q2 = Quaternion(90.0f, Vector3f(1.0f, 0.0f, 0.0f));
-	render = new RenderGL(1920, 1080, Vector3f(0.0f, -1500.0f, 50.0f), -90.0f, Vector3f(1.0f, 0.0f, 0.0f), false, true, 0.1f, 0.1f);
+	render = new RenderGL("RollAndRoll", wndProc, 1920, 1080, Vector3f(0.0f, -1500.0f, 50.0f), -90.0f, Vector3f(1.0f, 0.0f, 0.0f), false, true, 0.1f, 0.1f);
 	// ������� ���� OpenGL ����
-	if (!render->Init("RollAndRoll", wndProc)) return false;
+	if (!render->Init()) return false;
 
 	if (!Core::LoadRawFile("data/Terrain.raw", tera.HeightMap)) return false;
 
@@ -210,112 +210,6 @@ void Program::End()
 {
 
 }
-
-/*
-void Program::UpdateKeys()
-{
-	if (keys[VK_PRIOR])
-	{
-		render->MoveCameraQ(100.0f * InitData.moveScale);
-	}
-	if (keys[VK_NEXT])
-	{
-		render->MoveCameraQ(-100.0f * InitData.moveScale);
-	}
-	if (keys['W'])
-	{
-		//render->MoveCameraQ(10.0f * moveScale);
-		render->MoveCamera(Vector3f(0.0f, 25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['S'])
-	{
-		//render->MoveCameraQ(-10.0f*moveScale);
-		render->MoveCamera(Vector3f(0.0f, -25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['A'])
-	{
-		render->MoveCamera(Vector3f(-25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys['D'])
-	{
-		render->MoveCamera(Vector3f(25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys[VK_UP])
-	{
-		if(keys[VK_SHIFT])
-			render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-		else
-		{
-			Vector3f N = plane.unit();
-			qUp.rotate(N);
-			float d = plane.D;
-			plane = Plane(N, d);
-		}
-	}
-	if (keys[VK_DOWN])
-	{
-		if (keys[VK_SHIFT])
-			render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-		else
-		{
-			Vector3f N = plane.unit();
-			qDown.rotate(N);
-			float d = plane.D;
-			plane = Plane(N, d);
-		}
-	}
-	if (keys[VK_LEFT])
-	{
-		if (keys[VK_SHIFT])
-			render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-		else
-		{
-			Vector3f N = plane.unit();
-			qLeft.rotate(N);
-			float d = plane.D;
-			plane = Plane(N, d);
-		}
-	}
-	if (keys[VK_RIGHT])
-	{
-		if (keys[VK_SHIFT])
-			render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-		else
-		{
-			Vector3f N = plane.unit();
-			qRight.rotate(N);
-			float d = plane.D;
-			plane = Plane(N, d);
-		}
-
-	}
-	if (keys[VK_TAB])
-	{
-		keys[VK_TAB] = false;
-		drawDebugInfo = !drawDebugInfo;
-	}
-
-	if (keys[VK_F1])
-	{
-		keys[VK_F1] = false;
-		if (render->swithFullscreen()) Draw();
-		else done = true;
-	}
-	if (keys[VK_SPACE])
-	{
-		//111if (pause)	lastTickCount = GetTickCount();
-
-		keys[VK_SPACE] = false;
-		pause = !pause;
-	}
-	if (keys[VK_ESCAPE])
-	{
-		done = true;
-	}
-}
-*/
-
-
 int main()
 {
 

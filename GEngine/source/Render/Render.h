@@ -8,7 +8,7 @@
 
 class Render
 {
-public:
+protected:
 	Camera	camera;
 	bool	fullscreen;
 	bool	light;
@@ -16,20 +16,27 @@ public:
 	size_t height;
 	float moveScale;
 	float rotateScale;
-	
-	Render(size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		: width(width_)
+	void* ptr_wndProc;
+	char* title;
+public:
+	Render(const char* title_, void* wndProc, size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+		: ptr_wndProc(wndProc)
+		, width(width_)
 		, height(height_)
 		, fullscreen(fullscreen_)
 		, light(light_)
 		, camera(pos_, angle_, axic_)
 		, moveScale(moveScale_)
 		, rotateScale(rotateScale_)
-	{}
+	{
+		size_t lenght = strlen(title_);
+		title = new char[lenght];
+		strncpy_s(title, sizeof(title), title_, lenght);
+	}
 	//Render(InitData& initData);
-	virtual ~Render() {};
+	virtual ~Render() { delete[] title; };
 
-	virtual bool Init(const char* title, void *wndProc) = 0;
+	virtual bool Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
 	virtual bool LoadTextures() = 0;
 	virtual bool swithFullscreen() = 0;
@@ -37,7 +44,7 @@ public:
 
 	virtual void buildFont() = 0;
 	virtual void killFont() = 0;
-	virtual void print(float x, float y, const char * fmt, ...) = 0;
+	virtual void print(float x, float y, const char* fmt, ...) = 0;
 
 	virtual void beginDraw() const = 0;
 	virtual void endDraw() const = 0;
@@ -45,17 +52,18 @@ public:
 	virtual void Translate(const Vector3f& t) const = 0;
 	virtual void Rotate(float angle, Vector3f axic) const = 0;
 	virtual void Rotate(const Quaternion& q) const = 0;
+	virtual void Color(const Color4f& color) = 0;
 	virtual void LoadIdentity() const = 0;
 
 	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index) = 0;
 
-	virtual void drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const = 0;
+	virtual void drawTriangleStrip(size_t n, const Vector3f* vertexs, const Vector3f* normals, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& n, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& na, const Vector3f& nb, const Vector3f& nc, const Color4f& color) const = 0;
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Vector3f& n, const Color4f& color) const = 0;
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Color4f& color) const = 0;
-	virtual void drawQuad(const Vector3f *vertexs, const Vector3f& n, const Color4f &color) const = 0;
+	virtual void drawQuad(const Vector3f* vertexs, const Vector3f& n, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axic, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const = 0;
@@ -64,19 +72,22 @@ public:
 	virtual void drawVBO() const = 0;
 	//virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 
-	void RotateCamera(const Quaternion &q);
-	void MoveCamera(const Vector3f &v);
+	void RotateCamera(const Quaternion& q);
+	void MoveCamera(const Vector3f& v);
 	void MoveCameraQ(float s);
 
 	void SetLight(bool light_);
 	bool GetLight();
+
+	float getMoveScale() { return moveScale; }
+	float getRotateScale() { return rotateScale; }
 
 	//Camera& GetCamera() { return camera; }
 public:
 
 
 protected:
-	virtual bool createWindow(const char* title, void* wndProc) = 0;
+	virtual bool createWindow() = 0;
 	virtual void killWindow() = 0;
 
 	static Render* p_instance;

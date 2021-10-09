@@ -21,13 +21,10 @@ int main ()
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(1920, 1080, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
-	if (!render->Init("Gravi", wndProc)) return false;
+	render = new RenderGL("Gravi", wndProc, 1920, 1080, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
+	if (!render->Init()) return false;
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
-
-
 	Planets = new Entity[numEntites];
-
 	Planets[0].m = 597.370f;
 	Planets[0].pos = Vector3f(0, 0, 0);
 	Planets[0].vel = Vector3f(0, 0, 0);
@@ -111,93 +108,6 @@ bool Program::Init(void *wndProc)
 
 	return true;
 }
-
-/*
-void Program::UpdateKeys()
-{
-	if (keys[VK_PRIOR])
-	{
-		render->MoveCameraQ(100.0f * InitData.moveScale);
-	}
-	if (keys[VK_NEXT])
-	{
-		render->MoveCameraQ(-100.0f * InitData.moveScale);
-	}
-	if (keys['W'])
-	{
-		//render->MoveCameraQ(10.0f * moveScale);
-		render->MoveCamera(Vector3f(0.0f, 25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['S'])
-	{
-		//render->MoveCameraQ(-10.0f*moveScale);
-		render->MoveCamera(Vector3f(0.0f, -25.0f * InitData.moveScale, 0.0f));
-	}
-	if (keys['A'])
-	{
-		render->MoveCamera(Vector3f(-25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys['D'])
-	{
-		render->MoveCamera(Vector3f(25.0f * InitData.moveScale, 0.0f, 0.0f));
-	}
-	if (keys[VK_UP])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-	}
-	if (keys[VK_DOWN])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-	}
-	if (keys[VK_LEFT])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-	}
-	if (keys[VK_RIGHT])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-	}
-	if (keys[VK_TAB])
-	{
-		keys[VK_TAB] = false;
-		drawDebugInfo = !drawDebugInfo;
-	}
-
-	if (keys[VK_F1])
-	{
-		keys[VK_F1] = false;
-		//TODO render->killWindow();
-		if (render->swithFullscreen()) Draw();
-		else done = true;
-	}
-	if (keys[VK_SPACE])
-	{
-		if (pause) GUpdateLastTickCount();
-
-		keys[VK_SPACE] = false;
-		pause = !pause;
-	}
-	if (keys[VK_ESCAPE])
-	{
-		done = true;
-	}
-	if (keys[VK_ADD])
-	{
-		timeScale += 0.1f;
-	}
-	if (keys[VK_SUBTRACT])
-	{
-		timeScale -= 0.1f;
-	}
-
-	if (keys['L'])
-	{
-		render->SetLight(!render->GetLight());
-		render->UpdateLight();
-		keys['L'] = false;
-	}
-}
-*/
 void Program::Update(float dt)
 {
 	for (size_t i = 0; i < numEntites; i++) Planets[i].init();

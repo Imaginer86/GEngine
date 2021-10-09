@@ -7,6 +7,78 @@
 
 #include <list>
 
+	// Конструктор копирования, который выполняет глубокое копирование
+ModelOBJ::ModelOBJ(const ModelOBJ& x)
+{
+	// Копируем передаваемый объект
+	trianglesN = x.trianglesN;
+	Triangles = new Triangle[trianglesN];
+	for (size_t i = 0; i < trianglesN; ++i)
+	{
+		Triangles[i].VertexT[0] = x.Triangles[i].VertexT[0];
+		Triangles[i].VertexT[1] = x.Triangles[i].VertexT[1];
+		Triangles[i].VertexT[2] = x.Triangles[i].VertexT[2];
+
+		Triangles[i].NormalT[0] = x.Triangles[i].NormalT[0];
+		Triangles[i].NormalT[1] = x.Triangles[i].NormalT[2];
+		Triangles[i].NormalT[2] = x.Triangles[i].NormalT[1];
+
+		Triangles[i].TexturesT[0] = x.Triangles[i].TexturesT[0];
+		Triangles[i].TexturesT[1] = x.Triangles[i].TexturesT[1];
+		Triangles[i].TexturesT[2] = x.Triangles[i].TexturesT[2];
+
+
+	}
+	vertexN = x.vertexN;
+	Vertexs = new Vector3f[vertexN];
+	for (size_t i = 0; i < vertexN; ++i)	Vertexs[i] = x.Vertexs[i];
+	normalN = x.normalN;
+	for (size_t i = 0; i < normalN; ++i)	Normals[i] = x.Normals[i];
+	Normals;
+	texturesN = x.texturesN;
+	for (size_t i = 0; i < texturesN; ++i)	Textures[i] = x.Textures[i];
+}
+
+// Оператор присваивания копированием, который выполняет глубокое копирование
+ModelOBJ& ModelOBJ::operator=(const ModelOBJ& x)
+{
+	// Проверка на самоприсваивание
+	if (&x == this)
+		return *this;
+
+	// Удаляем всё, что к этому моменту может хранить указатель 
+	delete[] Normals; delete[] Vertexs; delete[] Textures; delete[] Triangles;
+
+	// Копируем передаваемый объект
+	trianglesN = x.trianglesN;
+	Triangles = new Triangle[trianglesN];
+	for (size_t i = 0; i < trianglesN; ++i)
+	{
+		Triangles[i].VertexT[0] = x.Triangles[i].VertexT[0];
+		Triangles[i].VertexT[1] = x.Triangles[i].VertexT[1];
+		Triangles[i].VertexT[2] = x.Triangles[i].VertexT[2];
+
+		Triangles[i].NormalT[0] = x.Triangles[i].NormalT[0];
+		Triangles[i].NormalT[1] = x.Triangles[i].NormalT[2];
+		Triangles[i].NormalT[2] = x.Triangles[i].NormalT[1];
+
+		Triangles[i].TexturesT[0] = x.Triangles[i].TexturesT[0];
+		Triangles[i].TexturesT[1] = x.Triangles[i].TexturesT[1];
+		Triangles[i].TexturesT[2] = x.Triangles[i].TexturesT[2];
+
+
+	}
+	vertexN = x.vertexN;
+	Vertexs = new Vector3f[vertexN];
+	for (size_t i = 0; i < vertexN; ++i)	Vertexs[i] = x.Vertexs[i];
+	normalN = x.normalN;
+	for (size_t i = 0; i < normalN; ++i)	Normals[i] = x.Normals[i];
+	Normals;
+	texturesN = x.texturesN;
+	for (size_t i = 0; i < texturesN; ++i)	Textures[i] = x.Textures[i];
+	return *this;
+}
+
 void ModelOBJ::setSizeVertex(size_t n)
 {
 	vertexN = n;
@@ -41,8 +113,14 @@ void ModelOBJ::setTexture(size_t i, Vector3f t)
 }
 void ModelOBJ::setSizeTriangles(size_t n)
 {
-	triangleN = n;
+	trianglesN = n;
 	Triangles = new Triangle[n];
+}
+
+void ModelOBJ::setSizeQuads(size_t n)
+{
+	quadsN = n;
+	Quads = new Quad[n];
 }
 
 //void ModelOBJ::setSizeQuads(size_t g, size_t s)
@@ -50,8 +128,9 @@ void ModelOBJ::setSizeTriangles(size_t n)
 //	Quads[g].setSizeSurfaces(s);
 //}
 
-bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
+bool ModelOBJ::Load(const char* fileName, bool noTextIndexs_, bool isQuads_, bool twoUV)
 {
+	isQuad = isQuads_;
 	std::ifstream inFile;
 	inFile.open(fileName, std::ios::in);
 
@@ -68,6 +147,9 @@ bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
 
 	size_t triN = 0;
 	std::list<Triangle> TrianglesL;
+
+	size_t quadN = 0;
+	std::list<Quad> QuadsL;
 
 	std::string str;
 	while (getline(inFile, str))
@@ -112,7 +194,7 @@ bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
 				else if (c1 == 't')
 				{
 					Vector3f t;
-					if (toUV)
+					if (twoUV)
 					{
 						sstr >> t.x >> t.y;
 						t.z = 0.0f;
@@ -157,22 +239,45 @@ bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
 		}
 		else if (c == 'f')
 		{
-			Triangle tTriangle;
-			triN++;
-			char cc;
-			size_t cv, ct, cn;
-			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct; sstr >> cc >> cn;
-			cv--; ct--; cn--;
-			tTriangle.VertexT[0] = cv; tTriangle.NormalT[0] = ct; tTriangle.TexturesT[0] = ct;
-			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct; sstr >> cc >> cn;
-			cv--; ct--; cn--;
-			tTriangle.VertexT[1] = cv; tTriangle.NormalT[1] = cn; tTriangle.TexturesT[1] = ct;
-			sstr >> cv >> cc; if (noTextIndexs) ct = 1; else sstr >> ct;  sstr >> cc >> cn;
-			cv--; ct--; cn--;
-			tTriangle.VertexT[2] = cv; tTriangle.NormalT[2] = cn; tTriangle.TexturesT[2] = ct;
-			TrianglesL.push_back(tTriangle);
+			if (isQuad)
+			{
+				Quad tQuad;
+				quadN++;
+				char cc;
+				size_t cv, ct, cn;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct; sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tQuad.VertexT[0] = cv; tQuad.NormalT[0] = ct; tQuad.TexturesT[0] = ct;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct; sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tQuad.VertexT[1] = cv; tQuad.NormalT[1] = cn; tQuad.TexturesT[1] = ct;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct;  sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tQuad.VertexT[2] = cv; tQuad.NormalT[2] = cn; tQuad.TexturesT[2] = ct;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct;  sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tQuad.VertexT[3] = cv; tQuad.NormalT[3] = cn; tQuad.TexturesT[3] = ct;
+				QuadsL.push_back(tQuad);
+			}
+			else
+			{
+				Triangle tTriangle;
+				triN++;
+				char cc;
+				size_t cv, ct, cn;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct; sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tTriangle.VertexT[0] = cv; tTriangle.NormalT[0] = ct; tTriangle.TexturesT[0] = ct;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct; sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tTriangle.VertexT[1] = cv; tTriangle.NormalT[1] = cn; tTriangle.TexturesT[1] = ct;
+				sstr >> cv >> cc; if (noTextIndexs_) ct = 1; else sstr >> ct;  sstr >> cc >> cn;
+				cv--; ct--; cn--;
+				tTriangle.VertexT[2] = cv; tTriangle.NormalT[2] = cn; tTriangle.TexturesT[2] = ct;
+				TrianglesL.push_back(tTriangle);
+			}
 		}
-		}
+	}
 		//TTT str.clear();
 
 	setSizeVertex(vertN);
@@ -203,158 +308,66 @@ bool ModelOBJ::Load(const char* fileName, bool toUV, bool noTextIndexs)
 		TrianglesL.pop_front();
 	}
 
+	setSizeQuads(quadN);
+	for (size_t i = 0; i < quadN; ++i)
+	{
+		Quads[i] = QuadsL.front();
+		QuadsL.pop_front();
+	}
 	inFile.close();
 
-	std::cout << "Vertexs: " << vertN << " Normals: " << normN << " Textures: " << textN << " Triangles: " << triN << std::endl;
+	std::cout << "Vertexs: " << vertexN << " Normals: " << normalN << " Textures: " << texturesN << " Triangles: " << trianglesN << " Quads: " << quadsN << std::endl;
 	return true;
 
 }
-
-
-bool ModelOBJ::LoadM(const char* fileName)
-{
-	std::ifstream inFile;
-	inFile.open(fileName, std::ios::in);
-
-	if (!inFile.is_open()) return false;
-
-	std::string str;
-	getline(inFile, str);
-	getline(inFile, str);
-	getline(inFile, str);//TODO
-	getline(inFile, str);
-	getline(inFile, str);
-	getline(inFile, str);
-	size_t vertN;
-	inFile >> vertN;
-	if (!vertN) return false;
-
-	setSizeVertex(vertN);
-	for (size_t i = 0; i < vertN; ++i)
-	{
-		char c;
-		inFile >> c;
-		if (c != 'v') {
-			std::cerr << "Failed Loaf OBJ model vertexs" << std::endl;
-			return false;
-		}
-		Vector3f v;
-		inFile >> v;
-		setVertex(i, v);
-	}
-
-	size_t normN;
-	inFile >> normN;
-	if (!normN) return false;
-
-	setSizeNormal(normN);
-	for (size_t i = 0; i < normN; ++i)
-	{
-		char c1, c2;
-		inFile >> c1 >> c2;
-		if (c1 != 'v' || c2 != 'n') {
-			std::cerr << "Failed Loaf OBJ model normals" << std::endl;
-			return false;
-		}
-		Vector3f n;
-		inFile >> n;
-		setNormal(i, n);
-	}
-
-	size_t textN;
-	inFile >> textN;
-	if (!textN) return false;
-
-	setSizeTextures(textN);
-	for (size_t i = 0; i < textN; ++i)
-	{
-		char c1, c2;
-		inFile >> c1 >> c2;
-		if (c1 != 'v' || c2 != 't') {
-			std::cerr << "Failed Loaf OBJ model textures" << std::endl;
-			return false;
-		}
-		Vector3f t;
-		inFile >> t.x >> t.y >> t.z;
-		setTexture(i, t);
-	}
-
-
-	size_t qqadsN;
-	inFile >> qqadsN;
-	if (!qqadsN) return false;
-	getline(inFile, str);
-	std::cout << str << std::endl; //TODO
-	getline(inFile, str);
-	getline(inFile, str);
-	getline(inFile, str);
-	std::cout << str << std::endl; //TODO
-
-
-	setSizeTriangles(qqadsN);
-
-	for (size_t i = 0; i < qqadsN; ++i)
-	{
-		char c;
-		//string gName;
-		inFile >> c;// >> gName;
-		if (c == 's')
-		{
-			--i;
-			size_t t;
-			inFile >> t;
-			continue;
-		}
-
-		char cc;
-		size_t cv, ct, cn;
-		inFile >> cv >> cc >> ct >> cc >> cn;
-		--cv; --ct; --cn;
-		Triangles[i].VertexT[0] = cv; Triangles[i].TexturesT[0] = ct; Triangles[i].NormalT[0] = cn;
-		inFile >> cv >> cc >> ct >> cc >> cn;
-		--cv; --ct; --cn;
-		Triangles[i].VertexT[1] = cv; Triangles[i].TexturesT[1] = ct; Triangles[i].NormalT[1] = cn;
-		inFile >> cv >> cc >> ct >> cc >> cn;
-		--cv; --ct; --cn;
-		Triangles[i].VertexT[2] = cv; Triangles[i].TexturesT[2] = ct; Triangles[i].NormalT[2] = cn;
-
-	}
-	inFile.close();
-	std::cout << "Vertexs: " << vertexN << " Normals: " << normalN << " Textures: " << texturesN << " Triangles: " << triangleN << std::endl;
-	return true;
-}
-
 void ModelOBJ::Draw(Render* r)
 {
-
 	Color4f color(0.25f, 1.0f, 0.5f, 1.0f);
-	for (size_t i = 0; i < triangleN; ++i)
+	for (size_t i = 0; i < trianglesN; ++i)
 	{
-		//Color4f color = Groups[i].color;
-		//for (size_t j = 0; j < ; ++j)
-		//{
-		size_t va = Triangles[i].VertexT[0];
-		size_t vb = Triangles[i].VertexT[1];
-		size_t vc = Triangles[i].VertexT[2];
-		//size_t vd = Quads[i].VertexT[3];
-		
-		Vector3f a = Vertexs[va];
-		Vector3f b = Vertexs[vb];
-		Vector3f c = Vertexs[vc];
-		//Vector3f d = Vertexs[vd];
+		if (isQuad)
+		{
+			size_t va = Quads[i].VertexT[0];
+			size_t vb = Quads[i].VertexT[1];
+			size_t vc = Quads[i].VertexT[2];
+			size_t vd = Quads[i].VertexT[3];
 
-		size_t naq = Triangles[i].NormalT[0];
-		size_t nbq = Triangles[i].NormalT[1];
-		size_t ncq = Triangles[i].NormalT[2];
-		//size_t ndq = Quads[i].NormalT[3];
+			Vector3f a = Vertexs[va];
+			Vector3f b = Vertexs[vb];
+			Vector3f c = Vertexs[vc];
+			Vector3f d = Vertexs[vd];
 
-		Vector3f na = Normals[naq];
-		Vector3f nb = Normals[nbq];
-		Vector3f nc = Normals[ncq];
-		//Vector3f nd = Normals[ndq];
-		
-		r->drawTriangle(a, b, c, na, nb, nc, color);
-		//r->drawTriangle(a, b, c, color);
-		//r->drawTriangle(c, d, a, nc, nd, na, color);
+			size_t naq = Quads[i].NormalT[0];
+			size_t nbq = Quads[i].NormalT[1];
+			size_t ncq = Quads[i].NormalT[2];
+			size_t ndq = Quads[i].NormalT[3];
+
+			Vector3f na = Normals[naq];
+			Vector3f nb = Normals[nbq];
+			Vector3f nc = Normals[ncq];
+			Vector3f nd = Normals[ndq];
+
+			r->drawQuad(a, b, c, d, na, color);
+		}
+		else
+		{
+			size_t va = Triangles[i].VertexT[0];
+			size_t vb = Triangles[i].VertexT[1];
+			size_t vc = Triangles[i].VertexT[2];
+
+			Vector3f a = Vertexs[va];
+			Vector3f b = Vertexs[vb];
+			Vector3f c = Vertexs[vc];
+
+			size_t naq = Triangles[i].NormalT[0];
+			size_t nbq = Triangles[i].NormalT[1];
+			size_t ncq = Triangles[i].NormalT[2];
+
+			Vector3f na = Normals[naq];
+			Vector3f nb = Normals[nbq];//TTTodo
+			Vector3f nc = Normals[ncq];
+
+			r->drawTriangle(a, b, c, na, color);
+		}
 	}
 }

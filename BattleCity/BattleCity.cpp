@@ -15,19 +15,12 @@ Program *programPtr = nullptr;
 
 bool Program::Init(void *wndProc)
 {
-	render = new RenderGL(1024, 768, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
+	render = new RenderGL("BattleCity", wndProc, 1024, 768, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
 	tank = new Tank;
-
-	//tank.pos = Vector3f();
-	//tank.angle = 0.0f;
-
-	if (!render->Init("BattleCity", wndProc)) return false;
-
-	//if (!ReadModelOBJM(levelM, "data/tale1.objm")) return false;
+	if (!render->Init()) return false;
 	if (!tank->model.Load("data/Tank.objm")) return false;
-
 	size_t indexN = 0;
-	for (size_t i = 0; i < tank->model.triangleN; i++)
+	for (size_t i = 0; i < tank->model.trianglesN; i++)
 	{
 		//TTT indexN += tank->model.Quads[i];
 	}
@@ -35,7 +28,7 @@ bool Program::Init(void *wndProc)
 	
 	size_t *index = new size_t[indexN * 3];
 	size_t in = 0;
-	for (size_t i = 0; i < tank->model.triangleN; i++)
+	for (size_t i = 0; i < tank->model.trianglesN; i++)
 	{
 		//TTT for (size_t j = 0; j < tank->model.Quads[i]; j++)
 		{
@@ -65,9 +58,7 @@ bool Program::Init(void *wndProc)
 	//render->CreateVBO(vertex, vn, index, in);
 
 	tank->q.identity();
-
 	tank->q *= Quaternion(180.0f, Vector3f(0.0f, 0.0f, 1.0f));
-
 	return true;
 }
 
@@ -76,9 +67,6 @@ bool Program::Init(void *wndProc)
 void Program::Draw()
 {
 	render->beginDraw();
-
-
-
 	//render->Translate(tank.pos);
 	//render->Rotate(tank.q);
 	Vector3f a(-100.0f, -100.0f, 0.0f);
@@ -88,118 +76,23 @@ void Program::Draw()
 	render->drawQuad(a, b, c, d, Color4f(0.0f, 0.0f, 1.0f, 1.0f));
 	//tank.model.Draw(render);
 	render->drawVBO();
-
-
-	//for (size_t i = 0; i < tank.model.vertexN; i++)
-		//render->drawTriangleStrip(tank.model.vertexN, tank.model.Vertexs, tank.model.Normals, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
-	
-	//render->LoadIdentity();
-
 	if (drawDebugInfo)
 	{
 		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
 	}
-
 	render->endDraw();
-
 }
 
 void Program::Update(float dt)
 {
 	dt += dt;//TTT;
 }
-
-/*
-void Program::UpdateKeys()
-{
-	if (keys[VK_PRIOR])
-	{
-		render->MoveCameraQ(100.0f * InitData.moveScale);
-	}
-	if (keys[VK_NEXT])
-	{
-		render->MoveCameraQ(-100.0f * InitData.moveScale);
-	}
-	if (keys['W'])
-	{
-		//render->MoveCameraQ(10.0f * moveScale);
-		render->MoveCamera(Vector3f(0.0f, 25.0f * InitData.moveScale, 0.0f));
-
-		//tank.pos.y += (25.0f * moveScale);
-	}
-	if (keys['S'])
-	{
-		//render->MoveCameraQ(-10.0f*moveScale);
-		render->MoveCamera(Vector3f(0.0f, -25.0f * InitData.moveScale, 0.0f));
-		//tank.pos.y -= (25.0f * moveScale);
-	}
-	if (keys['A'])
-	{
-		render->MoveCamera(Vector3f(-25.0f * InitData.moveScale, 0.0f, 0.0f));
-		//tank.pos.x -= (25.0f * moveScale);
-	}
-	if (keys['D'])
-	{
-		render->MoveCamera(Vector3f(25.0f * InitData.moveScale, 0.0f, 0.0f));
-		//tank.pos.x += (25.0f * moveScale);
-	}
-	if (keys[VK_UP])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-		//tank.q *= Quaternion(1.0f * rotateScale, Vector3f(1.0f, 0.0f, 0.0f));
-	}
-	if (keys[VK_DOWN])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(1.0f, 0.0f, 0.0f)));
-		//tank.q *= Quaternion(-1.0f * rotateScale, Vector3f(1.0f, 0.0f, 0.0f));
-	}
-	if (keys[VK_LEFT])
-	{
-		render->RotateCamera(Quaternion(1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-		//tank.q *= Quaternion(1.0f * rotateScale, Vector3f(0.0f, 1.0f, 0.0f));
-	}
-	if (keys[VK_RIGHT])
-	{
-		render->RotateCamera(Quaternion(-1.0f * InitData.rotateScale, Vector3f(0.0f, 1.0f, 0.0f)));
-		//tank.q *= Quaternion(1.0f * rotateScale, Vector3f(0.0f, -1.0f, 0.0f));
-	}
-	if (keys[VK_TAB])
-	{
-		keys[VK_TAB] = false;
-		drawDebugInfo = !drawDebugInfo;
-	}
-	if (keys[VK_SPACE])
-	{
-		//!!!if (pause)	lastTickCount = GetTickCount();
-
-		keys[VK_SPACE] = false;
-		pause = !pause;
-	}
-
-	if (keys[VK_F1])
-	{
-		keys[VK_F1] = false;
-		if (render->swithFullscreen()) Draw();
-		else done = true;
-	}
-}
-*/
-
 void Program::End()
 {
 	delete render;
 	delete tank;
 }
 
-
-//int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
-//{
-	//#ifndef _DEBUG
-	//UNREFERENCED_PARAMETER(hInstance);
-	//UNREFERENCED_PARAMETER(hPrevInstance);
-	//UNREFERENCED_PARAMETER(lpCmdLine);
-	//UNREFERENCED_PARAMETER(nCmdShow);
-	//#endif
 int main()
 {
 	GMain();
