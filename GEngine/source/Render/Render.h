@@ -2,7 +2,7 @@
 #include "../GEngine.h"
 
 #include "../Math/Vector3f.h"
-//#include "../Math/Quaternion.h"
+#include "../Math/Quaternion.h"
 #include "../Render/Color4f.h"
 #include "../Core/Camera.h"
 

@@ -6,11 +6,9 @@
 #endif
 
 #include "Math/Vector3f.h"
-#include "Math/Quaternion.h"
+//#include "Math/Quaternion.h"
 
-//TODO
-//#include"Render/ModelOBJ.h"
-
+/*
 struct InitData {
 	const char* title = "GEngine";
 	size_t width = 1024;
@@ -23,7 +21,7 @@ struct InitData {
 	Vector3f pos = Vector3f(0.0f, 0.0f, -100.0f);
 	float aangle = 0.0f;
 	Vector3f axic = Vector3f(0.0f, 1.0f, 0.0f);
-};
+};*/
 
 class Program
 {

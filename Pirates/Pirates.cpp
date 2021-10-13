@@ -5,27 +5,35 @@
 
 
 Render* render = nullptr;
-//ModelOBJ Manovar;// = nullptr;
-ModelOBJ Tree;
-ModelOBJ Tree_1;// = nullptr;
-ModelOBJ Tree_2;
-ModelOBJ Tree_3;
-ModelOBJ Tree_4;
+ModelOBJ Cube;
 
-ModelOBJ Back;
+//ModelOBJ Manovar;// = nullptr;
+//ModelOBJ Tree;
+//ModelOBJ Tree_1;// = nullptr;
+//ModelOBJ Tree_2;
+//ModelOBJ Tree_3;
+//ModelOBJ Tree_4;
+
+//ModelOBJ Back;
+
+Vector3f	CameraPos(-2.5f, -2.5f, -20.0f);
+float		CameraAngle(0.0f);
+Vector3f	CameraAxic(0.0f, 1.0f, 0.0f);
 
 bool Program::Init(void* wndProc)
 {
-	render = new RenderGL("Pirates", wndProc, 1920, 1080, Vector3f(0.0f, -20.0f, -50.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 10.0f);
+	render = new RenderGL("Pirates", wndProc, 1024, 768, CameraPos, CameraAngle, CameraAxic, false, true, 0.1f, 10.0f);
 	if (!render->Init()) return false;
+	if (!Cube.Load("data", "Cube.obj", true)) return false;
+	//if (!Manovar.Load("data", "Manovar.obj")) return false;
 	//if (!Tree.Load("data/Tree.obj", true)) return false;
 	//if (!Tree.Load("data/Tree_1.obj", false, false, false)) return false;
-	//if (!Tree_1.Load("data/Tree_1.obj", false, false, false)) return false;
+	//if (!Tree_1.Load("data", "Tree_1.obj")) return false;
 	//if (!Tree_2.Load("data/Tree_2.obj", false, false, false)) return false;
 	//if (!Tree_3.Load("data/Tree_3.obj", false, false, false)) return false;
 	//if (!Tree_4.Load("data/Tree_3.obj", false, false, false)) return false;
 
-	if (!Back.Load("data/Back.obj", true)) return false;
+	//if (!Back.Load("data/Back.obj", true)) return false;
 	return true;
 }
 
@@ -39,17 +47,16 @@ void Program::Update(float dt)
 void Program::Draw()
 {
 	render->beginDraw();
-
-	render->Color(Color4f(1.0f, 0.1f, 1.0f, 1.0f));
-	render->Rotate(alpha, Vector3f(0.0f, 1.0f, 0.0f));	
-	Back.Draw(render);
-	render->LoadIdentity();
+	//render->Rotate(alpha, Vector3f(0.0f, 0.0f, 1.0f));
+	Cube.Draw(render);
 	if (drawDebugInfo)
 	{
+		render->LoadIdentity();
 		render->Color(Color4f(1.0f, 0.1f, 0.1f, 1.0f));
-		render->print(-1.0f, 0.3f, "FPS: %d", FPS);
-		render->print(-0.85f, 0.3f, "Time Scale: %f", timeScale);
+		render->print(-0.55f, 0.4f, "FPS: %d", FPS);
+		render->print(-0.40f, 0.4f, "Time Scale: %f", timeScale);
 	}
+
 	render->endDraw();
 }
 

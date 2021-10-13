@@ -18,7 +18,7 @@ bool Program::Init(void *wndProc)
 	render = new RenderGL("BattleCity", wndProc, 1024, 768, Vector3f(0.0f, 0.0f, 500.0f), 180.0f, Vector3f(0.0f, 0.0f, 1.0f), false, true, 0.1f, 0.1f);
 	tank = new Tank;
 	if (!render->Init()) return false;
-	if (!tank->model.Load("data/Tank.objm")) return false;
+	if (!tank->model.Load("data", "Tank.objm")) return false;
 	size_t indexN = 0;
 	for (size_t i = 0; i < tank->model.trianglesN; i++)
 	{

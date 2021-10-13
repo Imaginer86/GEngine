@@ -34,6 +34,7 @@
     <ClInclude Include="source\Physics\Tera.h" />
     <ClInclude Include="source\Platform\GWindows.h" />
     <ClInclude Include="source\Render\Color4f.h" />
+    <ClInclude Include="source\Render\MaterialMTL.h" />
     <ClInclude Include="source\Render\ModelOBJ.h" />
     <ClInclude Include="source\Render\Render.h" />
     <ClInclude Include="source\Render\RenderGL.h" />
@@ -41,6 +42,7 @@
   <ItemGroup>
     <ClCompile Include="source\Physics\Tank.cpp" />
     <ClCompile Include="source\Platform\GWindows.cpp" />
+    <ClCompile Include="source\Render\MaterialMTL.cpp" />
     <ClCompile Include="source\Render\ModelOBJ.cpp" />
     <ClCompile Include="source\Render\RenderGL.cpp" />
   </ItemGroup>

@@ -13,6 +13,9 @@
     <ClCompile Include="source\Render\RenderGL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="source\Render\MaterialMTL.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">
@@ -67,6 +70,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="source\GEngine.h" />
+    <ClInclude Include="source\Render\MaterialMTL.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

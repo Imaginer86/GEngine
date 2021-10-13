@@ -5,7 +5,9 @@ class RenderGL:	public Render
 {
 public:		
 	RenderGL(const char* title_, void* wndProc_, size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		:Render(title_, wndProc_, width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {}
+		:Render(title_, wndProc_, width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {
+		p_instance = this;
+	}
 
 	virtual ~RenderGL() {};
 
@@ -57,7 +59,7 @@ private:
 	void InitGL();
 
 
-	size_t LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
-	size_t VBOVertexN;
-	size_t VBOIndexN;
+	//size_t LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
+	//size_t VBOVertexN;
+	//size_t VBOIndexN;
 };

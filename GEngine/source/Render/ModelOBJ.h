@@ -3,6 +3,7 @@
 #include "../Render/Color4f.h"
 
 #include "../Render/Render.h"
+#include "MaterialMTL.h"
 
 
 class ModelOBJ
@@ -32,14 +33,14 @@ public:
 	Vector3f*	Normals;
 	size_t	texturesN;
 	Vector3f* Textures;
-	
 
-
+	size_t materialN;
+	MaterialMTL::MTL* Materials;
 
 public:
 	//ModelOBJ() {}
-	ModelOBJ():vertexN(0), Vertexs(nullptr), normalN(0), Normals(nullptr), texturesN(0), Textures(nullptr), trianglesN(0), Triangles(nullptr) {}
-	~ModelOBJ() { delete[] Normals; delete[] Vertexs; delete[] Textures; delete[] Triangles; delete[] Quads; }
+	ModelOBJ():vertexN(0), Vertexs(nullptr), normalN(0), Normals(nullptr), texturesN(0), Textures(nullptr), quadsN(0), Quads(nullptr), trianglesN(0), Triangles(nullptr), materialN(0), Materials(nullptr) {}
+	~ModelOBJ() { delete[] Normals; delete[] Vertexs; delete[] Textures; delete[] Triangles; delete[] Quads; delete[] Materials; }
 
 	ModelOBJ(const ModelOBJ& x);
 	ModelOBJ& operator=(const ModelOBJ& x);
@@ -53,7 +54,7 @@ public:
 	void setSizeTriangles(size_t n);
 	void setSizeQuads(size_t n);
 	//void setSizeQuad(size_t g, size_t s);
-	bool Load(const char* fileName, bool noTextIndexs = false, bool isQuads = false, bool twoUV = false);
+	bool Load(const char* directory, const char* fileName, bool isQuads = false, bool noTextIndexs = false,  bool twoUV = false);
 	//bool LoadM(const char* fileName);
 	void Draw(Render* r);
 };

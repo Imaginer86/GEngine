@@ -59,7 +59,7 @@ void GUpdateKeys()
 	}
 	if (program.keys[VK_UP])
 	{
-		RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(1.0f, 0.0f, 0.0f)));
+		//RenderGL::getInstance()->RotateCamera(Quaternion(1.0f * RenderGL::getInstance()->getRotateScale(), Vector3f(1.0f, 0.0f, 0.0f)));
 	}
 	if (program.keys[VK_DOWN])
 	{
@@ -128,7 +128,7 @@ int GMain()
 
 	MSG msg;//WWWin
 	memset(&msg, 0, sizeof(MSG));
-	DWORD tickCount = 0;//_WIN#32
+	long long tickCount = 0;
 	program.lastTickCount = Core::GetTickCount();//_WIN#32
 
 

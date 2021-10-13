@@ -379,9 +379,9 @@ void RenderGL::InitGL()
 
 	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 
-	quadratic = gluNewQuadric();
+	//quadratic = gluNewQuadric();
 
 	//std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 	//std::string vendorInfo = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -424,20 +424,21 @@ void RenderGL::Resize(size_t width_, size_t height_)
 {
 	width = width_;
 	height = height_;
+	if (height == 0) height = 1;
+	float aspect = static_cast<float>(width) / static_cast<float>(height);
 
-	if (height == 0)
-	{
-		height = 1;              // ÐŸÑ€ÐµÐ´Ð¾Ñ‚Ð²Ñ€Ð°Ñ‰ÐµÐ½Ð¸Ðµ Ð´ÐµÐ»ÐµÐ½Ð¸Ñ Ð½Ð° Ð½Ð¾Ð»ÑŒ
-	}
+	
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	//glOrtho(-50.0 * aspect, 50.0 * aspect, -50.0, 50.0, 1.0, -1.0);
 
-	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));          // Ð¡Ð±Ñ€Ð¾Ñ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ Ð²Ñ‹Ð²Ð¾Ð´Ð°
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
-	glMatrixMode(GL_PROJECTION);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¹
-	glLoadIdentity();              // Ð¡Ð±Ñ€Ð¾Ñ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸Ð¸
-
-	gluPerspective(60.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 100000.0f); // Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ñ€Ð°Ð·Ð¼ÐµÑ€Ð¾Ð² Ð´Ð»Ñ Ð¾ÐºÐ½Ð°
-
-	glMatrixMode(GL_MODELVIEW);            // Ð’Ñ‹Ð±Ð¾Ñ€ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñ‹ Ð²Ð¸Ð´Ð° Ð¼Ð¾Ð´ÐµÐ»Ð¸
+	gluPerspective(45.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 1000000.0f);
+	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
+	glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	
 }
 
 /*void RenderGL::CreateVBO(const float* data, const 
@@ -565,8 +566,8 @@ void RenderGL::UpdateLight()
 void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
-	//glLoadIdentity();
-	glRotatef(camera.angle, camera.pos.x, camera.pos.y, camera.pos.z);
+	glLoadIdentity();
+	glRotatef(camera.angle, camera.axic.x, camera.axic.y, camera.axic.z);
 	glTranslatef(camera.pos.x, camera.pos.y, camera.pos.z);	
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -574,6 +575,7 @@ void RenderGL::beginDraw() const
 
 void RenderGL::endDraw() const
 {
+	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	glFlush();
 	SwapBuffers(hDC);//_WIN32
 }

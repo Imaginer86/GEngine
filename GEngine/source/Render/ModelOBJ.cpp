@@ -123,16 +123,11 @@ void ModelOBJ::setSizeQuads(size_t n)
 	Quads = new Quad[n];
 }
 
-//void ModelOBJ::setSizeQuads(size_t g, size_t s)
-//{
-//	Quads[g].setSizeSurfaces(s);
-//}
-
-bool ModelOBJ::Load(const char* fileName, bool noTextIndexs_, bool isQuads_, bool twoUV)
+bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, bool noTextIndexs_,bool twoUV)
 {
 	isQuad = isQuads_;
 	std::ifstream inFile;
-	inFile.open(fileName, std::ios::in);
+	inFile.open(std::string(directory) + '/' + std::string(fileName), std::ios::in);
 
 	if (!inFile.is_open()) return false;
 
@@ -151,16 +146,17 @@ bool ModelOBJ::Load(const char* fileName, bool noTextIndexs_, bool isQuads_, boo
 	size_t quadN = 0;
 	std::list<Quad> QuadsL;
 
+	size_t matN;
+	std::list<MaterialMTL> MaterialsL;
+
 	std::string str;
 	while (getline(inFile, str))
 	{
+		if (str.empty()) continue;
 		std::stringstream sstr(str);
 		char c;
 		sstr >> c;
-		if (c == '#')
-		{
-			continue;
-		}
+		if (c == '#')	continue;
 		else if (c == 'o')
 		{
 			continue;
@@ -220,7 +216,18 @@ bool ModelOBJ::Load(const char* fileName, bool noTextIndexs_, bool isQuads_, boo
 		}
 		else if (c == 'm')
 		{
-			continue;
+			char c1, c2, c3, c4, c5;
+			sstr >> c1 >> c2 >> c3 >> c4 >> c5;
+			if (c1 == 't' && c2 == 'l' && c3 == 'l' && c4 == 'i' && c5 == 'b')
+			{
+				std::string mtlFileName;
+				sstr >> mtlFileName;
+				std::cout << mtlFileName << std::endl;
+				MaterialMTL material;
+				Materials = material.Load((std::string(directory) + '/' + mtlFileName).c_str(), materialN);
+				if (Materials == nullptr)
+					std::cerr << "Error Load MAterial " << mtlFileName << std::endl;
+			}
 		}
 		else if (c == 'g')
 		{
@@ -323,9 +330,9 @@ bool ModelOBJ::Load(const char* fileName, bool noTextIndexs_, bool isQuads_, boo
 void ModelOBJ::Draw(Render* r)
 {
 	Color4f color(0.25f, 1.0f, 0.5f, 1.0f);
-	for (size_t i = 0; i < trianglesN; ++i)
+	if (isQuad)
 	{
-		if (isQuad)
+		for (size_t i = 0; i < quadsN; ++i)
 		{
 			size_t va = Quads[i].VertexT[0];
 			size_t vb = Quads[i].VertexT[1];
@@ -349,7 +356,10 @@ void ModelOBJ::Draw(Render* r)
 
 			r->drawQuad(a, b, c, d, na, color);
 		}
-		else
+	}
+	else
+	{
+		for (size_t i = 0; i < trianglesN; ++i)
 		{
 			size_t va = Triangles[i].VertexT[0];
 			size_t vb = Triangles[i].VertexT[1];
