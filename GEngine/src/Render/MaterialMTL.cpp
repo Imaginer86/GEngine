@@ -100,7 +100,7 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 	{
 		matN = MTLL.size();
 		MTL* MTLs = new MTL[matN];
-		for (int i = 0; i < matN; ++i)
+		for (size_t i = 0; i < matN; ++i)
 		{
 			MTLs[i] = MTLL.front();
 			MTLL.pop_front();

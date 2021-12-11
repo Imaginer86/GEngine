@@ -1,10 +1,11 @@
-#include <iostream>
 #include "GEngine.h"
 #include "Render/RenderGL.h"
 #include "Physics/Entity.h"
 #include "Math/gmath.h"
 #include "Math/Plane.h"
 #include "Math/Line.h"
+
+#include <iostream>
 
 Program program;
 Render *render = nullptr;
@@ -22,9 +23,10 @@ int main ()
 	Line L = P1 * P2;
 
 	if (!program.Init()) return 1;
-	for (;;)
+	program.Draw();
+	while(true)
 	{
-		program.Update(100);
+		program.Update(10);
 		program.Draw();
 	}
 	program.End();

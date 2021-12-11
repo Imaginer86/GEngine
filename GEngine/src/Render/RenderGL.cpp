@@ -128,6 +128,13 @@ bool RenderGL::Init()
 		std::cerr << "Cannot Create Window." << std::endl;
 		return false;
 	}
+
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+		//fprintf(stderr, «Ошибка: % s \ n», glewGetErrorString(err));
+		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
+	}
 	InitGL();
 	//buildFont();
 	return true;

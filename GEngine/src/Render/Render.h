@@ -35,7 +35,7 @@ public:
 		if (height == 0) height = 1;
 	}
 	//Render(InitData& initData);
-	virtual ~Render() { delete[] title; };
+	virtual ~Render() {/* delete[] title; */};
 
 	virtual bool Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
