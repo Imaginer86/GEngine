@@ -1,9 +1,12 @@
 #include "RenderGL.h"
 //WWWin Файлы заголовков Windows:
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
-#endif
-#include <Windows.h>
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
+//#endif
+//#include <Windows.h>
+#include <GL/glew.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 //#define GL_GLEXT_PROTOTYPES
 #include <gl/gl.h>
@@ -34,7 +37,7 @@ PFNGLUSEPROGRAMPROC					glUseProgram = 0;
 //#pragma comment(lib, "OpenGL32.lib")
 //#pragma comment(lib, "GLu32.lib")
 
-#include <cstdio>
+//#include <cstdio>
 //#include <stdarg.h>
 
 //#include <string>
@@ -44,11 +47,13 @@ PFNGLUSEPROGRAMPROC					glUseProgram = 0;
 
 Render* Render::p_instance = nullptr;
 
+GLFWwindow* window = nullptr;
 
-HDC		hDC;
-HGLRC	hRC;
-HWND	hWnd;
-HINSTANCE  hInstance;
+
+//HDC		hDC;
+//HGLRC	hRC;
+//HWND	hWnd;
+//HINSTANCE  hInstance;
 
 //Light
 GLfloat gLightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
@@ -81,224 +86,50 @@ GLuint IBO;
 /* Это имя программы шейдера */
 GLuint shaderProgram;
 
+void error_callback(int error, const char* description)
+{
+	fprintf(stderr, "Error: %s\n", description);
+}
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
 
 bool RenderGL::createWindow()
 {
-	int PixelFormat;              // Хранит результат после поиска
-	WNDCLASS  wc;                // Структура класса окна
-	DWORD    dwExStyle;              // Расширенный стиль окна
-	DWORD    dwStyle;              // Обычный стиль окна
-	RECT WindowRect;                // Grabs Rectangle Upper Left / Lower Right Values
-	WindowRect.left = (long)0;              // Установить левую составляющую в 0
-	WindowRect.right = (long)width;              // Установить правую составляющую в Width
-	WindowRect.top = (long)0;                // Установить верхнюю составляющую в 0
-	WindowRect.bottom = (long)height;              // Установить нижнюю составляющую в Height
-	//!!!fullscreen = fullscreen;              // Устанавливаем значение глобальной переменной fullscreen
-	hInstance = GetModuleHandle(NULL);        // Считаем дескриптор нашего приложения
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;      // Перерисуем при перемещении и создаём скрытый DC
-	wc.lpfnWndProc = (WNDPROC)ptr_wndProc;          // Процедура обработки сообщений
-    //TODO wc.lpfnWndProc =
-	wc.cbClsExtra = 0;              // Нет дополнительной информации для окна
-	wc.cbWndExtra = 0;              // Нет дополнительной информации для окна
-	wc.hInstance = hInstance;            // Устанавливаем дескриптор
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);        // Загружаем иконку по умолчанию
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);        // Загружаем указатель мышки
-	wc.hbrBackground = NULL;              // Фон не требуется для GL
-	wc.lpszMenuName = NULL;              // Меню в окне не будет
-	wc.lpszClassName = "OpenGL";            // Устанавливаем имя классу
-	if (!RegisterClass(&wc))              // Пытаемся зарегистрировать класс окна
+	if(!glfwInit())
 	{
-		std::cerr << "Failed To Register The Window Class." << std::endl;
-		//MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Выход и возвращение функцией значения false
+		return false;	// Ошибка инициализации
 	}
-	if (fullscreen)                // Полноэкранный режим?
+	glfwSetErrorCallback(error_callback);
+	window = glfwCreateWindow(width, height, title, NULL, NULL);
+	if (!window)
 	{
-		DEVMODE dmScreenSettings;            // Режим устройства
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));    // Очистка для хранения установок
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);      // Размер структуры Devmode
-		dmScreenSettings.dmPelsWidth = (DWORD)width;        // Ширина экрана
-		dmScreenSettings.dmPelsHeight = (DWORD)height;        // Высота экрана
-		dmScreenSettings.dmBitsPerPel = 32;        // Глубина цвета
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;// Режим Пикселя
-																				 // Пытаемся установить выбранный режим и получить результат.  Примечание: CDS_FULLSCREEN убирает панель управления.
-		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
-		{
-			//TODO
-			// Если переключение в полноэкранный режим невозможно, будет предложено два варианта: оконный режим или выход.
-			if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
-				"GEngine G", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
-			{
-				fullscreen = false;          // Выбор оконного режима (fullscreen = false)
-			}
-			else
-			{
-				std::cerr << "Program Will Now Close." << std::endl;
-				//MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
-				return false;            // Выход и возвращение функцией false
-			}
-		}
+		return false;	// Window or OpenGL context creation failed
 	}
-	if (fullscreen)                  // Мы остались в полноэкранном режиме?
-	{
-		dwExStyle = WS_EX_APPWINDOW;          // Расширенный стиль окна
-		dwStyle = WS_POPUP;            // Обычный стиль окна
-		ShowCursor(false);              // Скрыть указатель мышки
-	}
-	else
-	{
-		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;      // Расширенный стиль окна
-		dwStyle = WS_OVERLAPPEDWINDOW;        // Обычный стиль окна
-	}
-	AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);      // Подбирает окну подходящие размеры
-	hWnd = CreateWindowEx(dwExStyle,          // Расширенный стиль для окна
-		"OpenGL",          // Имя класса
-		title,            // Заголовок окна 
-		WS_CLIPSIBLINGS |        // Требуемый стиль для окна
-		WS_CLIPCHILDREN |        // Требуемый стиль для окна
-		dwStyle,          // Выбираемые стили для окна
-		0, 0,            // Позиция окна
-		WindowRect.right - WindowRect.left,    // Вычисление подходящей ширины
-		WindowRect.bottom - WindowRect.top,    // Вычисление подходящей высоты
-		NULL,            // Нет родительского
-		NULL,            // Нет меню
-		hInstance,          // Дескриптор приложения
-		NULL);
-	if (!hWnd)          // Не передаём ничего до WM_CREATE (???)
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Window Creation Error." << std::endl;
-		//MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-	static  PIXELFORMATDESCRIPTOR pfd =            // pfd сообщает Windows каким будет вывод на экран каждого пикселя
-	{
-		sizeof(PIXELFORMATDESCRIPTOR),            // Размер дескриптора данного формата пикселей
-		1,                  // Номер версии
-		PFD_DRAW_TO_WINDOW |              // Формат для Окна
-		PFD_SUPPORT_OPENGL |              // Формат для OpenGL
-		PFD_DOUBLEBUFFER,              // Формат для двойного буфера
-		PFD_TYPE_RGBA,                // Требуется RGBA формат
-		32,                  // Выбирается бит глубины цвета
-		0, 0, 0, 0, 0, 0,              // Игнорирование цветовых битов
-		0,                  // Нет буфера прозрачности
-		0,                  // Сдвиговый бит игнорируется
-		0,                  // Нет буфера накопления
-		0, 0, 0, 0,                // Биты накопления игнорируются
-		32,                  // 32 битный Z-буфер (буфер глубины)
-		0,                  // Нет буфера трафарета
-		0,                  // Нет вспомогательных буферов
-		PFD_MAIN_PLANE,                // Главный слой рисования
-		0,                  // Зарезервировано
-		0, 0, 0                  // Маски слоя игнорируются
-	};
-	hDC = GetDC(hWnd);
-	if (!hDC)              // Можем ли мы получить Контекст Устройства?
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Can't Create A GL Device Context." << std::endl;
-		//MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-	PixelFormat = ChoosePixelFormat(hDC, &pfd);
-	if (!PixelFormat)        // Найден ли подходящий формат пикселя?
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Can't Find A Suitable PixelFormat." << std::endl;
-		//MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-	if (!SetPixelFormat(hDC, PixelFormat, &pfd))          // Возможно ли установить Формат Пикселя?
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Can't Set The PixelFormat." << std::endl;
-		//MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-	hRC = wglCreateContext(hDC);
-	if (!hRC)          // Возможно ли установить Контекст Рендеринга?
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Can't Create A GL Rendering Context." << std::endl;
-		//MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-
-	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
-	{
-		killWindow();                // Восстановить экран
-		std::cerr << "Can't Activate The GL Rendering Context." << std::endl;
-		//MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;                // Вернуть false
-	}
-
-	ShowWindow(hWnd, SW_SHOW);              // Показать окно
-	SetForegroundWindow(hWnd);              // Слегка повысим приоритет
-	SetFocus(hWnd);                // Установить фокус клавиатуры на наше окно
-
+	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, key_callback);	
 	return true;
 }
 
-
 void RenderGL::killWindow()
 {
-	if (fullscreen)              // ÐœÑ‹ Ð² Ð¿Ð¾Ð»Ð½Ð¾ÑÐºÑ€Ð°Ð½Ð½Ð¾Ð¼ Ñ€ÐµÐ¶Ð¸Ð¼Ðµ?
-	{
-		ChangeDisplaySettings(NULL, 0);        // Ð•ÑÐ»Ð¸ Ð´Ð°, Ñ‚Ð¾ Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ÑÑ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾ Ð² Ð¾ÐºÐ¾Ð½Ð½Ñ‹Ð¹ Ñ€ÐµÐ¶Ð¸Ð¼
-		ShowCursor(true);            // ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ ÐºÑƒÑ€ÑÐ¾Ñ€ Ð¼Ñ‹ÑˆÐºÐ¸
-	}
-
-	if (hRC)                // Ð¡ÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚ Ð»Ð¸ ÐšÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ Ð ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³Ð°?
-	{
-		if (!wglMakeCurrent(NULL, NULL))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð´Ð¸Ñ‚ÑŒ RC Ð¸ DC?
-		{
-			std::cerr << "Release Of DC And RC Failed." << std::endl;
-			//MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
-		}
-		if (!wglDeleteContext(hRC))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ RC?
-		{
-			std::cerr << "Release Rendering Context Failed." << std::endl;
-			//MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
-		}
-		hRC = NULL;              // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ RC Ð² NULL
-	}
-
-	if (hDC && !ReleaseDC(hWnd, hDC))          // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ DC?
-	{
-		std::cerr << "Release Device Context Failed." << std::endl;
-		//MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
-		hDC = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ DC Ð² NULL
-	}
-
-	if (hWnd && !DestroyWindow(hWnd))            // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾?
-	{
-		std::cerr << "Could Not Release hWnd." << std::endl;
-		//MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
-		hWnd = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hWnd Ð² NULL
-	}
-
-	if (!UnregisterClass("OpenG", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
-	{
-		std::cerr << "Could Not Unregister Class." << std::endl;
-		//MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
-		hInstance = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hInstance Ð² NULL
-	}
-
-	gluDeleteQuadric(quadratic);
-
-	killFont();
+	glfwDestroyWindow(window);
 }
+
 
 bool RenderGL::Init()
 {
 	//ptr_wndProc = wndProc;
 	if (!createWindow())
 	{
-		//MessageBox(NULL, "Cannot Create Window.", "ERROR", MB_OK | MB_ICONSTOP);
 		std::cerr << "Cannot Create Window." << std::endl;
 		return false;
 	}
 	InitGL();
+	//buildFont();
 	return true;
 }
 
@@ -318,6 +149,25 @@ bool RenderGL::swithFullscreen()
 
 void RenderGL::InitGL()
 {
+	quadratic = gluNewQuadric();
+	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
+
+	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
+	glEnable(GL_DEPTH_TEST);
+
+
+	UpdateLight();
+
+	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	//glEnable(GL_TEXTURE_2D);
+
+
+
+	//----------
 	/*
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 	glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
@@ -341,7 +191,7 @@ void RenderGL::InitGL()
 	glGetProgramiv = (PFNGLGETPROGRAMIVPROC)wglGetProcAddress("glGetProgramiv");
 	glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
 	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
-	*/
+	
 
 	//glGenVertexArray(1, &VAO);
 	//glBindVertexArray(VAO);
@@ -358,30 +208,11 @@ void RenderGL::InitGL()
 	// Предоставляем наши вершины в OpenGL
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-
-
 	//glEnableVertexAttribArray(0);
 
 	//Shaders
 	//shaderProgram = LoadShaders("../GEngine/src/shaders/vertex_shader.glsl", "../GEngine/src/shaders/fragment_shader.glsl");
-
-
 	//LoadGLTextures();
-
-	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
-	glEnable(GL_DEPTH_TEST);
-
-
-	UpdateLight();
-
-	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	//glEnable(GL_TEXTURE_2D);
-
-	//quadratic = gluNewQuadric();
 
 	//std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 	//std::string vendorInfo = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -389,16 +220,13 @@ void RenderGL::InitGL()
 	//std::cout << "OpenGL version: " << version << std::endl;
 	//std::cout << "OpenGL vendor: " << vendorInfo << std::endl;
 	//std::cout << "Full OpenGL extensions list: " << extensionsInfo << std::endl;
-
-	buildFont();
-
-	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
+	*/
 }
 
 // Загрузка картинки и конвертирование в текстуру
+/*
 bool RenderGL::LoadTextures()
 {
-	/*
 	// Загрузка картинки
 	AUX_RGBImageRec *texture1;
 	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
@@ -416,9 +244,10 @@ bool RenderGL::LoadTextures()
 
 	if (!texture1) return false;
 	delete texture1;
-	*/
+	
 	return true;;
 }
+*/
 
 void RenderGL::Resize(size_t width_, size_t height_)
 {
@@ -434,12 +263,67 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0f, static_cast<GLfloat>(width) / static_cast<GLfloat>(height), 0.1f, 1000000.0f);
+	gluPerspective(45.0f, aspect, 0.1f, 1000000.0f);
 	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
 	glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-	
+	glLoadIdentity();	
 }
+
+
+/*
+void RenderGL::buildFont()
+{
+	HFONT  font;            // Идентификатор фонта
+	base = glGenLists(96);  // Выделим место для 96 символов ( НОВОЕ )								
+	font = CreateFont(-24,        // Высота фонта ( НОВОЕ )
+		0,        // Ширина фонта
+		0,        // Угол отношения
+		0,        // Угол наклона
+		FW_BOLD,      // Ширина шрифта
+		FALSE,        // Курсив
+		FALSE,        // Подчеркивание
+		FALSE,        // Перечеркивание
+		ANSI_CHARSET,      // Идентификатор набора символов
+		OUT_TT_PRECIS,      // Точность вывода
+		CLIP_DEFAULT_PRECIS,    // Точность отсечения
+		ANTIALIASED_QUALITY,    // Качество вывода
+		FF_DONTCARE | DEFAULT_PITCH,  // Семейство и шаг
+		"Courier New");      // Имя шрифта
+
+	SelectObject(hDC, font);        // Выбрать шрифт, созданный нами ( НОВОЕ )
+	wglUseFontBitmaps(hDC, 32, 96, base); // Построить 96 символов начиная с пробела ( НОВОЕ )
+}
+*/
+
+/*
+void RenderGL::killFont()
+{
+	glDeleteLists(base, 96);        // Удаление всех 96 списков отображения ( НОВОЕ )
+}
+*/
+
+
+/*
+void RenderGL::print(float x, float y, const char* fmt, ...)
+{
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -1.0f);
+	glColor3f(0.8f, 0.8f, 0.8f);
+	glRasterPos2f(x, y);
+	char    text[256];      // Место для нашей строки
+
+	va_list    ap;          // Указатель на список аргументов
+	if (fmt == NULL)	return;// Если нет текста Ничего не делать
+
+	va_start(ap, fmt);           // Разбор строки переменных
+	vsprintf_s(text, fmt, ap); // И конвертирование символов в реальные коды
+	va_end(ap);                  // Результат помещается в строку
+	glPushAttrib(GL_LIST_BIT);      // Протолкнуть биты списка отображения ( НОВОЕ )
+	glListBase(base - 32);          // Задать базу символа в 32 ( НОВОЕ )
+	glCallLists(static_cast<GLsizei>(strlen(text)), GL_UNSIGNED_BYTE, text);// Текст списками отображения(НОВОЕ)
+	glPopAttrib(); // Возврат битов списка отображения ( НОВОЕ )s	
+}
+*/
 
 /*void RenderGL::CreateVBO(const float* data, const 
 num_vert, const size_t* index, const size_t num_index)
@@ -576,8 +460,9 @@ void RenderGL::beginDraw() const
 void RenderGL::endDraw() const
 {
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	glFlush();
-	SwapBuffers(hDC);//_WIN32
+	//glFlush();
+	//SwapBuffers(hDC);//_WIN32
+	glfwSwapBuffers(window);
 }
 
 void RenderGL::Translate(const Vector3f & t) const
@@ -608,53 +493,6 @@ void RenderGL::LoadIdentity() const
 	glLoadIdentity();
 }
 
-void RenderGL::buildFont()
-{
-	HFONT  font;            // Идентификатор фонта
-	base = glGenLists(96);  // Выделим место для 96 символов ( НОВОЕ )								
-	font = CreateFont(-24,        // Высота фонта ( НОВОЕ )
-		0,        // Ширина фонта
-		0,        // Угол отношения
-		0,        // Угол наклона
-		FW_BOLD,      // Ширина шрифта
-		FALSE,        // Курсив
-		FALSE,        // Подчеркивание
-		FALSE,        // Перечеркивание
-		ANSI_CHARSET,      // Идентификатор набора символов
-		OUT_TT_PRECIS,      // Точность вывода
-		CLIP_DEFAULT_PRECIS,    // Точность отсечения
-		ANTIALIASED_QUALITY,    // Качество вывода
-		FF_DONTCARE | DEFAULT_PITCH,  // Семейство и шаг
-		"Courier New");      // Имя шрифта
-
-	SelectObject(hDC, font);        // Выбрать шрифт, созданный нами ( НОВОЕ )
-	wglUseFontBitmaps(hDC, 32, 96, base); // Построить 96 символов начиная с пробела ( НОВОЕ )
-}
-
-void RenderGL::killFont()
-{
-	glDeleteLists(base, 96);        // Удаление всех 96 списков отображения ( НОВОЕ )
-}
-
-void RenderGL::print(float x, float y, const char * fmt, ...)
-{
-	glLoadIdentity();	
-	glTranslatef(0.0f, 0.0f, -1.0f);
-	glColor3f(0.8f, 0.8f, 0.8f);
-	glRasterPos2f(x, y);
-	char    text[256];      // Место для нашей строки
-
-	va_list    ap;          // Указатель на список аргументов
-	if (fmt == NULL)	return;// Если нет текста Ничего не делать
-
-	va_start(ap, fmt);           // Разбор строки переменных
-	vsprintf_s(text, fmt, ap); // И конвертирование символов в реальные коды
-	va_end(ap);                  // Результат помещается в строку
-	glPushAttrib(GL_LIST_BIT);      // Протолкнуть биты списка отображения ( НОВОЕ )
-	glListBase(base - 32);          // Задать базу символа в 32 ( НОВОЕ )
-	glCallLists(static_cast<GLsizei>(strlen(text)), GL_UNSIGNED_BYTE, text);// Текст списками отображения(НОВОЕ)
-	glPopAttrib(); // Возврат битов списка отображения ( НОВОЕ )s	
-}
 
 void RenderGL::drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const
 {
@@ -944,3 +782,213 @@ void RenderGL::drawVBO() const
 	glDrawElements(GL_TRIANGLES, VBOIndexN, GL_size_t_INT, 0);
 	*/
 }
+/*
+bool RenderGL::createWindow()
+{
+	int PixelFormat;              // Хранит результат после поиска
+	WNDCLASS  wc;                // Структура класса окна
+	DWORD    dwExStyle;              // Расширенный стиль окна
+	DWORD    dwStyle;              // Обычный стиль окна
+	RECT WindowRect;                // Grabs Rectangle Upper Left / Lower Right Values
+	WindowRect.left = (long)0;              // Установить левую составляющую в 0
+	WindowRect.right = (long)width;              // Установить правую составляющую в Width
+	WindowRect.top = (long)0;                // Установить верхнюю составляющую в 0
+	WindowRect.bottom = (long)height;              // Установить нижнюю составляющую в Height
+	//!!!fullscreen = fullscreen;              // Устанавливаем значение глобальной переменной fullscreen
+	hInstance = GetModuleHandle(NULL);        // Считаем дескриптор нашего приложения
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;      // Перерисуем при перемещении и создаём скрытый DC
+	wc.lpfnWndProc = (WNDPROC)ptr_wndProc;          // Процедура обработки сообщений
+	//TODO wc.lpfnWndProc =
+	wc.cbClsExtra = 0;              // Нет дополнительной информации для окна
+	wc.cbWndExtra = 0;              // Нет дополнительной информации для окна
+	wc.hInstance = hInstance;            // Устанавливаем дескриптор
+	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);        // Загружаем иконку по умолчанию
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);        // Загружаем указатель мышки
+	wc.hbrBackground = NULL;              // Фон не требуется для GL
+	wc.lpszMenuName = NULL;              // Меню в окне не будет
+	wc.lpszClassName = "OpenGL";            // Устанавливаем имя классу
+	if (!RegisterClass(&wc))              // Пытаемся зарегистрировать класс окна
+	{
+		std::cerr << "Failed To Register The Window Class." << std::endl;
+		//MessageBox(NULL, "Failed To Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Выход и возвращение функцией значения false
+	}
+	if (fullscreen)                // Полноэкранный режим?
+	{
+		DEVMODE dmScreenSettings;            // Режим устройства
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));    // Очистка для хранения установок
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);      // Размер структуры Devmode
+		dmScreenSettings.dmPelsWidth = (DWORD)width;        // Ширина экрана
+		dmScreenSettings.dmPelsHeight = (DWORD)height;        // Высота экрана
+		dmScreenSettings.dmBitsPerPel = 32;        // Глубина цвета
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;// Режим Пикселя
+																				 // Пытаемся установить выбранный режим и получить результат.  Примечание: CDS_FULLSCREEN убирает панель управления.
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+		{
+			//TODO
+			// Если переключение в полноэкранный режим невозможно, будет предложено два варианта: оконный режим или выход.
+			if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?",
+				"GEngine G", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
+			{
+				fullscreen = false;          // Выбор оконного режима (fullscreen = false)
+			}
+			else
+			{
+				std::cerr << "Program Will Now Close." << std::endl;
+				//MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
+				return false;            // Выход и возвращение функцией false
+			}
+		}
+	}
+	if (fullscreen)                  // Мы остались в полноэкранном режиме?
+	{
+		dwExStyle = WS_EX_APPWINDOW;          // Расширенный стиль окна
+		dwStyle = WS_POPUP;            // Обычный стиль окна
+		ShowCursor(false);              // Скрыть указатель мышки
+	}
+	else
+	{
+		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;      // Расширенный стиль окна
+		dwStyle = WS_OVERLAPPEDWINDOW;        // Обычный стиль окна
+	}
+	AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);      // Подбирает окну подходящие размеры
+	hWnd = CreateWindowEx(dwExStyle,          // Расширенный стиль для окна
+		"OpenGL",          // Имя класса
+		title,            // Заголовок окна
+		WS_CLIPSIBLINGS |        // Требуемый стиль для окна
+		WS_CLIPCHILDREN |        // Требуемый стиль для окна
+		dwStyle,          // Выбираемые стили для окна
+		0, 0,            // Позиция окна
+		WindowRect.right - WindowRect.left,    // Вычисление подходящей ширины
+		WindowRect.bottom - WindowRect.top,    // Вычисление подходящей высоты
+		NULL,            // Нет родительского
+		NULL,            // Нет меню
+		hInstance,          // Дескриптор приложения
+		NULL);
+	if (!hWnd)          // Не передаём ничего до WM_CREATE (???)
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Window Creation Error." << std::endl;
+		//MessageBox(NULL, "Window Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+	static  PIXELFORMATDESCRIPTOR pfd =            // pfd сообщает Windows каким будет вывод на экран каждого пикселя
+	{
+		sizeof(PIXELFORMATDESCRIPTOR),            // Размер дескриптора данного формата пикселей
+		1,                  // Номер версии
+		PFD_DRAW_TO_WINDOW |              // Формат для Окна
+		PFD_SUPPORT_OPENGL |              // Формат для OpenGL
+		PFD_DOUBLEBUFFER,              // Формат для двойного буфера
+		PFD_TYPE_RGBA,                // Требуется RGBA формат
+		32,                  // Выбирается бит глубины цвета
+		0, 0, 0, 0, 0, 0,              // Игнорирование цветовых битов
+		0,                  // Нет буфера прозрачности
+		0,                  // Сдвиговый бит игнорируется
+		0,                  // Нет буфера накопления
+		0, 0, 0, 0,                // Биты накопления игнорируются
+		32,                  // 32 битный Z-буфер (буфер глубины)
+		0,                  // Нет буфера трафарета
+		0,                  // Нет вспомогательных буферов
+		PFD_MAIN_PLANE,                // Главный слой рисования
+		0,                  // Зарезервировано
+		0, 0, 0                  // Маски слоя игнорируются
+	};
+	hDC = GetDC(hWnd);
+	if (!hDC)              // Можем ли мы получить Контекст Устройства?
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Can't Create A GL Device Context." << std::endl;
+		//MessageBox(NULL, "Can't Create A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+	PixelFormat = ChoosePixelFormat(hDC, &pfd);
+	if (!PixelFormat)        // Найден ли подходящий формат пикселя?
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Can't Find A Suitable PixelFormat." << std::endl;
+		//MessageBox(NULL, "Can't Find A Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+	if (!SetPixelFormat(hDC, PixelFormat, &pfd))          // Возможно ли установить Формат Пикселя?
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Can't Set The PixelFormat." << std::endl;
+		//MessageBox(NULL, "Can't Set The PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+	hRC = wglCreateContext(hDC);
+	if (!hRC)          // Возможно ли установить Контекст Рендеринга?
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Can't Create A GL Rendering Context." << std::endl;
+		//MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+
+	if (!wglMakeCurrent(hDC, hRC))            // Попробовать активировать Контекст Рендеринга
+	{
+		killWindow();                // Восстановить экран
+		std::cerr << "Can't Activate The GL Rendering Context." << std::endl;
+		//MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return false;                // Вернуть false
+	}
+
+	ShowWindow(hWnd, SW_SHOW);              // Показать окно
+	SetForegroundWindow(hWnd);              // Слегка повысим приоритет
+	SetFocus(hWnd);                // Установить фокус клавиатуры на наше окно
+
+	return true;
+}
+*/
+
+
+/*
+void RenderGL::killWindow()
+{
+	if (fullscreen)              // ÐœÑ‹ Ð² Ð¿Ð¾Ð»Ð½Ð¾ÑÐºÑ€Ð°Ð½Ð½Ð¾Ð¼ Ñ€ÐµÐ¶Ð¸Ð¼Ðµ?
+	{
+		ChangeDisplaySettings(NULL, 0);        // Ð•ÑÐ»Ð¸ Ð´Ð°, Ñ‚Ð¾ Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ÑÑ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾ Ð² Ð¾ÐºÐ¾Ð½Ð½Ñ‹Ð¹ Ñ€ÐµÐ¶Ð¸Ð¼
+		ShowCursor(true);            // ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ ÐºÑƒÑ€ÑÐ¾Ñ€ Ð¼Ñ‹ÑˆÐºÐ¸
+	}
+
+	if (hRC)                // Ð¡ÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚ Ð»Ð¸ ÐšÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ Ð ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³Ð°?
+	{
+		if (!wglMakeCurrent(NULL, NULL))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð´Ð¸Ñ‚ÑŒ RC Ð¸ DC?
+		{
+			std::cerr << "Release Of DC And RC Failed." << std::endl;
+			//MessageBox(NULL, "Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		}
+		if (!wglDeleteContext(hRC))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ RC?
+		{
+			std::cerr << "Release Rendering Context Failed." << std::endl;
+			//MessageBox(NULL, "Release Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		}
+		hRC = NULL;              // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ RC Ð² NULL
+	}
+
+	if (hDC && !ReleaseDC(hWnd, hDC))          // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ DC?
+	{
+		std::cerr << "Release Device Context Failed." << std::endl;
+		//MessageBox(NULL, "Release Device Context Failed.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		hDC = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ DC Ð² NULL
+	}
+
+	if (hWnd && !DestroyWindow(hWnd))            // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾?
+	{
+		std::cerr << "Could Not Release hWnd." << std::endl;
+		//MessageBox(NULL, "Could Not Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		hWnd = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hWnd Ð² NULL
+	}
+
+	if (!UnregisterClass("OpenGL", hInstance))        // Ð’Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ Ð»Ð¸ Ñ€Ð°Ð·Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ»Ð°ÑÑ
+	{
+		std::cerr << "Could Not Unregister Class." << std::endl;
+		//MessageBox(NULL, "Could Not Unregister Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		hInstance = NULL;                // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ hInstance Ð² NULL
+	}
+
+	gluDeleteQuadric(quadratic);
+
+	killFont();
+}
+*/

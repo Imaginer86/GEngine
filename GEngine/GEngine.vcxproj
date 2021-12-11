@@ -145,7 +145,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>
       </CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\lib;C:\LIB\glew-2.1.0-win32\glew-2.1.0\include;C:\LIB\glfw-3.3.6\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,8 +154,8 @@
     </Link>
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\LIB\glfw-3.3.6\lib-vc2019;$(ProjectDir)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

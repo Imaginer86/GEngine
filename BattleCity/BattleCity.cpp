@@ -78,7 +78,7 @@ void Program::Draw()
 	render->drawVBO();
 	if (drawDebugInfo)
 	{
-		render->print(-0.45f, 0.35f, "FPS: %d", FPS);
+		//render->print(-0.45f, 0.35f, "FPS: %d", FPS);
 	}
 	render->endDraw();
 }
@@ -95,6 +95,6 @@ void Program::End()
 
 int main()
 {
-	GMain();
+	//GMain();
 	return 0;
 }

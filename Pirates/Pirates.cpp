@@ -22,7 +22,7 @@ Vector3f	CameraAxic(0.0f, 1.0f, 0.0f);
 
 bool Program::Init(void* wndProc)
 {
-	render = new RenderGL("Pirates", wndProc, 1024, 768, CameraPos, CameraAngle, CameraAxic, false, true, 0.1f, 10.0f);
+	render = new RenderGL("Pirates", wndProc, 1920, 1200, CameraPos, CameraAngle, CameraAxic, false, true, 0.1f, 10.0f);
 	if (!render->Init()) return false;
 	if (!Cube.Load("data", "Cube.obj", true)) return false;
 	//if (!Manovar.Load("data", "Manovar.obj")) return false;
@@ -51,10 +51,10 @@ void Program::Draw()
 	Cube.Draw(render);
 	if (drawDebugInfo)
 	{
-		render->LoadIdentity();
-		render->Color(Color4f(1.0f, 0.1f, 0.1f, 1.0f));
-		render->print(-0.55f, 0.4f, "FPS: %d", FPS);
-		render->print(-0.40f, 0.4f, "Time Scale: %f", timeScale);
+		//render->LoadIdentity();
+		//render->Color(Color4f(1.0f, 0.1f, 0.1f, 1.0f));
+		//render->print(-0.55f, 0.4f, "FPS: %d", FPS);
+		//render->print(-0.40f, 0.4f, "Time Scale: %f", timeScale);
 	}
 
 	render->endDraw();
@@ -66,5 +66,5 @@ void Program::End()
 
 int main()
 {
-	return GMain();
+	//return GMain();
 }

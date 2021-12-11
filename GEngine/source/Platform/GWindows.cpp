@@ -1,34 +1,39 @@
 ﻿//#include "GWindows.h"
-#include "../GEngine.h"
-#include "../Core/Time.h"
-#include "../Render/RenderGL.h"
+//#include "../GEngine.h"
+//#include "../Core/Time.h"
+//#include "../Render/RenderGL.h"
 
-#include <iostream>
+//#include <iostream>
 
 //WWWin
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
-#endif
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
+//#endif
 // Файлы заголовков Windows:
-#include <Windows.h>
+//#include <Windows.h>
 
-Program program;
-
-
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+//Program program;
 
 
+//LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+
+/*
 void GInitProgram(Program *&programPtr)
 {
 	programPtr = &program;
 }
+*/
 
+/*
 void GUpdateLastTickCount()
 {
 	program.lastTickCount = Core::GetTickCount();
 }
+*/
 
 
+/*
 void GUpdateKeys()
 {
 	if (program.keys[VK_PRIOR])
@@ -113,8 +118,9 @@ void GUpdateKeys()
 		program.keys['L'] = false;
 	}
 }
+*/
 
-
+/*
 int GMain()
 {
 	if (!program.Init(WndProc))
@@ -172,9 +178,10 @@ int GMain()
 	}
 	return 0;
 }
-
+*/
 
 //WWWin
+/*
 LRESULT CALLBACK WndProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -228,3 +235,4 @@ LRESULT CALLBACK WndProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc(hWND, message, wParam, lParam);
 }
+*/

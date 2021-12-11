@@ -1,11 +1,6 @@
 #pragma once
 
-//WWWin
-#ifdef _WINDOWS
-#include "Platform\GWindows.h"
-#endif
-
-#include "Math/Vector3f.h"
+//#include "Math/Vector3f.h"
 //#include "Math/Quaternion.h"
 
 /*
@@ -36,16 +31,16 @@ public:
 	bool drawDebugInfo = true;
 	float timeScale = 1.0f;
 public:
-	bool Init(void *wndProc);
+	bool Init(/*void* wndProc*/);
 	void Draw();
 	void Update(float dt);
 	void End();
 };
 
-void GInitProgram(Program *& programPtr);
+//void GInitProgram(Program *& programPtr);
 
-void GUpdateLastTickCount();
+//void GUpdateLastTickCount();
 
-void GUpdateKeys();
+//void GUpdateKeys();
 
-int GMain();
+//int GMain();

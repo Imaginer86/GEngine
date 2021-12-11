@@ -16,12 +16,12 @@ protected:
 	size_t height;
 	float moveScale;
 	float rotateScale;
-	void* ptr_wndProc;
+	//void* ptr_wndProc;
 	char* title;
 public:
-	Render(const char* title_, void* wndProc, size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		: ptr_wndProc(wndProc)
-		, width(width_)
+	Render(const char* title_, /*void* wndProc,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+		//: ptr_wndProc(wndProc)
+		: width(width_)
 		, height(height_)
 		, fullscreen(fullscreen_)
 		, light(light_)
@@ -30,21 +30,22 @@ public:
 		, rotateScale(rotateScale_)
 	{
 		size_t lenght = strlen(title_);
-		title = new char[lenght];
-		strncpy_s(title, sizeof(title), title_, lenght);
+		title = new char[lenght+1];
+		strcpy_s(title, sizeof(title), title_);
+		if (height == 0) height = 1;
 	}
 	//Render(InitData& initData);
 	virtual ~Render() { delete[] title; };
 
 	virtual bool Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
-	virtual bool LoadTextures() = 0;
+	//virtual bool LoadTextures() = 0;
 	virtual bool swithFullscreen() = 0;
 	virtual void UpdateLight() = 0;
 
-	virtual void buildFont() = 0;
-	virtual void killFont() = 0;
-	virtual void print(float x, float y, const char* fmt, ...) = 0;
+	//virtual void buildFont() = 0;
+	//virtual void killFont() = 0;
+	//virtual void print(float x, float y, const char* fmt, ...) = 0;
 
 	virtual void beginDraw() const = 0;
 	virtual void endDraw() const = 0;

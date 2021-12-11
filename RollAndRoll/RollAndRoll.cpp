@@ -198,10 +198,10 @@ void Program::Draw()
 	render->drawSphere(ball.pos, ball.r, ball.q, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	if (drawDebugInfo)
 	{
-		render->print(-0.45f, 0.37f, "FPS: %d", FPS);
-		render->print(-0.45f, 0.35f, "Ball Pos %f  %f  %f", ball.pos.x, ball.pos.y, ball.pos.z);
-		render->print(-0.45f, 0.33f, "Ball Vel %f  %f  %f", ball.vel.x, ball.vel.y, ball.vel.z);
-		render->print(-0.45f, 0.31f, contact ? "Contact: True" : "Contact: False");
+		//render->print(-0.45f, 0.37f, "FPS: %d", FPS);
+		//render->print(-0.45f, 0.35f, "Ball Pos %f  %f  %f", ball.pos.x, ball.pos.y, ball.pos.z);
+		//render->print(-0.45f, 0.33f, "Ball Vel %f  %f  %f", ball.vel.x, ball.vel.y, ball.vel.z);
+		//render->print(-0.45f, 0.31f, contact ? "Contact: True" : "Contact: False");
 	}
 	render->endDraw();	
 }
@@ -212,6 +212,5 @@ void Program::End()
 }
 int main()
 {
-
-	return GMain();
+	//return GMain();
 }

@@ -2,7 +2,7 @@
 #include <cmath>
 
 namespace Math {
-	const float G = 667.3848080808080808080f * 0.5f; //Gravi constant
+	const float G = 667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
 	const float GEPSILON = 0.0001f;
 	const float GM_PI = 3.14159265358979323846f;   // pi

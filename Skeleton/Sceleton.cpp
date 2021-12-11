@@ -42,6 +42,6 @@ void Program::End()
 int main()
 {
 	//GInitProgram(programPtr);
-	GMain();
+	//GMain();
 	return 0;
 }

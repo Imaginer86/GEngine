@@ -4,8 +4,8 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(const char* title_, void* wndProc_, size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		:Render(title_, wndProc_, width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {
+	RenderGL(const char* title_, /*void* wndProc_,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+		:Render(title_, /*wndProc_,*/ width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {
 		p_instance = this;
 	}
 
@@ -13,7 +13,7 @@ public:
 
 	virtual bool Init();
 	virtual void Resize(size_t  width_, size_t height_);
-	virtual bool LoadTextures();
+	//virtual bool LoadTextures();
 	virtual bool swithFullscreen();
 	virtual void UpdateLight();
 	virtual void beginDraw() const;
@@ -25,9 +25,9 @@ public:
 	virtual void Color(const Color4f& color);
 	virtual void LoadIdentity() const;
 
-	virtual void buildFont();
-	virtual void killFont();
-	virtual void print(float x, float y, const char * fmt, ...);
+	//virtual void buildFont();
+	//virtual void killFont();
+	//virtual void print(float x, float y, const char * fmt, ...);
 
 	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index);
 	
@@ -47,7 +47,7 @@ public:
 
 	static Render* getInstance() {
 		if (!p_instance) //TODO
-			p_instance = new RenderGL("GEngine", nullptr, 1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
+			p_instance = new RenderGL("GEngine", 1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
 		return p_instance;
 	}
 
