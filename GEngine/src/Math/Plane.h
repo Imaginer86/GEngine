@@ -3,9 +3,8 @@
 #include "Line.h"
 #include "gmath.h"
 
-class Plane
+struct Plane
 {
-public:
 	float A, B, C, D;
 
 	Plane(float a, float b, float c, float d);

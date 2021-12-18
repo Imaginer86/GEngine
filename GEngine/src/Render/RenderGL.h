@@ -1,13 +1,11 @@
 #pragma once
 #include "Render.h"
-
 class RenderGL:	public Render
 {
 public:		
 	RenderGL(const char* title_, /*void* wndProc_,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
-		:Render(title_, /*wndProc_,*/ width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {
-		p_instance = this;
-	}
+		:Render(title_, /*wndProc_,*/ width_, height_, pos_, angle_, axic_, fullscreen_, light_, moveScale_, rotateScale_) {}
+		//p_instance = this;//}
 
 	virtual ~RenderGL() {};
 
@@ -45,21 +43,22 @@ public:
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const;
 	virtual void drawVBO() const;
 
-	static Render* getInstance() {
-		if (!p_instance) //TODO
-			p_instance = new RenderGL("GEngine", 1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
-		return p_instance;
-	}
+	//static Render* getInstance() {
+		//if (!p_instance) //TODO
+			//p_instance = new RenderGL("GEngine", 1024, 768, Vector3f(0.0f, 0.0f, -1000.0f), 0.0f, Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
+		//return p_instance;
+	//}
 
 protected:
+	//static void key_callback(int key, GLFWwindow* window, int scancode, int action, int mods);
 	virtual bool createWindow();
 	virtual void killWindow();
-private:
 
 	void InitGL();
+	//static void key_callback(int key, int scancode, int action, int mods);
+private:
 
-
-	//size_t LoadShaders(const char * vertex_file_path, const char * fragment_file_path);
-	//size_t VBOVertexN;
-	//size_t VBOIndexN;
+	float gLightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
+	float gLightDiffuse[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float gLightPosition[4] = { 0.0f, 500.0f, 0.0f, 1.0f };
 };

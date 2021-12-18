@@ -1,7 +1,8 @@
 #pragma once
-#include "gmath.h"
-
+//#include "gmath.h"
+#include <cmath>
 #include <iostream>
+
 struct Vector3f
 {
 	float x;
@@ -33,17 +34,17 @@ struct Vector3f
 	Vector3f operator*(const Vector3f& v);	// cross product (vector product)
 	float dotProduct(const Vector3f& v);
 
-	float length();	// length() returns the length of this Vector3
+	float Length();	// length() returns the length of this Vector3
 	float lenght2();
 	float unitize();	// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 	Vector3f unit();	// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
 
-	//istream& operator>> (istream& is);
-
 	std::istream& operator>> (std::istream& is);
-};
-const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
 
+	std::ostream& operator<< (std::ostream& os);
+};
+
+const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
 
 
 inline std::istream& operator>> (std::istream& is, Vector3f& v)
@@ -52,10 +53,12 @@ inline std::istream& operator>> (std::istream& is, Vector3f& v)
 	return is;
 }
 
-inline std::istream& Vector3f::operator>> (std::istream& is)
+
+
+inline std::ostream& Vector3f::operator<< (std::ostream& os)
 {
-	is >> this->x >> this->y >> this->z;
-	return is;
+	os << x << y << z;
+	return os;
 }
 
 inline bool Vector3f::operator!=(const Vector3f& v)
@@ -151,9 +154,9 @@ inline float Vector3f::dotProduct(const Vector3f& v)
 	return this->x*v.x + this->y*v.y + this->z*v.z;
 }
 
-inline float Vector3f::length()								// length() returns the length of this Vector3
+inline float Vector3f::Length()								// length() returns the length of this Vector3
 {
-	return Math::sqrt(x*x + y*y + z*z);
+	return sqrtf(x*x + y*y + z*z);
 };
 
 inline float Vector3f::lenght2()
@@ -163,7 +166,7 @@ inline float Vector3f::lenght2()
 
 inline float Vector3f::unitize()								// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 {
-	float length = this->length();
+	float length = Length();
 
 	if (length == 0.0f)
 		return 0.0;
@@ -176,7 +179,7 @@ inline float Vector3f::unitize()								// unitize() normalizes this Vector3 tha
 
 inline Vector3f Vector3f::unit()								// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
 {
-	float length = this->length();
+	float length = Length();
 
 	if (length == 0)
 		return *this;

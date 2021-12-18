@@ -21,7 +21,7 @@ public:
 		size_t	NormalT[4];
 		size_t	TexturesT[4];
 	};
-public:
+private:
 	bool isQuad = false;
 	size_t	trianglesN;
 	Triangle* Triangles;

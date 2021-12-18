@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GEngine", "GEngine.vcxproj", "{CEDA5BDE-9584-4030-B7A4-C5F56D073693}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gravi", "..\Gravi\Gravi.vcxproj", "{C63FFE45-FFCF-4B68-9397-093C92AE8A9D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CEDA5BDE-9584-4030-B7A4-C5F56D073693} = {CEDA5BDE-9584-4030-B7A4-C5F56D073693}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,9 +1,8 @@
 #pragma once
 #include "Vector3f.h"
 
-class Line
+struct Line
 {
-public:
 	Vector3f P;
 	Vector3f L;
 

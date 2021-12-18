@@ -1,7 +1,7 @@
 #include <chrono>
 
-namespace Core
-{
+//namespace Core
+//{
     // simulation of Windows GetTickCount()
     unsigned long long
         GetTickCount()
@@ -24,4 +24,4 @@ namespace Core
             return time_point(duration(GetTickCount()));
         }
     };
-}
+//}//namespace Core

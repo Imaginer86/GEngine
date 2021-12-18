@@ -19,13 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Camera.h" />
     <ClInclude Include="src\Core\FileReader.h" />
     <ClInclude Include="src\Core\Time.h" />
-    <ClInclude Include="src\GEngine.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Math\GMath.h" />
     <ClInclude Include="src\Math\Line.h" />
-    <ClInclude Include="src\Math\Matrix3.h" />
     <ClInclude Include="src\Math\Plane.h" />
     <ClInclude Include="src\Math\Quaternion.h" />
     <ClInclude Include="src\Math\Vector3f.h" />
@@ -41,7 +39,6 @@
     <ClInclude Include="src\Render\RenderGL.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Physics\Camera.cpp" />
     <ClCompile Include="src\Physics\Tank.cpp" />
     <ClCompile Include="src\Platform\GWindows.cpp" />
     <ClCompile Include="src\Render\MaterialMTL.cpp" />
@@ -111,6 +108,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)\lib\</OutDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -150,14 +151,15 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\lib;C:\LIB\glew-2.1.0-win32\glew-2.1.0\include;C:\LIB\glfw-3.3.6.bin.WIN64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6.bin.WIN64\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
       <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6.bin.WIN64\lib-vc2019</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;OpenGL32.LIB;GLU32.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

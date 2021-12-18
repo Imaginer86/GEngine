@@ -1,9 +1,8 @@
 #include "RenderGL.h"
-//WWWin Файлы заголовков Windows:
-//#ifndef WIN32_LEAN_AND_MEAN
-//#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
-//#endif
-//#include <Windows.h>
+#include "../Game.h"
+
+//#include "../Core/Input.h"
+
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -11,7 +10,20 @@
 //#define GL_GLEXT_PROTOTYPES
 #include <gl/gl.h>
 #include <gl/glu.h>
-/*#include <gl/glext.h>
+
+GLFWwindow* window;
+GLuint  base;      // База списка отображения для фонта
+
+GLUquadricObj* quadratic;
+
+//WWWin Файлы заголовков Windows:
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
+//#endif
+//#include <Windows.h>
+
+/*
+#include <gl/glext.h>
 PFNGLGENBUFFERSPROC					glGenBuffers = 0;                     // VBO Name Generation Procedure
 PFNGLBINDBUFFERPROC					glBindBuffer = 0;                     // VBO Bind Procedure
 PFNGLBUFFERDATAPROC					glBufferData = 0;
@@ -33,10 +45,10 @@ PFNGLDELETESHADERPROC				glDeleteShader = 0;
 PFNGLGETPROGRAMIVPROC				glGetProgramiv = 0;
 PFNGLGETPROGRAMINFOLOGPROC			glGetProgramInfoLog = 0;
 PFNGLUSEPROGRAMPROC					glUseProgram = 0;
-*/
-//#pragma comment(lib, "OpenGL32.lib")
-//#pragma comment(lib, "GLu32.lib")
 
+#pragma comment(lib, "OpenGL32.lib")
+#pragma comment(lib, "GLu32.lib")
+*/
 //#include <cstdio>
 //#include <stdarg.h>
 
@@ -45,77 +57,78 @@ PFNGLUSEPROGRAMPROC					glUseProgram = 0;
 //#include <iostream>
 //#include <vector>
 
-Render* Render::p_instance = nullptr;
+//Render* Render::p_instance = nullptr;
 
-GLFWwindow* window = nullptr;
+/*
+HDC		hDC;
+HGLRC	hRC;
+HWND	hWnd;
+HINSTANCE  hInstance;
 
-
-//HDC		hDC;
-//HGLRC	hRC;
-//HWND	hWnd;
-//HINSTANCE  hInstance;
-
-//Light
-GLfloat gLightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
-GLfloat gLightDiffuse[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-GLfloat gLightPosition[4] = { 0.0f, 500.0f, 0.0f, 1.0f };
-
-GLuint  base;      // База списка отображения для фонта
-
-GLUquadricObj *quadratic;
-
-//GLuint texture[1];
+Light
 
 
-//Test Triangle
+GLuint texture[1];
+
+
+Test Triangle
+
 GLfloat g_vertex_buffer_data[] = {
 	-100.0f, -100.0f, -1.0f,
 	100.0f, -100.0f, -1.0f,
 	0.0f, 100.0f, -1.0f
 };
 
-
-
 GLuint VBO;
 GLuint NBO;
 GLuint IBO;
-//GLuint vertexbuffer;;
-//GLuint VertexArrayID;
+
+GLuint vertexbuffer;;
+GLuint VertexArrayID;
 
 
-/* Это имя программы шейдера */
+ Это имя программы шейдера 
 GLuint shaderProgram;
-
+*/
 void error_callback(int error, const char* description)
 {
-	fprintf(stderr, "Error: %s\n", description);
+	//fprintf(stderr, "Error: %s\n", description);
+	std::cerr << description << std::endl;
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (action == GLFW_PRESS)
+		Game::keys[key] = true;
+	//if (action == GLFW_RELEASE)
+		//Game::keys[key] = false;
 }
 
 bool RenderGL::createWindow()
 {
+	glfwSetErrorCallback(error_callback);
 	if(!glfwInit())
 	{
 		return false;	// Ошибка инициализации
 	}
-	glfwSetErrorCallback(error_callback);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (!window)
 	{
+		glfwTerminate();
 		return false;	// Window or OpenGL context creation failed
 	}
+	glfwSetKeyCallback(window, key_callback);
 	glfwMakeContextCurrent(window);
-	glfwSetKeyCallback(window, key_callback);	
+	glfwSwapInterval(1);	
 	return true;
 }
 
 void RenderGL::killWindow()
 {
+	glfwSetWindowShouldClose(window, GLFW_TRUE);
 	glfwDestroyWindow(window);
 }
 
@@ -270,7 +283,7 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0f, aspect, 0.1f, 1000000.0f);
+	gluPerspective(45.0f, aspect, 0.1f, 1000.0f);
 	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
@@ -458,7 +471,9 @@ void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
 	glLoadIdentity();
-	glRotatef(camera.angle, camera.axic.x, camera.axic.y, camera.axic.z);
+	float angle = camera.q.GetAngle();
+	Vector3f axic = camera.q.GetAxic();
+	glRotatef(angle, axic.x, axic.y, axic.z);
 	glTranslatef(camera.pos.x, camera.pos.y, camera.pos.z);	
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -470,6 +485,7 @@ void RenderGL::endDraw() const
 	//glFlush();
 	//SwapBuffers(hDC);//_WIN32
 	glfwSwapBuffers(window);
+	glfwPollEvents();
 }
 
 void RenderGL::Translate(const Vector3f & t) const
