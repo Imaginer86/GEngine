@@ -1,0 +1,11 @@
+	Planets[0].m = 597.370f;
+	Planets[0].pos = Vector3f(0, 0, 0);
+	Planets[0].vel = Vector3f(-0.5, 0, 0);
+	Planets[0].r = 100;
+	Planets[0].color = Color4f(0.5f, 1.0f, 0, 1);
+
+	Planets[1].m = 7.3477f;
+	Planets[1].pos = Vector3f(0, 384.399f, 0);
+	Planets[1].vel = Vector3f(23.605915f, 0, 0);
+	Planets[1].r = 10;
+	Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);

@@ -10,11 +10,11 @@
 #include "Core/Time.h"
 
 
+bool keys[512];
 
-//#include "GEngine.h"
-//Game game;
+
 Render *render = nullptr;
-const size_t numEntites = 1;// 51;
+const size_t numEntites = 2;// 51;
 Entity Planets[numEntites];
 
 bool GraviForce = true;
@@ -31,11 +31,12 @@ int main ()
 	Game::Draw();
 	while(!Game::done)
 	{
-		Game::Input();
+		//Game::Input();
 		long long tickCount = GetTickCount();
 		tickCount = tickCount - Game::lastTickCount;
 		float dt = static_cast<float>(tickCount);
-		dt /= 1000000.0f;
+		dt /= 1000000000.0f;
+		dt *= Game::timeScale;
 		if (!Game::pause)	Game::Update(dt);
 		Game::Draw();
 	}
@@ -43,14 +44,18 @@ int main ()
 	return 0;
 }
 
-void Game::Input()
+void Game::Input(int key, bool press)
 {
-	if (Game::keys[32]) { Game::keys[32] = false; Game::pause = !Game::pause; }
-	if (Game::keys[256]) { Game::keys[256] = false; Game::done = true; }
+	keys[key] = press;
+	if (press && key == 256) Game::done = true;
+	if (press && key == 32) Game::pause = !Game::pause;
 }
 
 bool Game::Init(/*void* wndProc*/)
 {
+	//keys = new bool[512];
+	//for (int i = 0; i < 512; ++i) keys[i] = false;
+	Game::timeScale = 1.0f;
 	std::cout << "Game::Init" << std::endl;
 	render = new RenderGL("Gravi", 1600, 900, Vector3f(0.0f, 0.0f, -1000.0f), radToDeg(0.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
 	if (!render) { std::cout << "Failed to Create render" << std::endl;  return false; }
@@ -66,11 +71,11 @@ bool Game::Init(/*void* wndProc*/)
 	Planets[0].r = 100;
 	Planets[0].color = Color4f(0.5f, 1.0f, 0, 1);
 
-	//Planets[1].m = 7.3477f;
-	//Planets[1].pos = Vector3f(0, 384.399f, 0);
-	//Planets[1].vel = Vector3f(23.605915f, 0, 0);
-	//Planets[1].r = 10;
-	//Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
+	Planets[1].m = 7.3477f;
+	Planets[1].pos = Vector3f(0, 384.399f, 0);
+	Planets[1].vel = Vector3f(23.605915f, 0, 0);
+	Planets[1].r = 10;
+	Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
 	
 	
 

@@ -98,8 +98,9 @@ void error_callback(int error, const char* description)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (action == GLFW_PRESS)
-		Game::keys[key] = true;
+	if (action == GLFW_PRESS)	Game::Input(key, true);
+	if (action == GLFW_RELEASE)	Game::Input(key, false);
+		//Game::keys[key] = true;
 	//if (action == GLFW_RELEASE)
 		//Game::keys[key] = false;
 }

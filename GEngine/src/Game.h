@@ -2,9 +2,7 @@
 
 namespace Game
 {
-
-	static bool keys[512];
-
+	//static bool *keys;
 	static long long lastTickCount;
 	static bool done;
 	static bool pause;
@@ -14,9 +12,9 @@ namespace Game
 	static bool drawDebugInfo;
 	static float timeScale;
 
-	static bool Init(/*void* wndProc*/);
-	static void Draw();
-	static void Input();
-	static void Update(float dt);
-	static void End();
+	bool Init(/*void* wndProc*/);
+	void Draw();
+	void Input(int key, bool press);
+	void Update(float dt);
+	void End();
 };
