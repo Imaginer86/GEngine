@@ -123,6 +123,7 @@
       <AdditionalDependencies>GEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>
       </AssemblyDebug>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

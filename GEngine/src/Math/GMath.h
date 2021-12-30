@@ -20,7 +20,8 @@ inline float radToDeg(float radians)
 
 inline bool Enough(float f1, float f2)
 {
-	return fabs((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < GEPSILON;
+	//return fabs((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < GEPSILON;
+	return (fabsf(f1 - f2)) < GEPSILON;
 }
 
 

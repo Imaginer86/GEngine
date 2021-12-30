@@ -39,9 +39,9 @@ struct Vector3f
 	float unitize();	// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 	Vector3f unit();	// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
 
-	std::istream& operator>> (std::istream& is);
+	//std::istream& operator>> (std::istream& is);
 
-	std::ostream& operator<< (std::ostream& os);
+	//std::ostream& operator<< (std::ostream& os);
 };
 
 const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
@@ -55,9 +55,9 @@ inline std::istream& operator>> (std::istream& is, Vector3f& v)
 
 
 
-inline std::ostream& Vector3f::operator<< (std::ostream& os)
+inline std::ostream& operator<< (std::ostream& os, const Vector3f& v)
 {
-	os << x << y << z;
+	os << v.x << " " << v.y << " " << v.z << " ";
 	return os;
 }
 

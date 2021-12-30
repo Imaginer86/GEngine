@@ -4,9 +4,6 @@
     <ClCompile Include="src\Physics\Tank.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\GWindows.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
     <ClCompile Include="src\Render\MaterialMTL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -16,6 +13,10 @@
     <ClCompile Include="src\Render\RenderGL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Input.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\FileReader.h">
@@ -51,9 +52,6 @@
     <ClInclude Include="src\Physics\Tera.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\GWindows.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="src\Render\Color4f.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -70,6 +68,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -80,9 +81,6 @@
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{3ac15a0c-c8f7-4f1c-a602-d53b9da264a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{8b802d17-51ed-4020-b048-9fece227f8ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{4ee81c14-8c00-4c4a-8211-eb58167c2a1f}</UniqueIdentifier>

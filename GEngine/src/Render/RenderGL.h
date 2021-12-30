@@ -9,7 +9,7 @@ public:
 
 	virtual ~RenderGL() {};
 
-	virtual bool Init();
+	virtual void* Init();
 	virtual void Resize(size_t  width_, size_t height_);
 	//virtual bool LoadTextures();
 	virtual bool swithFullscreen();
@@ -54,7 +54,7 @@ protected:
 	virtual bool createWindow();
 	virtual void killWindow();
 
-	void InitGL();
+	bool InitGL();
 	//static void key_callback(int key, int scancode, int action, int mods);
 private:
 

@@ -1,7 +1,6 @@
 #include "RenderGL.h"
 #include "../Game.h"
-
-//#include "../Core/Input.h"
+#include "../Core/Input.h"
 
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
@@ -90,20 +89,13 @@ GLuint VertexArrayID;
  Это имя программы шейдера 
 GLuint shaderProgram;
 */
+
 void error_callback(int error, const char* description)
 {
 	//fprintf(stderr, "Error: %s\n", description);
-	std::cerr << description << std::endl;
+	std::cerr << description << std::endl << "Error code: " << error << std::endl;
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (action == GLFW_PRESS)	Game::Input(key, true);
-	if (action == GLFW_RELEASE)	Game::Input(key, false);
-		//Game::keys[key] = true;
-	//if (action == GLFW_RELEASE)
-		//Game::keys[key] = false;
-}
 
 bool RenderGL::createWindow()
 {
@@ -120,8 +112,7 @@ bool RenderGL::createWindow()
 	{
 		glfwTerminate();
 		return false;	// Window or OpenGL context creation failed
-	}
-	glfwSetKeyCallback(window, key_callback);
+	}	
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);	
 	return true;
@@ -134,24 +125,26 @@ void RenderGL::killWindow()
 }
 
 
-bool RenderGL::Init()
+void* RenderGL::Init()
 {
 	//ptr_wndProc = wndProc;
 	if (!createWindow())
 	{
 		std::cerr << "Cannot Create Window." << std::endl;
-		return false;
+		return nullptr;
 	}
+	
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
 		//fprintf(stderr, «Ошибка: % s \ n», glewGetErrorString(err));
 		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
+		return nullptr;
 	}
 	InitGL();
 	//buildFont();
-	return true;
+	return window;
 }
 
 bool RenderGL::swithFullscreen()
@@ -168,7 +161,7 @@ bool RenderGL::swithFullscreen()
 	return true;
 }
 
-void RenderGL::InitGL()
+bool RenderGL::InitGL()
 {
 	quadratic = gluNewQuadric();
 	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
@@ -184,12 +177,16 @@ void RenderGL::InitGL()
 
 	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	//glEnable(GL_TEXTURE_2D);
+
+	return true;
+	
 
 
 
 	//----------
 	/*
+	//glEnable(GL_TEXTURE_2D);
+
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 	glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
 	glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
@@ -472,9 +469,9 @@ void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
 	glLoadIdentity();
-	float angle = camera.q.GetAngle();
+	float angle = radToDeg(camera.q.GetAngle());
 	Vector3f axic = camera.q.GetAxic();
-	glRotatef(angle, axic.x, axic.y, axic.z);
+	if (!Enough(angle, 0.0f)) glRotatef(angle, axic.x, axic.y, axic.z);
 	glTranslatef(camera.pos.x, camera.pos.y, camera.pos.z);	
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);

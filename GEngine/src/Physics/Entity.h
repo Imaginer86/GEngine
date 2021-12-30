@@ -13,6 +13,7 @@ public:
 	Vector3f  vel;      // Скорость.
 	Vector3f  force;    // Воздействующая сила.
 	Color4f   color;
+	bool moved;
 
 	//Entity():m(1.0f), r(1.0f)
 	//{
@@ -41,9 +42,8 @@ inline void Entity::applyForce(Vector3f _force)
 
 inline void Entity::init()          // Обнуляем «нашу» силу
 {
-	force.x = 0;
-	force.y = 0;
-	force.z = 0;
+	force.x = 0;	force.y = 0;	force.z = 0;
+	moved = false;
 }
 
 inline void Entity::simulate(float dt)
@@ -55,5 +55,6 @@ inline void Entity::simulate(float dt)
 inline void Entity::move(float dt)
 {
 	pos += vel * dt;          // Изменение в положении добавляем к текущему положению. Изменение в положении Скорость*время
+	moved = true;
 }
 

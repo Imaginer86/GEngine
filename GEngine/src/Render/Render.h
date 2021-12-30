@@ -53,7 +53,7 @@ public:
 	void Render::LightOn() { light = true; }
 	void Render::LightOff() { light = false; }
 
-	virtual bool Init() = 0;
+	virtual void* Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
 	//virtual bool LoadTextures() = 0;
 	virtual bool swithFullscreen() = 0;
