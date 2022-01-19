@@ -1,6 +1,5 @@
 #pragma once
-//#include "gmath.h"
-#include <cmath>
+#include "GMath.h"
 #include <iostream>
 
 struct Vector3f

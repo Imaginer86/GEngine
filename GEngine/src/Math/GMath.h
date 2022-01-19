@@ -6,16 +6,16 @@
 const float G = 667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
 const float GEPSILON = 0.00001f;
-const float GM_PI = 3.14159265358979323846f;   // pi
+//const float GM_PI = 3.14159265358979323846f;   // pi
 
 inline float degToRad(float degrees)
 {
-	return (degrees * GM_PI) / 180.0f;
+	return (degrees * M_PI) / 180.0f;
 }
 
 inline float radToDeg(float radians)
 {
-	return (radians * 180.0f) / GM_PI;
+	return (radians * 180.0f) / M_PI;
 }
 
 inline bool Enough(float f1, float f2)

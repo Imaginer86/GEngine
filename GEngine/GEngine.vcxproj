@@ -149,7 +149,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>
       </CompileAs>
-      <AdditionalIncludeDirectories>C:\LIB\glew-2.1.0\include;C:\LIB\glfw-3.3.6.bin.WIN64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\LIB\glew-2.1.0\include;C:\LIB\glfw-3.3.6\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,7 +159,7 @@
     </Link>
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
-      <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6.bin.WIN64\lib-vc2019</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;glfw3.lib;OpenGL32.LIB;GLU32.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

@@ -1,9 +1,9 @@
 #include <chrono>
 
-//namespace Core
-//{
+namespace Core
+{
     // simulation of Windows GetTickCount()
-    unsigned long long
+    inline unsigned long long
         GetTickCount()
     {
         using namespace std::chrono;
@@ -24,4 +24,4 @@
             return time_point(duration(GetTickCount()));
         }
     };
-//}//namespace Core
+}//namespace Core

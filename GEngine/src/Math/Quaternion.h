@@ -47,7 +47,7 @@ struct Quaternion
 	
 	void fromAngleAxis(float angle, const Vector3f &axis);
 	void toAngleAxis(float &angle, Vector3f &axis) const;
-	Vector3f& GetAxic() const;
+	Vector3f GetAxic() const;
 	float GetAngle() const;
 
 	void rotate(Vector3f &v) const;
@@ -250,7 +250,7 @@ inline void Quaternion::toAngleAxis(float &angle, Vector3f &axis) const
 	angle = 2.0f * atan2f(sqrt(sinHalfThetaSq), w);
 }
 
-inline Vector3f& Quaternion::GetAxic() const
+inline Vector3f Quaternion::GetAxic() const
 {
 	float sinHalfThetaSq = 1.0f - w * w;
 	float invSinHalfTheta = 1.0f / sqrt(sinHalfThetaSq);
