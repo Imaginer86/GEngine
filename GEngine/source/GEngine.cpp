@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 
 #include "Game.h"
@@ -48,23 +49,24 @@ void Game::Input()
 	if (Game::keys[32]) { Game::keys[32] = false; Game::pause = !Game::pause; }
 	if (Game::keys[256]) { Game::keys[256] = false; Game::done = true; }
 }
+*/
 
-bool Game::Init(/*void* wndProc*/)
-{
-	std::cout << "Game::Init" << std::endl;
-	render = new RenderGL("Gravi", 1600, 900, Vector3f(0.0f, 0.0f, -1000.0f), radToDeg(0.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
-	if (!render) { std::cout << "Failed to Create render" << std::endl;  return false; }
-	if (!render->Init()) { std::cout << "Failed to Init render" << std::endl;  return false; }
+//bool Game::Init(/*void* wndProc*/)
+//{
+	//std::cout << "Game::Init" << std::endl;
+	//render = new RenderGL("Gravi", 1600, 900, Vector3f(0.0f, 0.0f, -1000.0f), radToDeg(0.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
+	//if (!render) { std::cout << "Failed to Create render" << std::endl;  return false; }
+	//if (!render->Init()) { std::cout << "Failed to Init render" << std::endl;  return false; }
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 	//Earth-Moon
 
 	//Planets = new Entity[numEntites];
-	Planets[0].m = 597.370f;
-	Planets[0].pos = Vector3f(0, 0, 0);
-	Planets[0].vel = Vector3f(-0.5, 0, 0);
-	Planets[0].r = 100;
-	Planets[0].color = Color4f(0.5f, 1.0f, 0, 1);
+	//Planets[0].m = 597.370f;
+	//Planets[0].pos = Vector3f(0, 0, 0);
+	//Planets[0].vel = Vector3f(-0.5, 0, 0);
+	//Planets[0].r = 100;
+	//Planets[0].color = Color4f(0.5f, 1.0f, 0, 1);
 
 	//Planets[1].m = 7.3477f;
 	//Planets[1].pos = Vector3f(0, 384.399f, 0);
@@ -143,8 +145,10 @@ bool Game::Init(/*void* wndProc*/)
 	 Planets[2].color = Color4f(1.0f, 0.0f, -.0f, 1.0f);
 	 */
 
-	return true;
-}
+	//return true;
+//}
+
+/*
 void Game::Update(float dt)
 {
 	if (GraviForce)
@@ -220,3 +224,4 @@ void Game::End()
 	delete render;
 	//delete[] Planets;
 }
+*/

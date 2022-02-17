@@ -23,9 +23,9 @@ public:
 	virtual void Color(const Color4f& color);
 	virtual void LoadIdentity() const;
 
-	//virtual void buildFont();
-	//virtual void killFont();
-	//virtual void print(float x, float y, const char * fmt, ...);
+//	virtual void buildFont();
+//	virtual void killFont();
+//	virtual void print(float x, float y, const char * fmt, ...);
 
 	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index);
 	

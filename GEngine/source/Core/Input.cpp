@@ -1,5 +1,6 @@
-
+/*
 #include "Input.h"
+#include "../Game.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
@@ -21,3 +22,4 @@ bool Input::Init(void* window_)
 	glfwSetKeyCallback(window, key_callback);
 	return true;
 }
+*/

@@ -17,14 +17,14 @@ inline void Camera::Move(const Vector3f& s)
 	pos += s;
 }
 
-inline void Camera::Rotate(const Quaternion& r)
+inline void Camera::Rotate(const Quaternion& q_)
 {
-	q *= r;
+	q *= q_;
 }
 
 inline void Camera::MoveQ(float s)
 {
-	Vector3f r = q.GetAxic();
-	pos += r * s;
+	Vector3f axic = 
+	pos += axic * s;
 }
 

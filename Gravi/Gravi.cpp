@@ -11,33 +11,132 @@
 
 //bool keys[512];
 
-Game game;
-
-
-
-
-
 int main ()
 {
 	Plane P1(Vector3f(2, 1, -1), -1);
 	Plane P2(Vector3f(1, 3, -2), 0);
 	Line L = P1 * P2;
-	game;
+	//game;
 
-	if (!game.Init()) return 1;
-	game.Draw();
-	game.lastTickCount = Core::GetTickCount();
-	while(!game.done)
+	Game game;
+
+	if (!game.Init(4, 1600, 900, Vector3f(0.0f, 0.0f, 100.0f), degToRad(0.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 1.0f)) return 1;
+
+	game.GraviForce = false;
+	game.Collision = true;
+
+	game.Planets[0].m = 500.0;
+	game.Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[0].r = 5.0f;
+	game.Planets[0].color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	game.Planets[1].m = 100.0;
+	game.Planets[1].pos = Vector3f(20.0f, 0.0f, 0.0f);
+	game.Planets[1].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[1].r = 2.0f;
+	game.Planets[1].color = Color4f(1.0f, 0.0f, 0.0f, 1.0f);
+
+	game.Planets[2].m = 100.0;
+	game.Planets[2].pos = Vector3f(0.0f, 10.0f, 0.0f);
+	game.Planets[2].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[2].r = 2.0f;
+	game.Planets[2].color = Color4f(0.0f, 1.0f, 0.0f, 1.0f);
+
+	game.Planets[3].m = 100.0;
+	game.Planets[3].pos = Vector3f(0.0f, 0.0f, 10.0f);
+	game.Planets[3].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[3].r = 2.0f;
+	game.Planets[3].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
+
+
+
+
+
+	/*
+	game.Planets[0].m = 500.0;
+	game.Planets[0].pos = Vector3f(50.0f, 0.0f, 0.0f);
+	game.Planets[0].vel = Vector3f(-100.0f, 0.0f, 0.0f);
+	game.Planets[0].r = 10.0f;
+	game.Planets[0].color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	game.Planets[1].m = 500.0;
+	game.Planets[1].pos = Vector3f(0.0f, 0.0f, 0.0f);
+	game.Planets[1].vel = Vector3f(-50.0f, 0.0f, 0.0f);
+	game.Planets[1].r = 10.0f;
+	game.Planets[1].color = Color4f(1.0f, 0.0f, 0.0f, 1.0f);
+	*/
+	//Planets = new Entity[numEntites];
+	//Earth-Moon
+	/*
+	game.Planets[0].m = 597.370f;
+	game.Planets[0].pos = Vector3f(0, 0, 0);
+	game.Planets[0].vel = Vector3f(0, 0, 0);
+	game.Planets[0].r = 100;
+	game.Planets[0].color = Color4f(0, 1, 0, 1);
+
+	game.Planets[1].m = 7.3477f;
+	game.Planets[1].pos = Vector3f(0, 384.399f, 0);
+	game.Planets[1].vel = Vector3f(23.605915f, 0, 0);
+	game.Planets[1].r = 10;
+	game.Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
+	*/
+	
+	/*
+	Planets[0].m = 10000.0f;
+	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].r = 5.0f;
+	Planets[0].color = Color4f(0.2f, 0.2f, 0.2f, 1.0f);
+
+	for (size_t i = 1; i < numEntites; i++)
 	{
-		//game.Input();
+		Planets[i].m = 10.0f + randf() * 90.0f;
+		Planets[i].pos = Vector3f(randf()*200.0f - 100.0f, randf()*200.0f - 100.0f, randf()*200.0f - 100.0f);
+		if ((Planets[i].pos - Planets[0].pos).length() < 50.0f)
+		{
+			--i;
+			continue;
+		}
+		Planets[i].vel = Vector3f(randf()*50.0f - 25.0f, randf()*50.0f - 25.0f, randf()*50.0f - 25.0f);
+		Planets[i].r = 10.0f;
+		Planets[i].color = Color4f(randf(), randf(), randf(), 1.0f);
+	}
+	*/
+
+
+	/*
+	Planets[0].m = 100000.0f;
+	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
+	Planets[0].r = 20.0f;
+	Planets[0].color = Color4f(0.0f, 1.0f, 0.0f, 1.0f);
+	Planets[1].m = 1000.0f;
+	Planets[1].pos = Vector3f(100.0f, 0.0f, -50.0f);
+	Planets[1].vel = Vector3f(0.0f, 50.0f, 0.0f);
+	Planets[1].r = 10.0f;
+	Planets[1].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
+	Planets[2].m = 1000.0f;
+	Planets[2].pos = Vector3f(-100.0f, 0.0f, 50.0f);
+	Planets[2].vel = Vector3f(0.0f, -50.0f, 0.0f);
+	Planets[2].r = 10.0f;
+	Planets[2].color = Color4f(1.0f, 0.0f, -.0f, 1.0f);
+	*/
+
+	game.lastTickCount = Core::GetTickCount();
+	game.Draw();
+	while (!game.done)
+	{
+		game.Input();
+		game.Draw();//TT
 		long long tickCount = Core::GetTickCount();
 		tickCount = tickCount - game.lastTickCount;
 		float dt = static_cast<float>(tickCount);
-		dt /= 1000000.0f;
+		dt /= 1000.0f;
+		game.FPS = static_cast<size_t>(1.0f / dt);
 		dt *= game.timeScale;
-		if (!game.pause)	game.Update(dt);
-		game.Draw();
-	}
+		if (!game.pause)	game.Update(dt);		
+	}	
 	game.End();
 	return 0;
 }

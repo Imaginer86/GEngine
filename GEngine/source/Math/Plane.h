@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector3f.h"
 #include "Line.h"
-#include "gmath.h"
+#include "GMath.h"
 
 struct Plane
 {

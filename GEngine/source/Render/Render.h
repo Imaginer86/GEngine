@@ -59,9 +59,9 @@ public:
 	virtual bool swithFullscreen() = 0;
 	virtual void UpdateLight() = 0;
 
-	//virtual void buildFont() = 0;
-	//virtual void killFont() = 0;
-	//virtual void print(float x, float y, const char* fmt, ...) = 0;
+//	virtual void buildFont() = 0;
+//	virtual void killFont() = 0;
+//	virtual void print(float x, float y, const char* fmt, ...) = 0;
 
 	virtual void beginDraw() const = 0;
 	virtual void endDraw() const = 0;
@@ -108,17 +108,17 @@ inline Render::Render(InitData& initData)
 
 inline void Render::RotateCamera(const Quaternion &q)
 {
-	camera.Rotate(q);
+	camera.Rotate(q * rotateScale);
 }
 
 inline void Render::MoveCamera(const Vector3f &s)
 {
-	camera.Move(s);
+	camera.Move(s * moveScale);
 }
 
 inline void Render::MoveCameraQ(float s)
 {
-	camera.MoveQ(s);
+	camera.MoveQ(s * moveScale);
 }
 
 

@@ -1,75 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Physics\Tank.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\MaterialMTL.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\ModelOBJ.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\RenderGL.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Input.cpp">
+    <ClCompile Include="source\Core\Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="source\Physics\Tank.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\MaterialMTL.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\ModelOBJ.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\RenderGL.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\GEngine.cpp" />
+    <ClCompile Include="source\Platform\GWindows.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Time.h">
+    <ClInclude Include="source\Core\FileReader.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Math\GMath.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Line.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Plane.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Quaternion.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\Vector3f.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Camera.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Entity.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Tank.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Tera.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\Color4f.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\MaterialMTL.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\ModelOBJ.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\Render.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\RenderGL.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\Core\Input.h">
+    <ClInclude Include="source\Core\Input.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\FileReader.h">
+    <ClInclude Include="source\Core\Time.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\GMath.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\Line.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\Plane.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\Quaternion.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\Vector3f.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Physics\Camera.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Physics\Entity.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Physics\Tank.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Physics\Tera.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\Color4f.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\MaterialMTL.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\ModelOBJ.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\Render.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\RenderGL.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Game.h" />
+    <ClInclude Include="source\GEngine.h" />
+    <ClInclude Include="source\Platform\GWindows.h">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,15 +96,18 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{8e6dd8e7-7352-4719-9a89-c10eb42cf426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{3f8f0bb0-54ce-46ce-9e2d-aa9c56b098da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Shaders\fragment_shader.glsl">
+    <None Include="source\Shaders\fragment_shader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="src\Shaders\vertex_shader.glsl">
+    <None Include="source\Shaders\vertex_shader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="src\Shaders\Wave.cg">
+    <None Include="source\Shaders\Wave.cg">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

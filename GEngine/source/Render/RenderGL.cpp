@@ -7,12 +7,11 @@
 #include <GLFW/glfw3.h>
 
 //#define GL_GLEXT_PROTOTYPES
-#include <gl/gl.h>
-#include <gl/glu.h>
+//#include <gl/gl.h>
+//#include <gl/glu.h>
 
 GLFWwindow* window;
 GLuint  base;      // База списка отображения для фонта
-
 GLUquadricObj* quadratic;
 
 //WWWin Файлы заголовков Windows:
@@ -267,6 +266,8 @@ bool RenderGL::LoadTextures()
 }
 */
 
+
+
 void RenderGL::Resize(size_t width_, size_t height_)
 {
 	width = width_;
@@ -286,7 +287,6 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
 }
-
 
 /*
 void RenderGL::buildFont()
@@ -311,17 +311,15 @@ void RenderGL::buildFont()
 	SelectObject(hDC, font);        // Выбрать шрифт, созданный нами ( НОВОЕ )
 	wglUseFontBitmaps(hDC, 32, 96, base); // Построить 96 символов начиная с пробела ( НОВОЕ )
 }
-*/
 
-/*
+
 void RenderGL::killFont()
 {
 	glDeleteLists(base, 96);        // Удаление всех 96 списков отображения ( НОВОЕ )
 }
-*/
 
 
-/*
+
 void RenderGL::print(float x, float y, const char* fmt, ...)
 {
 	glLoadIdentity();
@@ -471,8 +469,8 @@ void RenderGL::beginDraw() const
 	glLoadIdentity();
 	float angle = radToDeg(camera.q.GetAngle());
 	Vector3f axic = camera.q.GetAxic();
-	if (!Enough(angle, 0.0f)) glRotatef(angle, axic.x, axic.y, axic.z);
-	glTranslatef(camera.pos.x, camera.pos.y, camera.pos.z);	
+	if (!isEqual(angle, 0.0f)) glRotatef(angle, axic.x, axic.y, axic.z);
+	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);	
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }

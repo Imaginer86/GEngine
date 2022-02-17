@@ -1,5 +1,5 @@
 #pragma once
-#include "gmath.h"
+#include "GMath.h"
 #include "Vector3f.h"
 
 struct Quaternion
@@ -7,12 +7,12 @@ struct Quaternion
 	float w, x, y, z;
 
 	Quaternion():w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
-	Quaternion(float _w, float _x, float _y, float _z);
-	Quaternion(float angleD, const Vector3f &axic)
+	Quaternion(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
+	Quaternion(float angle, const Vector3f &axic)
 	{
 		Vector3f naxic = axic;
 		naxic.unitize();
-		fromAngleAxis(angleD, naxic);
+		fromAngleAxis(angle, naxic);
 	}
 	~Quaternion() {}
 
@@ -50,7 +50,7 @@ struct Quaternion
 	Vector3f GetAxic() const;
 	float GetAngle() const;
 
-	void rotate(Vector3f &v) const;
+	//void rotate(Vector3f &v) const;
 
 	//oid toHeadPitchRoll(float &headDegrees, float &pitchDegrees, float &rollDegrees) const;
 	//atrix4 toMatrix4() const;
@@ -72,13 +72,10 @@ inline Quaternion operator*(Quaternion &q1, const Quaternion &q2)
 	return q1.operator*(q2);
 }
 
-inline Quaternion::Quaternion(float w_, float x_, float y_, float z_)
-	: w(w_), x(x_), y(y_), z(z_) {}
-
 inline bool Quaternion::operator==(const Quaternion &rhs) const
 {
-	return Enough(w, rhs.w) && Enough(x, rhs.x)
-		&& Enough(y, rhs.y) && Enough(z, rhs.z);
+	return isEqual(w, rhs.w) && isEqual(x, rhs.x)
+		&& isEqual(y, rhs.y) && isEqual(z, rhs.z);
 }
 
 inline bool Quaternion::operator!=(const Quaternion &rhs) const
@@ -122,14 +119,12 @@ inline Quaternion &Quaternion::operator*=(const Quaternion &rhs)
 
 inline Quaternion &Quaternion::operator*=(const Vector3f &v)
 {
-	const float w_ = -(x * v.x) - (y * v.y) - (z * v.z);
-	const float x_ = (w * v.x) + (y * v.z) - (z * v.y);
-	const float y_ = (w * v.y) + (z * v.x) - (x * v.z);
-	const float z_ = (w * v.z) + (x * v.y) - (y * v.x);
-
-	Quaternion ret(x_, y_, z_, w_);
-
-	*this = ret;
+	Quaternion tmp(
+		-(x * v.x) - (y * v.y) - (z * v.z),
+		(w * v.x) + (y * v.z) - (z * v.y),
+		(w * v.y) + (z * v.x) - (x * v.z),
+		(w * v.z) + (x * v.y) - (y * v.x));	
+	*this = tmp;
 	return *this;
 }
 
@@ -253,7 +248,9 @@ inline void Quaternion::toAngleAxis(float &angle, Vector3f &axis) const
 inline Vector3f Quaternion::GetAxic() const
 {
 	float sinHalfThetaSq = 1.0f - w * w;
-	float invSinHalfTheta = 1.0f / sqrt(sinHalfThetaSq);
+	float invSinHalfTheta = 1.0f;
+	if (!isEqual(sinHalfThetaSq, 0.0f))
+		invSinHalfTheta = 1.0f / sqrt(sinHalfThetaSq);
 
 	Vector3f axic(x * invSinHalfTheta, y * invSinHalfTheta, z * invSinHalfTheta);
 	return axic;
@@ -266,6 +263,7 @@ inline float Quaternion::GetAngle() const
 	return angle;
 }
 
+/*
 inline void Quaternion::rotate(Vector3f & v) const
 {
 	//Quaternion t;
@@ -284,6 +282,7 @@ inline void Quaternion::rotate(Vector3f & v) const
 	//float sinHalfAlpha = u.unitize();
 	//v = v*(w*w) + (u*v - v*u)*sinHalfAlpha*w - u*v*u*(sinHalfAlpha*sinHalfAlpha);
 }
+*/
 
 inline void Quaternion::fromAngleAxis(float angle, const Vector3f &axis)
 {

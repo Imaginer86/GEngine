@@ -5,17 +5,16 @@
 
 namespace Core
 {
-	using namespace std;
 
 	bool LoadRawFile(const char* fileName, char* pHeightMap)
 	{
-		fstream in;
-		in.open(fileName, ios::in | ios::binary | ios::ate);
+		std::fstream in;
+		in.open(fileName, std::ios::in | std::ios::binary | std::ios::ate);
 
 		if (in.is_open())
 		{
-			streampos size = in.tellg();
-			in.seekg(0, ios::beg);
+			std::streampos size = in.tellg();
+			in.seekg(0, std::ios::beg);
 			in.read(reinterpret_cast<char*>(pHeightMap), size);
 		}
 		else

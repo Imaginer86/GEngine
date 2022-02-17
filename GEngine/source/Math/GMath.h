@@ -1,27 +1,29 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <limits>
 
 
 const float G = 667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
-const float GEPSILON = 0.00001f;
+//const float GEPSILON = 0.00001f;
 //const float GM_PI = 3.14159265358979323846f;   // pi
+const float GM_PI = static_cast<float>(M_PI);
 
 inline float degToRad(float degrees)
 {
-	return (degrees * M_PI) / 180.0f;
+	return (degrees * GM_PI) / 180.0f;
 }
 
 inline float radToDeg(float radians)
 {
-	return (radians * 180.0f) / M_PI;
+	return (radians * 180.0f) / GM_PI;
 }
 
-inline bool Enough(float f1, float f2)
+inline bool isEqual(float f1, float f2)
 {
 	//return fabs((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < GEPSILON;
-	return (fabsf(f1 - f2)) < GEPSILON;
+	return (fabsf(f1 - f2)) < std::numeric_limits<float>::epsilon();
 }
 
 

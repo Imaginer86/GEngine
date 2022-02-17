@@ -1,127 +1,70 @@
 #include "Game.h"
 #include "Render/RenderGL.h"
-#include "Core/Input.h"
 #include "Core/Time.h"
-#include "Physics/Entity.h"
+
+#include <GL/glew.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+
 
 bool  Game::done = false;
 bool Game::pause = true;
 bool Game::drawDebugInfo = true;
+size_t Game::FPS = 0;
+Render* Game::render = nullptr;
+bool* Game::keys = nullptr;
 
 
+//Input* input = nullptr;
 
-
-
-Render* render = nullptr;
-Input* input = nullptr;
-
-const size_t numEntites = 2;// 51;
-Entity Planets[numEntites];
-
-
+//const size_t numEntites = 2;// 51;
 //void Game::Input(int key, bool press){keys[key] = press;}
 
-Game::~Game()
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (key >= 0 && key < 512)
+		if (action == GLFW_PRESS) Game::keys[key] = true;
+		else if(action == GLFW_RELEASE) Game::keys[key] = false;
 }
 
-bool Game::Init(/*void* wndProc*/)
+bool Game::Init(size_t numEntites_, size_t width, size_t height, const Vector3f& cameraPos, float cameraAngle, const Vector3f& cameraAxic, bool fullscreen, bool light, float moveScale, float rotateScale)
 {
+	numEntites = numEntites_;
+	Planets = new Entity[numEntites];
 	lastTickCount = 0;
 	pause = true;
 	done = false;
 	timeScale = 1.0f;
-	GraviForce = true;
-	Collision = true;
-	pause = false;
-	GraviForce = false;
-	Collision = true;
-	//keys = new bool[512];
-	//for (int i = 0; i < 512; ++i) keys[i] = false;
-	std::cout << "Game::Init" << std::endl;
-	render = new RenderGL("Gravi", 1600, 900, Vector3f(0.0f, 0.0f, 1000.0f), degToRad(180.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 0.1f);
-	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
-	void* window = nullptr;
-	if (!(window = render->Init())) { std::cerr << "Failed to Init Render" << std::endl;  return false; }
 
-	input = new Input;
-	if (!input->Init(window)) { std::cerr << "Failed to Init Input" << std::endl;  return false; }
+
+	keys = new bool[512];
+	for (int i = 0; i < 512; ++i) keys[i] = false;
+	std::cout << "Game::Init" << std::endl;
+	render = new RenderGL("Gravi", width, height, cameraPos, cameraAngle, cameraAxic, fullscreen, light, moveScale, rotateScale);
+	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
+	GLFWwindow* window = (GLFWwindow*) render->Init();
+	if (!window) { std::cerr << "Failed to Init Render" << std::endl;  return false; }
+	glfwSetKeyCallback(window, key_callback);
+
+	//if (!input->Init(window)) { std::cerr << "Failed to Init Input" << std::endl;  return false; }
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
-	//Planets = new Entity[numEntites];
-	//Earth-Moon
-	/*
-	Planets[0].m = 597.370f;
-	Planets[0].pos = Vector3f(0, 0, 0);
-	Planets[0].vel = Vector3f(0, 0, 0.0);
-	Planets[0].r = 100;
-	Planets[0].color = Color4f(0, 1, 0, 1);
-
-	Planets[1].m = 7.3477f;
-	Planets[1].pos = Vector3f(0, 384.399f, 0);
-	Planets[1].vel = Vector3f(23.605915f, 0, 0);
-	Planets[1].r = 10;
-	Planets[1].color = Color4f(0.5f, 0.5f, 0.5f, 1);
-	*/
-
-	Planets[0].m = 500.0;
-	Planets[0].pos = Vector3f(50.0f, 0.0f, 0.0f);
-	Planets[0].vel = Vector3f(-100.0f, 0.0f, 0.0f);
-	Planets[0].r = 10.0f;
-	Planets[0].color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	Planets[1].m = 500.0;
-	Planets[1].pos = Vector3f(0.0f, 0.0f, 0.0f);
-	Planets[1].vel = Vector3f(-50.0f, 0.0f, 0.0f);
-	Planets[1].r = 10.0f;
-	Planets[1].color = Color4f(1.0f, 0.0f, 0.0f, 1.0f);
-
-
-
-
-
-	/*
-	Planets[0].m = 10000.0f;
-	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
-	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
-	Planets[0].r = 5.0f;
-	Planets[0].color = Color4f(0.2f, 0.2f, 0.2f, 1.0f);
-
-	for (size_t i = 1; i < numEntites; i++)
-	{
-		Planets[i].m = 10.0f + randf() * 90.0f;
-		Planets[i].pos = Vector3f(randf()*200.0f - 100.0f, randf()*200.0f - 100.0f, randf()*200.0f - 100.0f);
-		if ((Planets[i].pos - Planets[0].pos).length() < 50.0f)
-		{
-			--i;
-			continue;
-		}
-		Planets[i].vel = Vector3f(randf()*50.0f - 25.0f, randf()*50.0f - 25.0f, randf()*50.0f - 25.0f);
-		Planets[i].r = 10.0f;
-		Planets[i].color = Color4f(randf(), randf(), randf(), 1.0f);
-	}
-	*/
-
-
-	/*
-	Planets[0].m = 100000.0f;
-	Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
-	Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
-	Planets[0].r = 20.0f;
-	Planets[0].color = Color4f(0.0f, 1.0f, 0.0f, 1.0f);
-	Planets[1].m = 1000.0f;
-	Planets[1].pos = Vector3f(100.0f, 0.0f, -50.0f);
-	Planets[1].vel = Vector3f(0.0f, 50.0f, 0.0f);
-	Planets[1].r = 10.0f;
-	Planets[1].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
-	Planets[2].m = 1000.0f;
-	Planets[2].pos = Vector3f(-100.0f, 0.0f, 50.0f);
-	Planets[2].vel = Vector3f(0.0f, -50.0f, 0.0f);
-	Planets[2].r = 10.0f;
-	Planets[2].color = Color4f(1.0f, 0.0f, -.0f, 1.0f);
-	*/
-
 	return true;
+}
+
+void Game::Input()
+{
+	if (keys[GLFW_KEY_ESCAPE]) Game::done = true;
+	if (keys[GLFW_KEY_SPACE]) { keys[GLFW_KEY_SPACE] = false;  Game::pause = !Game::pause; }
+	if (keys[GLFW_KEY_TAB]) { keys[GLFW_KEY_TAB] = false;  Game::drawDebugInfo = !Game::drawDebugInfo; }
+	if (keys[GLFW_KEY_W]) Game::render->MoveCameraQ(10.0f);
+	if (keys[GLFW_KEY_S]) Game::render->MoveCameraQ(-10.0f);
+	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(1.0f, 0.0f, 0.0f)));
+	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(-1.0f, 0.0f, 0.0f)));
+	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, 1.0f, 0.0f)));
+	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, -1.0f, 0.0f)));
+
 }
 void Game::Update(float dt)
 {
@@ -205,8 +148,10 @@ void Game::Draw()
 	render->endDraw();
 }
 
+
 void Game::End()
 {
-	delete render;
-	//delete[] Planets;
+	delete render;	
+	delete[] Planets;
+	delete[] keys;
 }
