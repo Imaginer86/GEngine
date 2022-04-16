@@ -1,4 +1,5 @@
 #pragma once
+#include "Options.h"
 #include "Physics/Entity.h"
 #include "Render/Render.h"
 
@@ -7,6 +8,7 @@
 class Game
 {
 public:
+	Game():Planets(nullptr){};
 	static bool done;
 	static bool pause;
 	static bool drawDebugInfo;
@@ -24,7 +26,7 @@ public:
 	//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	
 
-	bool Init(size_t numEntites_, size_t width, size_t height, const Vector3f& cameraPos, float cameraAngle, const Vector3f& cameraAxic, bool fullscreen, bool light, float moveScale, float rotateScale);
+	bool Init(size_t numEntites_, Options option);
 	//void Input(int key, bool press);
 	
 	void Draw();

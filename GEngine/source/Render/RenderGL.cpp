@@ -162,6 +162,18 @@ bool RenderGL::swithFullscreen()
 
 bool RenderGL::InitGL()
 {
+	//gLightAmbient[0] = 0.25f;; 
+	//gLightAmbient[1] = 0.25f;
+	//gLightAmbient[2] = 0.25f; 
+	//gLightAmbient[3] = 1.0f;
+	//gLightDiffuse[0] = 0.5f;
+	//gLightDiffuse[1] =  0.5f;
+	//gLightDiffuse[2] =  0.5f; 
+	//gLightDiffuse[3] = 1.0f;
+	//gLightPosition[0] = 0.0f;
+	//gLightPosition[1] = 500.0f;
+	//gLightPosition[2] = 0.0f;
+	//gLightPosition[3] = 1.0f;
 	quadratic = gluNewQuadric();
 	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
 
@@ -450,9 +462,9 @@ void RenderGL::UpdateLight()
 {
 	if (light)
 	{
-		glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse);
-		glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient.v);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse.v);
+		glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition.v);
 		glEnable(GL_LIGHT0);
 
 		glEnable(GL_LIGHTING);

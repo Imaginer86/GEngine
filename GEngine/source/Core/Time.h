@@ -18,7 +18,7 @@ namespace Core
         typedef std::chrono::time_point<TickCountClock>  time_point;
         static const bool is_steady = true;
 
-        static time_point now() noexcept
+        static time_point now() //noexcept
         {
             return time_point(duration(GetTickCount()));
         }

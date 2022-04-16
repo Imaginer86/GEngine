@@ -79,6 +79,10 @@
     <ClInclude Include="source\Platform\GWindows.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="source\Options.h" />
+    <ClInclude Include="source\Math\Vector4f.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

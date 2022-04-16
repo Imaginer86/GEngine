@@ -1,6 +1,8 @@
 #include "Game.h"
+#include "Options.h"
 #include "Math/Gmath.h"
 #include "Core/Time.h"
+#include "Core/FileReader.h"
 #include "Math/Plane.h"
 #include "Math/Line.h"
 
@@ -20,11 +22,20 @@ int main ()
 
 	Game game;
 
-	if (!game.Init(4, 1600, 900, Vector3f(0.0f, 0.0f, 100.0f), degToRad(0.0f), Vector3f(0.0f, 1.0f, 0.0f), false, true, 0.1f, 1.0f)) return 1;
+	//Entity* Planets = nullptr;
+	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Planets);
+	if (!numE) return 1;
 
-	game.GraviForce = false;
+	Options option;
+	if (!Core::LoadOptions("options.ini", option)) return 2;
+
+	if (!game.Init(numE, option)) return 3;
+	//game.Planets = Planets;
+
+	game.GraviForce = true;
 	game.Collision = true;
 
+	/*
 	game.Planets[0].m = 500.0;
 	game.Planets[0].pos = Vector3f(0.0f, 0.0f, 0.0f);
 	game.Planets[0].vel = Vector3f(0.0f, 0.0f, 0.0f);
@@ -49,23 +60,24 @@ int main ()
 	game.Planets[3].r = 2.0f;
 	game.Planets[3].color = Color4f(0.0f, 0.0f, 1.0f, 1.0f);
 
-
+	*/
 
 
 
 	/*
 	game.Planets[0].m = 500.0;
 	game.Planets[0].pos = Vector3f(50.0f, 0.0f, 0.0f);
-	game.Planets[0].vel = Vector3f(-100.0f, 0.0f, 0.0f);
+	game.Planets[0].vel = Vector3f(-10.0f, 0.0f, 0.0f);
 	game.Planets[0].r = 10.0f;
 	game.Planets[0].color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	game.Planets[1].m = 500.0;
 	game.Planets[1].pos = Vector3f(0.0f, 0.0f, 0.0f);
-	game.Planets[1].vel = Vector3f(-50.0f, 0.0f, 0.0f);
+	game.Planets[1].vel = Vector3f(-5.0f, 0.0f, 0.0f);
 	game.Planets[1].r = 10.0f;
 	game.Planets[1].color = Color4f(1.0f, 0.0f, 0.0f, 1.0f);
 	*/
+
 	//Planets = new Entity[numEntites];
 	//Earth-Moon
 	/*

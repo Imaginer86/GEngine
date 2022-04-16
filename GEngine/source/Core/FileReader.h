@@ -2,9 +2,29 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <string>
+
+#include "../Physics/Entity.h"
+#include "../Options.h"
 
 namespace Core
 {
+	class FileReader
+	{
+		std::ifstream in;
+	public:	
+		FileReader(const char* filename){ in.open(filename, std::ios::in); }
+		~FileReader(){ in.close(); }
+		bool isOpen() { return in.is_open(); }
+		bool isEof() {return in.eof(); }
+		std::string	 getStr() { std::string str; in >> str; return str; }
+		Vector3f getVector3f() { Vector3f v; in >> v; return v; }
+		Vector4f getVector4f() { Vector4f v; in >> v; return v; }
+		Color4f getColor4f() { Color4f c; in >> c; return c; }
+		float getFloat() { float f; in >> f; return f; }
+		size_t getNumber() { size_t num; in >> num; return num; }
+		bool getBool() { bool b; in >> b; return b; }
+	};
 
 	bool LoadRawFile(const char* fileName, char* pHeightMap)
 	{
@@ -29,6 +49,63 @@ namespace Core
 			return false;
 		}
 		in.close();
+		return true;
+	}
+
+	size_t LoadEntitys(const char* filename, Entity*& Entitys)
+	{
+		size_t num_entitys = 0;
+		std::fstream in;
+		in.open(filename, std::ios::in);
+
+		if (in.is_open())
+		{
+			in >> num_entitys;
+			if (num_entitys > 0)
+				Entitys = new Entity[num_entitys];
+
+			std::string name;
+			Entity entity;
+			for (size_t i = 0; i < num_entitys; ++i)
+			{
+				
+				in >> name;
+				if (name != "Entity")
+				{
+					delete[] Entitys;
+					return 0;
+				}				
+				in >> entity.m >> entity.pos >> entity.vel >> entity.r >> entity.color;
+				Entitys[i] = entity;
+			}
+			in.close();
+		}
+		else return 0;
+		return num_entitys;
+	}
+
+	bool LoadOptions(const char* filename, Options& options)
+	{
+		FileReader fr(filename);
+		if (!fr.isOpen()) return false;
+		
+		while (!fr.isEof())
+		{
+			std::string pName = fr.getStr();
+			if (pName == "width") options.width = fr.getNumber();
+			else if (pName == "height") options.height = fr.getNumber(); 
+			else if (pName == "camera_pos") options.cameraPos = fr.getVector3f();
+			else if (pName == "camera_angle") options.cameraAngle = fr.getFloat();
+			else if (pName == "camera_axic") options.cameraAxic = fr.getVector3f();
+			else if (pName == "fullscreen") options.fullscreen = fr.getBool();
+			else if (pName == "move_scale") options.moveScale = fr.getFloat();
+			else if (pName == "rotate_scale") options.rotateScale = fr.getFloat();
+			else if (pName == "light") options.light = fr.getBool();
+			else if (pName == "light_ambient") options.lightAmbient = fr.getVector4f();
+			else if (pName == "light_diffuse") options.lightDiffuse = fr.getVector4f();
+			else if (pName == "light_position") options.lightPosition = fr.getVector4f();
+			else { std::cerr << "Wrong options data: " << pName << std:: endl; return false;} 
+		}
 		return true;
 	}
 }

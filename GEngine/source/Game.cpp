@@ -28,10 +28,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		else if(action == GLFW_RELEASE) Game::keys[key] = false;
 }
 
-bool Game::Init(size_t numEntites_, size_t width, size_t height, const Vector3f& cameraPos, float cameraAngle, const Vector3f& cameraAxic, bool fullscreen, bool light, float moveScale, float rotateScale)
+bool Game::Init(size_t numEntites_, Options option)
 {
 	numEntites = numEntites_;
-	Planets = new Entity[numEntites];
+	//Planets = new Entity[numEntites];
 	lastTickCount = 0;
 	pause = true;
 	done = false;
@@ -41,7 +41,7 @@ bool Game::Init(size_t numEntites_, size_t width, size_t height, const Vector3f&
 	keys = new bool[512];
 	for (int i = 0; i < 512; ++i) keys[i] = false;
 	std::cout << "Game::Init" << std::endl;
-	render = new RenderGL("Gravi", width, height, cameraPos, cameraAngle, cameraAxic, fullscreen, light, moveScale, rotateScale);
+	render = new RenderGL("Gravi", option.width, option.height, option.cameraPos, option.cameraAngle, option.cameraAxic, option.fullscreen, option.light, option.lightAmbient, option.lightDiffuse, option.lightPosition, option.moveScale, option.rotateScale);
 	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
 	GLFWwindow* window = (GLFWwindow*) render->Init();
 	if (!window) { std::cerr << "Failed to Init Render" << std::endl;  return false; }

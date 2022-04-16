@@ -9,7 +9,7 @@ struct Vector3f
 	float z;
 
 	Vector3f():x(0.0f), y(0.0f), z(0.0f)	{}
-	Vector3f(float _x, float _y, float _z):x(_x) ,y(_y) ,z(_z)	{}
+	Vector3f(float x_, float y_, float z_):x(x_) ,y(y_) ,z(z_)	{}
 	~Vector3f()	{}
 
 	bool operator !=(const  Vector3f& v);

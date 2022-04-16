@@ -22,7 +22,7 @@ public:
 		size_t	TexturesT[4];
 	};
 private:
-	bool isQuad = false;
+	bool isQuad;
 	size_t	trianglesN;
 	Triangle* Triangles;
 	size_t quadsN;
@@ -39,7 +39,7 @@ private:
 
 public:
 	//ModelOBJ() {}
-	ModelOBJ():vertexN(0), Vertexs(nullptr), normalN(0), Normals(nullptr), texturesN(0), Textures(nullptr), quadsN(0), Quads(nullptr), trianglesN(0), Triangles(nullptr), materialN(0), Materials(nullptr) {}
+	ModelOBJ():isQuad(false), vertexN(0), Vertexs(nullptr), normalN(0), Normals(nullptr), texturesN(0), Textures(nullptr), quadsN(0), Quads(nullptr), trianglesN(0), Triangles(nullptr), materialN(0), Materials(nullptr) {}
 	~ModelOBJ() { delete[] Normals; delete[] Vertexs; delete[] Textures; delete[] Triangles; delete[] Quads; delete[] Materials; }
 
 	ModelOBJ(const ModelOBJ& x);

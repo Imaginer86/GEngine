@@ -1,5 +1,6 @@
 #pragma once
 #include "../Math/Vector3f.h"
+#include "../Math/Vector4f.h"
 #include "../Math/Quaternion.h"
 #include "../Render/Color4f.h"
 #include "../Physics/Camera.h"
@@ -21,13 +22,20 @@ protected:
 	float rotateScale;
 	//void* ptr_wndProc;
 	char* title;	
+
+	Vector4f gLightAmbient;
+	Vector4f gLightDiffuse;
+	Vector4f gLightPosition;
 public:
-	Render(const char* title_, /*void* wndProc,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, float moveScale_, float rotateScale_)
+	Render(const char* title_, /*void* wndProc,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, const Vector4f& lightAmbient_, const Vector4f& lightDiffuse_, const Vector4f& light_position_, float moveScale_, float rotateScale_)
 		//: ptr_wndProc(wndProc)
 		: width(width_)
 		, height(height_)
 		, fullscreen(fullscreen_)
 		, light(light_)
+		, gLightAmbient(lightAmbient_)
+		, gLightDiffuse(lightDiffuse_)
+		, gLightPosition(light_position_)
 		, camera(pos_, Quaternion(angle_, axic_))
 		, moveScale(moveScale_)
 		, rotateScale(rotateScale_)

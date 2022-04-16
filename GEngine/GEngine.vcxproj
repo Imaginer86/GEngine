@@ -29,6 +29,8 @@
     <ClInclude Include="source\Math\Plane.h" />
     <ClInclude Include="source\Math\Quaternion.h" />
     <ClInclude Include="source\Math\Vector3f.h" />
+    <ClInclude Include="source\Math\Vector4f.h" />
+    <ClInclude Include="source\Options.h" />
     <ClInclude Include="source\Physics\Camera.h" />
     <ClInclude Include="source\Physics\Entity.h" />
     <ClInclude Include="source\Physics\Tank.h" />
@@ -78,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -113,10 +115,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)\lib\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-    <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -163,7 +162,7 @@
     </Link>
     <Lib>
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
-      <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\glew-2.1.0\lib\Release\x64;C:\LIB\glfw-3.3.6\lib-vc2012</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;glfw3.lib;OpenGL32.LIB;GLU32.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
