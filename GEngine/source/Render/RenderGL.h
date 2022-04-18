@@ -3,8 +3,8 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(const char* title_, /*void* wndProc_,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, const Vector4f& lightAmbient_, const Vector4f& lightDiffuse_, const Vector4f& lightPosition_, float moveScale_, float rotateScale_)
-		:Render(title_, /*wndProc_,*/ width_, height_, pos_, angle_, axic_, fullscreen_, light_, lightAmbient_, lightDiffuse_, lightPosition_,   moveScale_, rotateScale_) {}
+	RenderGL(const char* title_, /*void* wndProc_,*/ const Options& option)
+		:Render(title_, /*wndProc_,*/option) {}
 		//p_instance = this;//}
 
 	virtual ~RenderGL() {};

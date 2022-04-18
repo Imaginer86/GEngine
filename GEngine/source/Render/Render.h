@@ -1,4 +1,5 @@
 #pragma once
+#include "../Options.h"
 #include "../Math/Vector3f.h"
 #include "../Math/Vector4f.h"
 #include "../Math/Quaternion.h"
@@ -14,10 +15,15 @@ private:
 
 protected:
 	Camera	camera;
+
 	bool	fullscreen;
 	bool	light;
 	size_t width;
 	size_t height;
+	float fovy;
+	float near;
+	float far;
+	
 	float moveScale;
 	float rotateScale;
 	//void* ptr_wndProc;
@@ -27,18 +33,21 @@ protected:
 	Vector4f gLightDiffuse;
 	Vector4f gLightPosition;
 public:
-	Render(const char* title_, /*void* wndProc,*/ size_t width_, size_t height_, const Vector3f& pos_, float angle_, const Vector3f& axic_, bool fullscreen_, bool light_, const Vector4f& lightAmbient_, const Vector4f& lightDiffuse_, const Vector4f& light_position_, float moveScale_, float rotateScale_)
+	Render(const char* title_, /*void* wndProc,*/ const Options& option)
 		//: ptr_wndProc(wndProc)
-		: width(width_)
-		, height(height_)
-		, fullscreen(fullscreen_)
-		, light(light_)
-		, gLightAmbient(lightAmbient_)
-		, gLightDiffuse(lightDiffuse_)
-		, gLightPosition(light_position_)
-		, camera(pos_, Quaternion(angle_, axic_))
-		, moveScale(moveScale_)
-		, rotateScale(rotateScale_)
+		: width(option.width)
+		, height(option.height)
+		, fovy(option.fovy)
+		, near(option.near)
+		, far(option.far)
+		, fullscreen(option.fullscreen)
+		, light(option.light)
+		, gLightAmbient(option.lightAmbient)
+		, gLightDiffuse(option.lightDiffuse)
+		, gLightPosition(option.lightPosition)
+		, camera(option.cameraPos, Quaternion(option.cameraAngle, option.cameraAxic))
+		, moveScale(option.moveScale)
+		, rotateScale(option.rotateScale)
 	{
 		size_t lenght = strlen(title_);
 		title = new char[lenght+1];

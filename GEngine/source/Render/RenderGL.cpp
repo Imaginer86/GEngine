@@ -294,7 +294,7 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0f, aspect, 0.1f, 1000.0f);
+	gluPerspective(fovy, aspect, near, far);
 	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	

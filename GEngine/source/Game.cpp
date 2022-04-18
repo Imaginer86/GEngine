@@ -36,12 +36,14 @@ bool Game::Init(size_t numEntites_, Options option)
 	pause = true;
 	done = false;
 	timeScale = 1.0f;
+	Collision = option.collision;
+	GraviForce = option.graviForce;
 
 
 	keys = new bool[512];
 	for (int i = 0; i < 512; ++i) keys[i] = false;
 	std::cout << "Game::Init" << std::endl;
-	render = new RenderGL("Gravi", option.width, option.height, option.cameraPos, option.cameraAngle, option.cameraAxic, option.fullscreen, option.light, option.lightAmbient, option.lightDiffuse, option.lightPosition, option.moveScale, option.rotateScale);
+	render = new RenderGL("Gravi", option);
 	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
 	GLFWwindow* window = (GLFWwindow*) render->Init();
 	if (!window) { std::cerr << "Failed to Init Render" << std::endl;  return false; }
@@ -146,6 +148,25 @@ void Game::Draw()
 
 	}
 	render->endDraw();
+}
+
+bool Game::Run()
+{
+	lastTickCount = Core::GetTickCount();
+	Draw();
+	while (!done)
+	{
+		Input();
+		Draw();//TT
+		long long tickCount = Core::GetTickCount();
+		tickCount = tickCount - lastTickCount;
+		float dt = static_cast<float>(tickCount);
+		dt /= 1000.0f;
+		FPS = static_cast<size_t>(1.0f / dt);
+		dt *= timeScale;
+		if (!pause)	Update(dt);		
+	}
+	return true;
 }
 
 

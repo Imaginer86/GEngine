@@ -5,6 +5,9 @@ struct Options
 {
 	size_t width;
 	size_t height;
+	float fovy;
+	float near;
+	float far;
 	Vector3f cameraPos;
 	float cameraAngle;
 	Vector3f cameraAxic;
@@ -15,4 +18,6 @@ struct Options
 	Vector4f lightAmbient;
 	Vector4f lightDiffuse;
 	Vector4f lightPosition;
+	bool graviForce;
+	bool collision;
 };

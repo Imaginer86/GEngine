@@ -28,6 +28,8 @@ public:
 
 	bool Init(size_t numEntites_, Options option);
 	//void Input(int key, bool press);
+
+	bool Run();
 	
 	void Draw();
 	void Update(float dt = 0.1f);

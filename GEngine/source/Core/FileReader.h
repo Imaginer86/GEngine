@@ -94,6 +94,9 @@ namespace Core
 			std::string pName = fr.getStr();
 			if (pName == "width") options.width = fr.getNumber();
 			else if (pName == "height") options.height = fr.getNumber(); 
+			else if (pName == "fovy") options.fovy = fr.getFloat();
+			else if (pName == "near") options.near = fr.getFloat();
+			else if (pName == "far") options.far = fr.getFloat();
 			else if (pName == "camera_pos") options.cameraPos = fr.getVector3f();
 			else if (pName == "camera_angle") options.cameraAngle = fr.getFloat();
 			else if (pName == "camera_axic") options.cameraAxic = fr.getVector3f();
@@ -104,6 +107,8 @@ namespace Core
 			else if (pName == "light_ambient") options.lightAmbient = fr.getVector4f();
 			else if (pName == "light_diffuse") options.lightDiffuse = fr.getVector4f();
 			else if (pName == "light_position") options.lightPosition = fr.getVector4f();
+			else if (pName == "gravi_force") options.graviForce = fr.getBool();
+			else if (pName == "collision") options.collision = fr.getBool();
 			else { std::cerr << "Wrong options data: " << pName << std:: endl; return false;} 
 		}
 		return true;
