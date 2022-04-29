@@ -20,7 +20,7 @@ inline float radToDeg(float radians)
 	return (radians * 180.0f) / GM_PI;
 }
 
-inline bool isEqual(float f1, float f2)
+inline bool isEqual(float f1, float f2 = 0.0f)
 {
 	//return fabs((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < GEPSILON;
 	return (fabsf(f1 - f2)) < std::numeric_limits<float>::epsilon();

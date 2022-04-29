@@ -8,11 +8,13 @@ struct Quaternion
 
 	Quaternion():w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
 	Quaternion(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
-	Quaternion(float angle, const Vector3f &axic)
+	Quaternion(float angle, const Vector3f &axis)
 	{
-		Vector3f naxic = axic;
-		naxic.unitize();
-		fromAngleAxis(angle, naxic);
+		Vector3f naxis = axis;
+		naxis.unitize();
+		float halfTheta = angle / 2.0f;
+		float s = sin(halfTheta);
+		w = cos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 	}
 	~Quaternion() {}
 
@@ -47,7 +49,7 @@ struct Quaternion
 	
 	void fromAngleAxis(float angle, const Vector3f &axis);
 	void toAngleAxis(float &angle, Vector3f &axis) const;
-	Vector3f GetAxic() const;
+	Vector3f Getaxis() const;
 	float GetAngle() const;
 
 	//void rotate(Vector3f &v) const;
@@ -223,8 +225,6 @@ inline float Quaternion::magnitude() const
 
 inline void Quaternion::normalize()
 {
-	if (w == 0.0f&&x == 0.0f&&y == 0.0f&&z == 0.0f)
-		identity();
 	float invMag = 1.0f / magnitude();
 	w *= invMag, x *= invMag, y *= invMag, z *= invMag;
 }
@@ -245,15 +245,12 @@ inline void Quaternion::toAngleAxis(float &angle, Vector3f &axis) const
 	angle = 2.0f * atan2f(sqrt(sinHalfThetaSq), w);
 }
 
-inline Vector3f Quaternion::GetAxic() const
+inline Vector3f Quaternion::Getaxis() const
 {
 	float sinHalfThetaSq = 1.0f - w * w;
 	float invSinHalfTheta = 1.0f;
-	if (!isEqual(sinHalfThetaSq, 0.0f))
-		invSinHalfTheta = 1.0f / sqrt(sinHalfThetaSq);
-
-	Vector3f axic(x * invSinHalfTheta, y * invSinHalfTheta, z * invSinHalfTheta);
-	return axic;
+	Vector3f axis(x * invSinHalfTheta, y * invSinHalfTheta, z * invSinHalfTheta);
+	return axis;
 }
 
 inline float Quaternion::GetAngle() const

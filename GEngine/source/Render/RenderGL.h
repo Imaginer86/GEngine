@@ -18,7 +18,7 @@ public:
 	virtual void endDraw() const;
 
 	virtual void Translate(const Vector3f& t) const;
-	virtual void Rotate(float angle, Vector3f axic) const;
+	virtual void Rotate(float angle, Vector3f axis) const;
 	virtual void Rotate(const Quaternion& q) const;
 	virtual void Color(const Color4f& color);
 	virtual void LoadIdentity() const;
@@ -37,7 +37,7 @@ public:
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Color4f& color) const;
 	virtual void drawQuad(const Vector3f* vertexs, const Vector3f& n, const Color4f& color) const;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Color4f& color) const;
-	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axic, const Color4f& color) const;
+	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axis, const Color4f& color) const;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const;

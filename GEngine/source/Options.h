@@ -10,7 +10,7 @@ struct Options
 	float far;
 	Vector3f cameraPos;
 	float cameraAngle;
-	Vector3f cameraAxic;
+	Vector3f cameraaxis;
 	bool fullscreen;
 	float moveScale;
 	float rotateScale;

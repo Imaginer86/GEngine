@@ -6,12 +6,7 @@
 #include "Math/Plane.h"
 #include "Math/Line.h"
 
-//#include "Physics/Entity.h"
-
 #include <iostream>
-
-
-//bool keys[512];
 
 int main ()
 {
@@ -22,18 +17,31 @@ int main ()
 
 	Game game;
 
-	//Entity* Planets = nullptr;
-	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Planets);
-	if (!numE) return 1;
+	//Entity* Enityes = nullptr;
+	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Enityes);
+	if (!numE)
+	{
+		std::cerr << "Can't LoadEntity" << std::endl;
+		return 1;
+	}
 
 	Options option;
-	if (!Core::LoadOptions("options.ini", option)) return 2;
+	if (!Core::LoadOptions("options.ini", option))
+	{
+		std::cerr << "Can't LoadOptions" << std::endl;
+		return 1;
+	}
 
-	if (!game.Init(numE, option)) return 3;
+	if (game.Init(numE, option))
+	{
+		game.Run();
+		game.End();
+	}
+	else
+	{
+		std::cerr << "Can't game.Init" << std::endl;
+		return 1;
+	}
 
-	game.Run();
-
-
-	game.End();
 	return 0;
 }

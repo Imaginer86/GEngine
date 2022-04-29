@@ -23,7 +23,6 @@
     <ClInclude Include="source\Core\Input.h" />
     <ClInclude Include="source\Core\Time.h" />
     <ClInclude Include="source\Game.h" />
-    <ClInclude Include="source\GEngine.h" />
     <ClInclude Include="source\Math\GMath.h" />
     <ClInclude Include="source\Math\Line.h" />
     <ClInclude Include="source\Math\Plane.h" />
@@ -35,7 +34,6 @@
     <ClInclude Include="source\Physics\Entity.h" />
     <ClInclude Include="source\Physics\Tank.h" />
     <ClInclude Include="source\Physics\Tera.h" />
-    <ClInclude Include="source\Platform\GWindows.h" />
     <ClInclude Include="source\Render\Color4f.h" />
     <ClInclude Include="source\Render\MaterialMTL.h" />
     <ClInclude Include="source\Render\ModelOBJ.h" />
@@ -45,9 +43,7 @@
   <ItemGroup>
     <ClCompile Include="source\Core\Input.cpp" />
     <ClCompile Include="source\Game.cpp" />
-    <ClCompile Include="source\GEngine.cpp" />
     <ClCompile Include="source\Physics\Tank.cpp" />
-    <ClCompile Include="source\Platform\GWindows.cpp" />
     <ClCompile Include="source\Render\MaterialMTL.cpp" />
     <ClCompile Include="source\Render\ModelOBJ.cpp" />
     <ClCompile Include="source\Render\RenderGL.cpp" />
@@ -61,6 +57,7 @@
     <ProjectGuid>{CEDA5BDE-9584-4030-B7A4-C5F56D073693}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

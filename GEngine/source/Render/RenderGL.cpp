@@ -479,10 +479,10 @@ void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
 	glLoadIdentity();
-	float angle = radToDeg(camera.q.GetAngle());
-	Vector3f axic = camera.q.GetAxic();
-	if (!isEqual(angle, 0.0f)) glRotatef(angle, axic.x, axic.y, axic.z);
-	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);	
+	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
+	float angle = camera.q.GetAngle();
+	Vector3f axis = camera.axis;
+	glRotatef(angle, axis.x, axis.y, axis.z);
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
@@ -501,17 +501,17 @@ void RenderGL::Translate(const Vector3f & t) const
 	glTranslatef(t.x, t.y, t.z);
 }
 
-void RenderGL::Rotate(float angle, Vector3f axic) const
+void RenderGL::Rotate(float angle, Vector3f axis) const
 {
-	glRotatef(angle, axic.x, axic.y, axic.z);
+	glRotatef(angle, axis.x, axis.y, axis.z);
 }
 
 void RenderGL::Rotate(const Quaternion & q) const
 {
 	float angle;
-	Vector3f axic;
-	q.toAngleAxis(angle, axic);
-	glRotatef(angle, axic.x, axic.y, axic.z);
+	Vector3f axis;
+	q.toAngleAxis(angle, axis);
+	glRotatef(angle, axis.x, axis.y, axis.z);
 }
 
 void RenderGL::Color(const Color4f& color)
@@ -640,11 +640,11 @@ void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Color4f&
 	glPopMatrix();
 }
 
-void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axic, const Color4f& color) const
+void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axis, const Color4f& color) const
 {
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, pos.z);
-	glRotatef(angle, axic.x, axic.y, axic.z);
+	glRotatef(angle, axis.x, axis.y, axis.z);
 	Vector3f ad = Vector3f(-size.x / 2.0f, -size.y / 2.0f, -size.z / 2.0f);
 	Vector3f bd = Vector3f(-size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);
 	Vector3f cd = Vector3f(size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);
@@ -668,10 +668,10 @@ void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Quaterni
 {
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, pos.z);
-	Vector3f axic;
+	Vector3f axis;
 	float angle;
-	rotation.toAngleAxis(angle, axic);
-	glRotatef(angle, axic.x, axic.y, axic.z);
+	rotation.toAngleAxis(angle, axis);
+	glRotatef(angle, axis.x, axis.y, axis.z);
 	Vector3f ad = Vector3f(-size.x / 2.0f, -size.y / 2.0f, -size.z / 2.0f);
 	Vector3f bd = Vector3f(-size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);
 	Vector3f cd = Vector3f(size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);
@@ -737,8 +737,8 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	//glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 	float angle;
-	Vector3f axic;
-	q.toAngleAxis(angle, axic);
+	Vector3f axis;
+	q.toAngleAxis(angle, axis);
 	glTranslatef(pos.x, pos.y, pos.z);
 	glRotatef(-angle, q.x, q.y, q.z);
 	//GLUquadric *qobj = gluNewQuadric();

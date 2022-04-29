@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Render/RenderGL.h"
 #include "Core/Time.h"
+#include "Core/Input.h"
 
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
@@ -8,30 +9,21 @@
 
 
 
-bool  Game::done = false;
-bool Game::pause = true;
-bool Game::drawDebugInfo = true;
-size_t Game::FPS = 0;
-Render* Game::render = nullptr;
+
+
+
 bool* Game::keys = nullptr;
 
 
-//Input* input = nullptr;
 
 //const size_t numEntites = 2;// 51;
 //void Game::Input(int key, bool press){keys[key] = press;}
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key >= 0 && key < 512)
-		if (action == GLFW_PRESS) Game::keys[key] = true;
-		else if(action == GLFW_RELEASE) Game::keys[key] = false;
-}
 
 bool Game::Init(size_t numEntites_, Options option)
 {
 	numEntites = numEntites_;
-	//Planets = new Entity[numEntites];
+	//Enityes = new Entity[numEntites];
 	lastTickCount = 0;
 	pause = true;
 	done = false;
@@ -45,23 +37,26 @@ bool Game::Init(size_t numEntites_, Options option)
 	std::cout << "Game::Init" << std::endl;
 	render = new RenderGL("Gravi", option);
 	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
-	GLFWwindow* window = (GLFWwindow*) render->Init();
-	if (!window) { std::cerr << "Failed to Init Render" << std::endl;  return false; }
-	glfwSetKeyCallback(window, key_callback);
 
-	//if (!input->Init(window)) { std::cerr << "Failed to Init Input" << std::endl;  return false; }
+	input = new Input();
+	void* window = render->Init();
+	input->Init(window);
+	if (!input) { std::cerr << "Failed to Init Input" << std::endl;  return false; }
+
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 
 	return true;
 }
 
-void Game::Input()
+void Game::InputCheck()
 {
 	if (keys[GLFW_KEY_ESCAPE]) Game::done = true;
 	if (keys[GLFW_KEY_SPACE]) { keys[GLFW_KEY_SPACE] = false;  Game::pause = !Game::pause; }
 	if (keys[GLFW_KEY_TAB]) { keys[GLFW_KEY_TAB] = false;  Game::drawDebugInfo = !Game::drawDebugInfo; }
-	if (keys[GLFW_KEY_W]) Game::render->MoveCameraQ(10.0f);
-	if (keys[GLFW_KEY_S]) Game::render->MoveCameraQ(-10.0f);
+	if (keys[GLFW_KEY_W]) Game::render->MoveCameraUD(-10.0f);
+	if (keys[GLFW_KEY_S]) Game::render->MoveCameraUD(10.0f);
+	if (keys[GLFW_KEY_A]) Game::render->MoveCameraLR(-10.0f);
+	if (keys[GLFW_KEY_D]) Game::render->MoveCameraLR(10.0f);
 	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(1.0f, 0.0f, 0.0f)));
 	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(-1.0f, 0.0f, 0.0f)));
 	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, 1.0f, 0.0f)));
@@ -70,58 +65,58 @@ void Game::Input()
 }
 void Game::Update(float dt)
 {
-	for (size_t i = 0; i < numEntites; i++) Planets[i].init();
+	for (size_t i = 0; i < numEntites; i++) Enityes[i].init();
 	if (Collision)
 	{
 		for (size_t i = 0; i < numEntites; i++)
 			for (size_t j = i + 1; j < numEntites; j++)
 			{
-				Vector3f rAxic = Planets[i].pos - Planets[j].pos;
-				float dr = rAxic.unitize();
-				float r = (Planets[i].r + Planets[j].r);
+				Vector3f raxis = Enityes[i].pos - Enityes[j].pos;
+				float dr = raxis.unitize();
+				float r = (Enityes[i].r + Enityes[j].r);
 				if (dr < r)
 				{
-					std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Planets[i].vel << " vs " << Planets[j].vel;
-					Vector3f u1r = rAxic * (rAxic.dotProduct(Planets[i].vel));
-					Vector3f u1p = Planets[i].vel - u1r;
+					std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Enityes[i].vel << " vs " << Enityes[j].vel;
+					Vector3f u1r = raxis * (raxis.dotProduct(Enityes[i].vel));
+					Vector3f u1p = Enityes[i].vel - u1r;
 
-					Vector3f u2r = rAxic * (rAxic.dotProduct(Planets[j].vel));
-					Vector3f u2p = Planets[j].vel - u2r;
+					Vector3f u2r = raxis * (raxis.dotProduct(Enityes[j].vel));
+					Vector3f u2p = Enityes[j].vel - u2r;
 
-					Vector3f v1r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u1r - u2r) * Planets[j].m) / (Planets[i].m + Planets[j].m);
-					Vector3f v2r = ((u1r * Planets[i].m) + (u2r * Planets[j].m) - (u2r - u1r) * Planets[i].m) / (Planets[i].m + Planets[j].m);
+					Vector3f v1r = ((u1r * Enityes[i].m) + (u2r * Enityes[j].m) - (u1r - u2r) * Enityes[j].m) / (Enityes[i].m + Enityes[j].m);
+					Vector3f v2r = ((u1r * Enityes[i].m) + (u2r * Enityes[j].m) - (u2r - u1r) * Enityes[i].m) / (Enityes[i].m + Enityes[j].m);
 
-					float v = (Planets[i].vel - Planets[j].vel).Length();
+					float v = (Enityes[i].vel - Enityes[j].vel).Length();
 					float dt0 = (dr - r) / v;
-					Planets[i].move(dt0);
-					Planets[j].move(dt0);
-					//float testr = (Planets[i].pos - Planets[j].pos).Length();
+					Enityes[i].move(dt0);
+					Enityes[j].move(dt0);
+					//float testr = (Enityes[i].pos - Enityes[j].pos).Length();
 					//testr -= r;
-					Planets[i].move(dt + dt0);
-					Planets[j].move(dt + dt0);
-					Planets[i].vel = v1r + u1p;
-					Planets[j].vel = v2r + u2p;
-					std::cout << ". Vel After: " << Planets[i].vel << " vs " << Planets[j].vel;
+					Enityes[i].move(dt + dt0);
+					Enityes[j].move(dt + dt0);
+					Enityes[i].vel = v1r + u1p;
+					Enityes[j].vel = v2r + u2p;
+					std::cout << ". Vel After: " << Enityes[i].vel << " vs " << Enityes[j].vel;
 				}
 			}
 	}
 	if (GraviForce)
 	{
-		for (size_t i = 0; i < numEntites; i++) Planets[i].init();
+		for (size_t i = 0; i < numEntites; i++) Enityes[i].init();
 		for (size_t i = 0; i < numEntites; i++)
 			for (size_t j = 0; j < numEntites; j++)
 				if (i != j)
 				{
-					float r2 = (Planets[i].pos - Planets[j].pos).lenght2();
-					float f = G * Planets[i].m * Planets[j].m / r2;
-					Vector3f force = (Planets[j].pos - Planets[i].pos).unit() * f;
-					Planets[i].applyForce(force);
-					Planets[j].applyForce(-force);
+					float r2 = (Enityes[i].pos - Enityes[j].pos).lenght2();
+					float f = G * Enityes[i].m * Enityes[j].m / r2;
+					Vector3f force = (Enityes[j].pos - Enityes[i].pos).unit() * f;
+					Enityes[i].applyForce(force);
+					Enityes[j].applyForce(-force);
 				}
 	}
 
-	for (size_t i = 0; i < numEntites; i++) Planets[i].simulate(dt);
-	for (size_t i = 0; i < numEntites; i++) if (!Planets[i].moved) Planets[i].move(dt);
+	for (size_t i = 0; i < numEntites; i++) Enityes[i].simulate(dt);
+	for (size_t i = 0; i < numEntites; i++) if (!Enityes[i].moved) Enityes[i].move(dt);
 }
 
 void Game::Draw()
@@ -131,7 +126,7 @@ void Game::Draw()
 
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		render->drawSphere(Planets[i].pos, Planets[i].r, Planets[i].color);
+		render->drawSphere(Enityes[i].pos, Enityes[i].r, Enityes[i].color);
 	}
 	if (drawDebugInfo)
 	{
@@ -139,12 +134,12 @@ void Game::Draw()
 		//render->print(-0.25f, 0.35f, "Time Scale: %f", timeScale);
 
 		//Debug Vel
-		//render->print(-0.60f, 0.37f, "P0 V: %f %f %f", Planets[0].vel.x, Planets[0].vel.y, Planets[0].vel.z);
-		//render->print(-0.10f, 0.37f, "P1 V: %f %f %f", Planets[1].vel.x, Planets[1].vel.y, Planets[1].vel.z);
+		//render->print(-0.60f, 0.37f, "P0 V: %f %f %f", Enityes[0].vel.x, Enityes[0].vel.y, Enityes[0].vel.z);
+		//render->print(-0.10f, 0.37f, "P1 V: %f %f %f", Enityes[1].vel.x, Enityes[1].vel.y, Enityes[1].vel.z);
 
 		//Debug Pos
-		//render->print(-0.60f, 0.39f, "P0 P: %f %f %f", Planets[0].pos.x, Planets[0].pos.y, Planets[0].pos.z);
-		//render->print(-0.10f, 0.39f, "P1 P: %f %f %f", Planets[1].pos.x, Planets[1].pos.y, Planets[1].pos.z);
+		//render->print(-0.60f, 0.39f, "P0 P: %f %f %f", Enityes[0].pos.x, Enityes[0].pos.y, Enityes[0].pos.z);
+		//render->print(-0.10f, 0.39f, "P1 P: %f %f %f", Enityes[1].pos.x, Enityes[1].pos.y, Enityes[1].pos.z);
 
 	}
 	render->endDraw();
@@ -156,7 +151,7 @@ bool Game::Run()
 	Draw();
 	while (!done)
 	{
-		Input();
+		InputCheck();
 		Draw();//TT
 		long long tickCount = Core::GetTickCount();
 		tickCount = tickCount - lastTickCount;
@@ -172,7 +167,8 @@ bool Game::Run()
 
 void Game::End()
 {
-	delete render;	
-	delete[] Planets;
+	delete render;
+	delete input;
+	delete[] Enityes;
 	delete[] keys;
 }

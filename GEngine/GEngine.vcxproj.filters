@@ -17,10 +17,6 @@
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="source\Game.cpp" />
-    <ClCompile Include="source\GEngine.cpp" />
-    <ClCompile Include="source\Platform\GWindows.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">
@@ -75,10 +71,6 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.h" />
-    <ClInclude Include="source\GEngine.h" />
-    <ClInclude Include="source\Platform\GWindows.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="source\Options.h" />
     <ClInclude Include="source\Math\Vector4f.h">
       <Filter>Math</Filter>
@@ -99,9 +91,6 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{8e6dd8e7-7352-4719-9a89-c10eb42cf426}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{3f8f0bb0-54ce-46ce-9e2d-aa9c56b098da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

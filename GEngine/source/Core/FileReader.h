@@ -99,7 +99,7 @@ namespace Core
 			else if (pName == "far") options.far = fr.getFloat();
 			else if (pName == "camera_pos") options.cameraPos = fr.getVector3f();
 			else if (pName == "camera_angle") options.cameraAngle = fr.getFloat();
-			else if (pName == "camera_axic") options.cameraAxic = fr.getVector3f();
+			else if (pName == "camera_axis") options.cameraaxis = fr.getVector3f();
 			else if (pName == "fullscreen") options.fullscreen = fr.getBool();
 			else if (pName == "move_scale") options.moveScale = fr.getFloat();
 			else if (pName == "rotate_scale") options.rotateScale = fr.getFloat();

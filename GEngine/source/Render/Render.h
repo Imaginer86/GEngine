@@ -45,7 +45,7 @@ public:
 		, gLightAmbient(option.lightAmbient)
 		, gLightDiffuse(option.lightDiffuse)
 		, gLightPosition(option.lightPosition)
-		, camera(option.cameraPos, Quaternion(option.cameraAngle, option.cameraAxic))
+		, camera(option.cameraPos, option.cameraAngle, option.cameraaxis)
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
 	{
@@ -59,7 +59,8 @@ public:
 
 	void RotateCamera(const Quaternion& q);
 	void MoveCamera(const Vector3f& v);
-	void MoveCameraQ(float s);
+	void MoveCameraUD(float s);
+	void MoveCameraLR(float s);
 
 	void SetLight(bool light_);
 	bool GetLight();
@@ -84,7 +85,7 @@ public:
 	virtual void endDraw() const = 0;
 
 	virtual void Translate(const Vector3f& t) const = 0;
-	virtual void Rotate(float angle, Vector3f axic) const = 0;
+	virtual void Rotate(float angle, Vector3f axis) const = 0;
 	virtual void Rotate(const Quaternion& q) const = 0;
 	virtual void Color(const Color4f& color) = 0;
 	virtual void LoadIdentity() const = 0;
@@ -99,7 +100,7 @@ public:
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Color4f& color) const = 0;
 	virtual void drawQuad(const Vector3f* vertexs, const Vector3f& n, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Color4f& color) const = 0;
-	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axic, const Color4f& color) const = 0;
+	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axis, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const = 0;
@@ -116,7 +117,7 @@ inline Render::Render(InitData& initData)
 , height(initData.height)
 , fullscreen(initData.fullscreen)
 , light(initData.light)
-, camera(initData.pos, initData.aangle, initData.axic)
+, camera(initData.pos, initData.aangle, initData.axis)
 , moveScale(initData.moveScale)
 , rotateScale(initData.rotateScale)
 {
@@ -133,9 +134,14 @@ inline void Render::MoveCamera(const Vector3f &s)
 	camera.Move(s * moveScale);
 }
 
-inline void Render::MoveCameraQ(float s)
+inline void Render::MoveCameraUD(float s)
 {
-	camera.MoveQ(s * moveScale);
+	camera.MoveUD(s * moveScale);
+}
+
+inline void Render::MoveCameraLR(float s)
+{
+	camera.MoveLR(s * moveScale);
 }
 
 
