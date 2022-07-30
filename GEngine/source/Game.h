@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include <vector>
 #include "Options.h"
 #include "Physics/Entity.h"
 #include "Render/Render.h"
@@ -19,7 +21,7 @@ public:
 		,GraviForce(false)
 		,Collision(false)
 		,numEntites(0)
-		,Enityes(nullptr)
+		//,Enityes(nullptr)
 		,render(nullptr)
 		,input(nullptr)
 		
@@ -38,7 +40,7 @@ public:
 public:
 	Render* render;
 	Input* input;
-	Entity* Enityes;
+	std::vector<Entity*> Enityes;
 	size_t numEntites;
 	static bool* keys;
 

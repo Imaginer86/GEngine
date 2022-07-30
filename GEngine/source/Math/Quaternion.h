@@ -248,7 +248,7 @@ inline void Quaternion::toAngleAxis(float &angle, Vector3f &axis) const
 inline Vector3f Quaternion::Getaxis() const
 {
 	float sinHalfThetaSq = 1.0f - w * w;
-	float invSinHalfTheta = 1.0f;
+	float invSinHalfTheta = sqrtf(sinHalfThetaSq);
 	Vector3f axis(x * invSinHalfTheta, y * invSinHalfTheta, z * invSinHalfTheta);
 	return axis;
 }

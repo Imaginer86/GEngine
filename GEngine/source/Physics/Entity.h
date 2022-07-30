@@ -7,7 +7,6 @@ class Entity
 {
 public:
 	float	m;        // Значение массы.
-	float	r;
 	Vector3f  pos;      // Положение в пространстве.
 	Quaternion	q;		// Положение в пространстве.
 	Vector3f  vel;      // Скорость.
@@ -15,34 +14,28 @@ public:
 	Color4f   color;
 	bool moved;
 
-	//Entity():m(1.0f), r(1.0f)
-	//{
-	//}
+	void applyForce(Vector3f _force);
 
-	//virtual ~Entity()
-	//{
-	//}
+	void init();	// Обнуляем «нашу» силу
 
-	virtual void applyForce(Vector3f _force);
+	void simulate(float dt);
 
-	virtual void init();	// Обнуляем «нашу» силу
-
-	virtual void simulate(float dt);
-
-	virtual void move(float dt);
+	void move(float dt);
 
 	virtual void draw() {};
 
+	virtual bool isBall() {	return false; }
+
 };
 
-inline void Entity::applyForce(Vector3f _force)
+inline void Entity::applyForce(Vector3f _force) 
 {
 	force += _force;    // Внешнюю силу прибавляем к «нашей».
 }
 
 inline void Entity::init()          // Обнуляем «нашу» силу
 {
-	force.x = 0;	force.y = 0;	force.z = 0;
+	force = {0, 0, 0};
 	moved = false;
 }
 

@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../Physics/Entity.h"
+#include "../Physics/Ball.h"
 #include "../Options.h"
 
 namespace Core
@@ -52,7 +53,7 @@ namespace Core
 		return true;
 	}
 
-	size_t LoadEntitys(const char* filename, Entity*& Entitys)
+	size_t LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 	{
 		size_t num_entitys = 0;
 		std::fstream in;
@@ -62,20 +63,20 @@ namespace Core
 		{
 			in >> num_entitys;
 			if (num_entitys > 0)
-				Entitys = new Entity[num_entitys];
+				Entitys.resize(num_entitys);
+				//Entitys = new Entity[num_entitys];
 
-			std::string name;
-			Entity entity;
+			std::string name;			
 			for (size_t i = 0; i < num_entitys; ++i)
 			{
-				
+				Ball* entity = new Ball;				
 				in >> name;
-				if (name != "Entity")
+				if (name != "Ball")
 				{
-					delete[] Entitys;
+					//delete[] Entitys;
 					return 0;
 				}				
-				in >> entity.m >> entity.pos >> entity.vel >> entity.r >> entity.color;
+				in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
 				Entitys[i] = entity;
 			}
 			in.close();

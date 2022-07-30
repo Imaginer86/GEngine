@@ -106,7 +106,7 @@ bool RenderGL::createWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(width, height, title, NULL, NULL);
+	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();

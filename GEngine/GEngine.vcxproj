@@ -30,6 +30,8 @@
     <ClInclude Include="source\Math\Vector3f.h" />
     <ClInclude Include="source\Math\Vector4f.h" />
     <ClInclude Include="source\Options.h" />
+    <ClInclude Include="source\Physics\Ball.h" />
+    <ClInclude Include="source\Physics\Box.h" />
     <ClInclude Include="source\Physics\Camera.h" />
     <ClInclude Include="source\Physics\Entity.h" />
     <ClInclude Include="source\Physics\Tank.h" />
