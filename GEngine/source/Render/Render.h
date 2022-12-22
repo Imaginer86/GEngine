@@ -68,8 +68,8 @@ public:
 	float getMoveScale() { return moveScale; }
 	float getRotateScale() { return rotateScale; }
 
-	void Render::LightOn() { light = true; }
-	void Render::LightOff() { light = false; }
+	void LightOn() { light = true; }
+	void LightOff() { light = false; }
 
 	virtual void* Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;

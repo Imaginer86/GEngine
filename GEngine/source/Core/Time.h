@@ -3,7 +3,7 @@
 namespace Core
 {
     // simulation of Windows GetTickCount()
-    inline unsigned long long   GetTickCount()
+    inline long long   GetTickCount()
     {
         using namespace std::chrono;
         return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
