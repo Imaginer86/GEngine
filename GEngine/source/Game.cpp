@@ -38,7 +38,7 @@ bool Game::Init(size_t numEntites_, Options option)
 	keys = new bool[512];
 	for (int i = 0; i < 512; ++i) keys[i] = false;
 	std::cout << "Game::Init" << std::endl;
-	render = new RenderGL("Gravi", option);
+	render = new RenderGL(option);
 	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
 
 	input = new Input();

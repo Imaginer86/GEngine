@@ -119,7 +119,8 @@ namespace Core
 		while (!fr.isEof())
 		{
 			std::string pName = fr.getStr();
-			if (pName == "width") options.width = fr.getNumber();
+			if (pName == "name") options.name = fr.getStr();
+			else if (pName == "width") options.width = fr.getNumber();
 			else if (pName == "height") options.height = fr.getNumber(); 
 			else if (pName == "fovy") options.fovy = fr.getFloat();
 			else if (pName == "near") options.near = fr.getFloat();

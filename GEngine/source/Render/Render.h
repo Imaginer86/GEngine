@@ -33,8 +33,7 @@ protected:
 	Vector4f gLightDiffuse;
 	Vector4f gLightPosition;
 public:
-	Render(const char* title_, /*void* wndProc,*/ const Options& option)
-		//: ptr_wndProc(wndProc)
+	Render(const Options& option)
 		: width(option.width)
 		, height(option.height)
 		, fovy(option.fovy)
@@ -49,9 +48,9 @@ public:
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
 	{
-		size_t lenght = strlen(title_);
+		size_t lenght = option.name.size();
 		title = new char[lenght+1];
-		strcpy_s(title, sizeof(title), title_);
+		strcpy_s(title, sizeof(title), option.name.c_str());
 		if (height == 0) height = 1;
 	}
 	//Render(InitData& initData);

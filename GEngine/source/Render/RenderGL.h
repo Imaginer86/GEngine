@@ -3,8 +3,8 @@
 class RenderGL:	public Render
 {
 public:		
-	RenderGL(const char* title_, /*void* wndProc_,*/ const Options& option)
-		:Render(title_, /*wndProc_,*/option) {}
+	RenderGL(const Options& option)
+		:Render(option) {}
 		//p_instance = this;//}
 
 	virtual ~RenderGL() {};
