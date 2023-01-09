@@ -222,7 +222,7 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 			{
 				std::string mtlFileName;
 				sstr >> mtlFileName;
-				std::cout << mtlFileName << std::endl;
+				//std::cout << mtlFileName << std::endl;
 				MaterialMTL material;
 				Materials = material.Load((std::string(directory) + '/' + mtlFileName).c_str(), materialN);
 				if (Materials == nullptr)
@@ -238,7 +238,7 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 			char cc;
 			sstr >> cc >> cc >> cc >> cc >> cc;
 			sstr >> mtl_name;
-			std::cout << mtl_name << std::endl;
+			//std::cout << mtl_name << std::endl;
 		}
 		else if (c == 's')
 		{

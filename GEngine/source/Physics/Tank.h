@@ -3,7 +3,7 @@
 #include "../Math/Vector3f.h"
 #include "../Math/Quaternion.h"
 //#include "Model.h"
-#include "../Render/ModelOBJ.h"
+#include "../Physics/ModelOBJ.h"
 
 class Tank : public Entity
 {

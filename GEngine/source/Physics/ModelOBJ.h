@@ -1,13 +1,15 @@
 #pragma once
+#include "Entity.h"
 #include "../Math/Vector3f.h"
 #include "../Render/Color4f.h"
-
 #include "../Render/Render.h"
-#include "MaterialMTL.h"
+#include "../Render/MaterialMTL.h"
 
 
-class ModelOBJ
+class ModelOBJ : public Entity
 {
+public:
+	virtual bool isModel() { return true; }
 public:
 	struct Triangle
 	{

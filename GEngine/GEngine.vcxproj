@@ -34,20 +34,20 @@
     <ClInclude Include="source\Physics\Box.h" />
     <ClInclude Include="source\Physics\Camera.h" />
     <ClInclude Include="source\Physics\Entity.h" />
+    <ClInclude Include="source\Physics\ModelOBJ.h" />
     <ClInclude Include="source\Physics\Tank.h" />
     <ClInclude Include="source\Physics\Tera.h" />
     <ClInclude Include="source\Render\Color4f.h" />
     <ClInclude Include="source\Render\MaterialMTL.h" />
-    <ClInclude Include="source\Render\ModelOBJ.h" />
     <ClInclude Include="source\Render\Render.h" />
     <ClInclude Include="source\Render\RenderGL.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Core\Input.cpp" />
     <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Physics\ModelOBJ.cpp" />
     <ClCompile Include="source\Physics\Tank.cpp" />
     <ClCompile Include="source\Render\MaterialMTL.cpp" />
-    <ClCompile Include="source\Render\ModelOBJ.cpp" />
     <ClCompile Include="source\Render\RenderGL.cpp" />
   </ItemGroup>
   <ItemGroup>

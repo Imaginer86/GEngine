@@ -10,13 +10,13 @@
     <ClCompile Include="source\Render\MaterialMTL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="source\Render\ModelOBJ.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="source\Render\RenderGL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Physics\ModelOBJ.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">
@@ -61,9 +61,6 @@
     <ClInclude Include="source\Render\MaterialMTL.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="source\Render\ModelOBJ.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="source\Render\Render.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -79,6 +76,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="source\Physics\Ball.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Physics\ModelOBJ.h">
       <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,14 +1,18 @@
-#include "Game.h"
-#include "Render/RenderGL.h"
-#include "Core/Time.h"
-#include "Core/Input.h"
-#include "Physics/Ball.h"
-#include "Physics/Box.h"
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#include "Game.h"
+#include "Render/RenderGL.h"
+#include "Core/Time.h"
+#include "Core/Input.h"
+#include "Physics/Entity.h"
+#include "Physics/Ball.h"
+#include "Physics/Box.h"
+#include "Physics/ModelOBJ.h"
+
+
 
 
 
@@ -132,8 +136,8 @@ void Game::Draw()
 
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		if(Enityes[i]->isBall())
-		 render->drawSphere(Enityes[i]->pos, dynamic_cast<Ball*>(Enityes[i])->r, Enityes[i]->color);
+		if (Enityes[i]->isBall())	render->drawSphere(Enityes[i]->pos, dynamic_cast<Ball*>(Enityes[i])->r, Enityes[i]->color);
+		else if (Enityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Enityes[i])->Draw(render);
 	}
 	if (drawDebugInfo)
 	{

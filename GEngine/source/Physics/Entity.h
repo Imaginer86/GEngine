@@ -25,6 +25,7 @@ public:
 	virtual void draw() {};
 
 	virtual bool isBall() {	return false; }
+	virtual bool isModel() { return false; }
 
 };
 

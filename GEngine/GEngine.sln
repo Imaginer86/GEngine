@@ -11,6 +11,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gravi", "..\Gravi\Gravi.vcx
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pirates", "..\Pirates\Pirates.vcxproj", "{7B64CD4C-A797-4645-82F2-C859748878E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CEDA5BDE-9584-4030-B7A4-C5F56D073693} = {CEDA5BDE-9584-4030-B7A4-C5F56D073693}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

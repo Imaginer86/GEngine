@@ -1,4 +1,5 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include <vector>
 #include <list>
 #include <string>
@@ -8,6 +9,7 @@
 
 #include "../Physics/Entity.h"
 #include "../Physics/Ball.h"
+#include "../Physics/ModelOBJ.h"
 #include "../Options.h"
 
 namespace Core
@@ -68,11 +70,28 @@ namespace Core
 		{
 			std::string name;
 			in >> name;
-			if (name != "Ball") return 0;
-			num_entitys++;
-			Ball* entity = new Ball;
-			in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
-			lEntitys.push_back(entity);
+			if (name == "Ball")
+			{
+				num_entitys++;
+				Ball* entity = new Ball;
+				in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				lEntitys.push_back(entity);
+			}
+			else if (name == "Model")
+			{
+				num_entitys++;
+				ModelOBJ* entity = new ModelOBJ;
+				in >> entity->m >> entity->pos >> entity->vel >> entity->color;
+				std::string path, fileName;
+				in >> path >> fileName;
+				if (!entity->Load(path.c_str(), fileName.c_str()))
+				{
+					std::cerr << "Can't load obj" << std::endl;
+					return 0;
+				}
+				lEntitys.push_back(entity);
+			}
+			else return 0;
 		} while (!in.eof());
 		in.close();
 

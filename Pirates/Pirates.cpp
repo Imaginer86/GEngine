@@ -1,8 +1,10 @@
 #define _USE_MATH_DEFINES
 #include <iostream>
 
+#include "PiratesGame.h"
 #include "Game.h"
 #include "Core/FileReader.h"
+
 
 //#include "GEngine.h"
 //#include "Render/RenderGL.h"
@@ -74,9 +76,11 @@ void Program::Draw()
 
 //void Program::End(){}
 
+
+
 int main()
 {
-	Game game;
+	PiratesGame game;
 
 	//Entity* Enityes = nullptr;
 	size_t numE = Core::LoadEntitys("Pirates.dat", game.Enityes);
@@ -90,7 +94,7 @@ int main()
 	if (!Core::LoadOptions("options.ini", option))
 	{
 		std::cerr << "Can't LoadOptions" << std::endl;
-		return 1;
+		return 2;
 	}
 
 	if (game.Init(numE, option))

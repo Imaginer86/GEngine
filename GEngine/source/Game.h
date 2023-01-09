@@ -27,7 +27,7 @@ public:
 		
 	{
 	};
-	bool Init(size_t numEntites_, Options option);
+	virtual bool Init(size_t numEntites_, Options option);
 	//void Input(int key, bool press);
 
 	bool Run();
