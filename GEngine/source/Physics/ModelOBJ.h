@@ -57,6 +57,8 @@ public:
 	void setSizeQuads(size_t n);
 	//void setSizeQuad(size_t g, size_t s);
 	bool Load(const char* directory, const char* fileName, bool isQuads = false, bool noTextIndexs = false,  bool twoUV = false);
+
+	bool Save(const char* file);
 	//bool LoadM(const char* fileName);
 	void Draw(Render* r);
 };

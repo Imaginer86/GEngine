@@ -6,8 +6,6 @@
 
 const float G = 667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
-//const float GEPSILON = 0.00001f;
-//const float GM_PI = 3.14159265358979323846f;   // pi
 const float GM_PI = static_cast<float>(M_PI);
 
 inline float degToRad(float degrees)

@@ -1,11 +1,13 @@
 #include "RenderGL.h"
-#include "../Game.h"
-#include "../Core/Input.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#include "../Game.h"
+#include "../Core/Input.h"
+
 
 //#define GL_GLEXT_PROTOTYPES
 //#include <gl/gl.h>

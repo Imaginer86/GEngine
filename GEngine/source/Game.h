@@ -1,6 +1,8 @@
 #pragma once
-#define _USE_MATH_DEFINES
+#include  "Math/GMath.h"
+
 #include <vector>
+
 #include "Options.h"
 #include "Physics/Entity.h"
 #include "Render/Render.h"

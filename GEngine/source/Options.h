@@ -1,12 +1,12 @@
 #pragma once
-#define _USE_MATH_DEFINES
-#include <string>
+//#define _USE_MATH_DEFINES
+//#include <string>
 #include "Math/Vector3f.h"
 #include "Math/Vector4f.h"
 
 struct Options
 {
-	std::string name;
+	char name[20];
 	size_t width;
 	size_t height;
 	float fovy;

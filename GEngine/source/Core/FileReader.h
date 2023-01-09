@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <string>
+
 
 #include "../Physics/Entity.h"
 #include "../Physics/Ball.h"
@@ -22,7 +22,16 @@ namespace Core
 		~FileReader(){ in.close(); }
 		bool isOpen() { return in.is_open(); }
 		bool isEof() {return in.eof(); }
-		std::string	 getStr() { std::string str; in >> str; return str; }
+		void getStr(char* strc)
+		{
+			std::string str;
+			in >> str;
+			//strc = new char[str.length() + 1]; 
+			//strcpy_s(strc, str.length() + 1, str.c_str());
+			int i = 0;
+			for (; i < str.length(); i++) strc[i] = str[i];
+			strc[i] = '\0';
+		}
 		Vector3f getVector3f() { Vector3f v; in >> v; return v; }
 		Vector4f getVector4f() { Vector4f v; in >> v; return v; }
 		Color4f getColor4f() { Color4f c; in >> c; return c; }
@@ -83,12 +92,14 @@ namespace Core
 				ModelOBJ* entity = new ModelOBJ;
 				in >> entity->m >> entity->pos >> entity->vel >> entity->color;
 				std::string path, fileName;
-				in >> path >> fileName;
-				if (!entity->Load(path.c_str(), fileName.c_str()))
+				bool isQuad;
+				in >> path >> fileName >> isQuad;				
+				if (!entity->Load(path.c_str(), fileName.c_str(), isQuad))
 				{
 					std::cerr << "Can't load obj" << std::endl;
 					return 0;
 				}
+				entity->Save((path + '/' + fileName + ".objm").c_str());
 				lEntitys.push_back(entity);
 			}
 			else return 0;
@@ -137,8 +148,12 @@ namespace Core
 		
 		while (!fr.isEof())
 		{
-			std::string pName = fr.getStr();
-			if (pName == "name") options.name = fr.getStr();
+			char pcName[20];// = new char[100];
+			fr.getStr(pcName);
+			std::string pName(pcName);
+			//delete[] pcName;
+			
+			if (pName == "name") fr.getStr(options.name);
 			else if (pName == "width") options.width = fr.getNumber();
 			else if (pName == "height") options.height = fr.getNumber(); 
 			else if (pName == "fovy") options.fovy = fr.getFloat();
@@ -157,6 +172,8 @@ namespace Core
 			else if (pName == "gravi_force") options.graviForce = fr.getBool();
 			else if (pName == "collision") options.collision = fr.getBool();
 			else { std::cerr << "Wrong options data: " << pName << std:: endl; return false;} 
+			
+			
 		}
 		return true;
 	}

@@ -1,9 +1,11 @@
+#include "Game.h"
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "Game.h"
+
 #include "Render/RenderGL.h"
 #include "Core/Time.h"
 #include "Core/Input.h"

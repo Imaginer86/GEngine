@@ -327,6 +327,14 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 	return true;
 
 }
+bool ModelOBJ::Save(const char* file)
+{
+	std::ofstream outFile;
+	outFile.open(file);
+	outFile << "# File Create GEngine - it is modify obj file" << std::endl;
+	outFile.close();
+	return false;
+}
 void ModelOBJ::Draw(Render* r)
 {
 	Color4f color(0.25f, 1.0f, 0.5f, 1.0f);
@@ -374,10 +382,11 @@ void ModelOBJ::Draw(Render* r)
 			size_t ncq = Triangles[i].NormalT[2];
 
 			Vector3f na = Normals[naq];
-			Vector3f nb = Normals[nbq];//TTTodo
+			Vector3f nb = Normals[nbq];
 			Vector3f nc = Normals[ncq];
 
-			r->drawTriangle(a, b, c, na, color);
+			r->drawTriangle(a, b, c, na, nb, nc, color);
+			//TTTodo
 		}
 	}
 }
