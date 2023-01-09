@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <list>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -59,6 +61,27 @@ namespace Core
 		std::fstream in;
 		in.open(filename, std::ios::in);
 
+		std::list<Entity*> lEntitys;
+
+		if (in.is_open())
+		do
+		{
+			std::string name;
+			in >> name;
+			if (name != "Ball") return 0;
+			num_entitys++;
+			Ball* entity = new Ball;
+			in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+			lEntitys.push_back(entity);
+		} while (!in.eof());
+		in.close();
+
+		Entitys.resize(num_entitys);
+		int i = 0;
+		for (auto entity : lEntitys) { Entitys[i] = entity; ++i; }
+
+		/*
+		in.open(filename, std::ios::in);
 		if (in.is_open())
 		{
 			in >> num_entitys;
@@ -69,12 +92,14 @@ namespace Core
 			std::string name;			
 			for (size_t i = 0; i < num_entitys; ++i)
 			{
-				Ball* entity = new Ball;				
+				Ball* entity = new Ball;
 				in >> name;
 				if (name != "Ball")
 				{
 					//delete[] Entitys;
-					return 0;
+					//return 0;
+					num_entitys = 0;
+					break;
 				}				
 				in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
 				Entitys[i] = entity;
@@ -82,6 +107,7 @@ namespace Core
 			in.close();
 		}
 		else return 0;
+		*/
 		return num_entitys;
 	}
 

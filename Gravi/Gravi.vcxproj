@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gravi.cpp" />
+    <ClCompile Include="GraviGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraviGame.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C63FFE45-FFCF-4B68-9397-093C92AE8A9D}</ProjectGuid>

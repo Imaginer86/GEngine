@@ -32,9 +32,9 @@ public:
 
 	bool Run();
 
-	void Draw();
-	void Update(float dt = 0.1f);
-	void InputCheck();
+	virtual void Draw();
+	virtual void Update(float dt = 0.1f);
+	virtual void InputCheck();
 	void End();
 
 public:

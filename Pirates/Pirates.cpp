@@ -1,12 +1,19 @@
-#include "GEngine.h"
-#include "Render/RenderGL.h"
-#include "Render/ModelOBJ.h"
+#define _USE_MATH_DEFINES
+#include <iostream>
+
+#include "Game.h"
+#include "Core/FileReader.h"
+
+//#include "GEngine.h"
+//#include "Render/RenderGL.h"
+//#include "Render/ModelOBJ.h"
 //#include "Physics/Entity.h"
 
 
+/*
 Render* render = nullptr;
 ModelOBJ Cube;
-
+*/
 //ModelOBJ Manovar;// = nullptr;
 //ModelOBJ Tree;
 //ModelOBJ Tree_1;// = nullptr;
@@ -16,10 +23,11 @@ ModelOBJ Cube;
 
 //ModelOBJ Back;
 
-Vector3f	CameraPos(-2.5f, -2.5f, -20.0f);
-float		CameraAngle(0.0f);
-Vector3f	CameraAxic(0.0f, 1.0f, 0.0f);
+//Vector3f	CameraPos(-2.5f, -2.5f, -20.0f);
+//float		CameraAngle(0.0f);
+//Vector3f	CameraAxic(0.0f, 1.0f, 0.0f);
 
+/*
 bool Program::Init(void* wndProc)
 {
 	render = new RenderGL("Pirates", wndProc, 1920, 1200, CameraPos, CameraAngle, CameraAxic, false, true, 0.1f, 10.0f);
@@ -36,14 +44,17 @@ bool Program::Init(void* wndProc)
 	//if (!Back.Load("data/Back.obj", true)) return false;
 	return true;
 }
+*/
+//static float alpha = 0.0f;//SSStatic
 
-static float alpha = 0.0f;//SSStatic
-
+/*
 void Program::Update(float dt)
 {
 	alpha += 0.1f;
 }
+*/
 
+/*
 void Program::Draw()
 {
 	render->beginDraw();
@@ -59,12 +70,40 @@ void Program::Draw()
 
 	render->endDraw();
 }
+*/
 
-void Program::End()
-{
-}
+//void Program::End(){}
 
 int main()
 {
+	Game game;
+
+	//Entity* Enityes = nullptr;
+	size_t numE = Core::LoadEntitys("Pirates.dat", game.Enityes);
+	if (!numE)
+	{
+		std::cerr << "Can't LoadEntity" << std::endl;
+		return 1;
+	}
+
+	Options option;
+	if (!Core::LoadOptions("options.ini", option))
+	{
+		std::cerr << "Can't LoadOptions" << std::endl;
+		return 1;
+	}
+
+	if (game.Init(numE, option))
+	{
+		game.Run();
+		game.End();
+	}
+	else
+	{
+		std::cerr << "Can't game.Init" << std::endl;
+		return 1;
+	}
+
+	return 0;
 	//return GMain();
 }

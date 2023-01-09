@@ -1,12 +1,13 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+
 #include "Game.h"
-#include "Options.h"
-#include "Math/Gmath.h"
-#include "Core/Time.h"
 #include "Core/FileReader.h"
+
 #include "Math/Plane.h"
 #include "Math/Line.h"
 
-#include <iostream>
+#include "GraviGame.h"
 
 int main ()
 {
@@ -15,7 +16,7 @@ int main ()
 	Line L = P1 * P2;
 	//game;
 
-	Game game;
+	GraviGame game;
 
 	//Entity* Enityes = nullptr;
 	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Enityes);
