@@ -337,6 +337,8 @@ bool ModelOBJ::Save(const char* file)
 }
 void ModelOBJ::Draw(Render* r)
 {
+	//r->LoadIdentity();
+	r->Translate(pos);
 	Color4f color(0.25f, 1.0f, 0.5f, 1.0f);
 	if (isQuad)
 	{

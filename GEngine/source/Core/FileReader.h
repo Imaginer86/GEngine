@@ -93,8 +93,9 @@ namespace Core
 				in >> entity->m >> entity->pos >> entity->vel >> entity->color;
 				std::string path, fileName;
 				bool isQuad;
-				in >> path >> fileName >> isQuad;				
-				if (!entity->Load(path.c_str(), fileName.c_str(), isQuad))
+				bool isNoTextIndex;
+				in >> path >> fileName >> isQuad >> isNoTextIndex;				
+				if (!entity->Load(path.c_str(), fileName.c_str(), isQuad, isNoTextIndex))
 				{
 					std::cerr << "Can't load obj" << std::endl;
 					return 0;

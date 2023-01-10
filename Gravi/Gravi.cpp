@@ -19,7 +19,7 @@ int main ()
 	GraviGame game;
 
 	//Entity* Enityes = nullptr;
-	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Enityes);
+	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
 	if (!numE)
 	{
 		std::cerr << "Can't LoadEntity" << std::endl;

@@ -83,7 +83,7 @@ int main()
 	PiratesGame game;
 
 	//Entity* Enityes = nullptr;
-	size_t numE = Core::LoadEntitys("Pirates.dat", game.Enityes);
+	size_t numE = Core::LoadEntitys("Pirates.dat", game.Entityes);
 	if (!numE)
 	{
 		std::cerr << "Can't LoadEntity" << std::endl;

@@ -42,7 +42,7 @@ public:
 public:
 	Render* render;
 	Input* input;
-	std::vector<Entity*> Enityes;
+	std::vector<Entity*> Entityes;
 	size_t numEntites;
 	static bool* keys;
 

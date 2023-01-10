@@ -74,61 +74,62 @@ void Game::InputCheck()
 }
 void Game::Update(float dt)
 {
-	for (size_t i = 0; i < numEntites; i++) Enityes[i]->init();
+	for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
 	if (Collision)
 	{
 		for (size_t i = 0; i < numEntites; i++)
 			for (size_t j = i + 1; j < numEntites; j++)
 			{
-				if (Enityes[i]->isBall() && Enityes[j]->isBall())
+				if (Entityes[i]->isBall() && Entityes[j]->isBall())
 				{
-					Vector3f raxis = Enityes[i]->pos - Enityes[j]->pos;
+					Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
 					float dr = raxis.unitize();
-					float r = (dynamic_cast<Ball*>(Enityes[i])->r + dynamic_cast<Ball*>(Enityes[j])->r);
+					float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
 					if (dr < r)
 					{
-						std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Enityes[i]->vel << " vs " << Enityes[j]->vel;
-						Vector3f u1r = raxis * (raxis.dotProduct(Enityes[i]->vel));
-						Vector3f u1p = Enityes[i]->vel - u1r;
+						std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel;
+						Vector3f u1r = raxis * (raxis.dotProduct(Entityes[i]->vel));
+						Vector3f u1p = Entityes[i]->vel - u1r;
 
-						Vector3f u2r = raxis * (raxis.dotProduct(Enityes[j]->vel));
-						Vector3f u2p = Enityes[j]->vel - u2r;
+						Vector3f u2r = raxis * (raxis.dotProduct(Entityes[j]->vel));
+						Vector3f u2p = Entityes[j]->vel - u2r;
 
-						Vector3f v1r = ((u1r * Enityes[i]->m) + (u2r * Enityes[j]->m) - (u1r - u2r) * Enityes[j]->m) / (Enityes[i]->m + Enityes[j]->m);
-						Vector3f v2r = ((u1r * Enityes[i]->m) + (u2r * Enityes[j]->m) - (u2r - u1r) * Enityes[i]->m) / (Enityes[i]->m + Enityes[j]->m);
+						Vector3f v1r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u1r - u2r) * Entityes[j]->m) / (Entityes[i]->m + Entityes[j]->m);
+						Vector3f v2r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u2r - u1r) * Entityes[i]->m) / (Entityes[i]->m + Entityes[j]->m);
 
-						float v = (Enityes[i]->vel - Enityes[j]->vel).Length();
+						float v = (Entityes[i]->vel - Entityes[j]->vel).Length();
 						float dt0 = (dr - r) / v;
-						Enityes[i]->move(dt0);
-						Enityes[j]->move(dt0);
+						Entityes[i]->move(dt0);
+						Entityes[j]->move(dt0);
 						//float testr = (Enityes[i]->pos - Enityes[j]->pos).Length();
 						//testr -= r;
-						Enityes[i]->move(dt + dt0);
-						Enityes[j]->move(dt + dt0);
-						Enityes[i]->vel = v1r + u1p;
-						Enityes[j]->vel = v2r + u2p;
-						std::cout << ". Vel After: " << Enityes[i]->vel << " vs " << Enityes[j]->vel;
+						Entityes[i]->move(dt + dt0);
+						Entityes[j]->move(dt + dt0);
+						Entityes[i]->vel = v1r + u1p;
+						Entityes[j]->vel = v2r + u2p;
+						std::cout << ". Vel After: " << Entityes[i]->vel << " vs " << Entityes[j]->vel;
 					}
 				}
 			}
 	}
 	if (GraviForce)
 	{
-		for (size_t i = 0; i < numEntites; i++) Enityes[i]->init();
+		for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
 		for (size_t i = 0; i < numEntites; i++)
 			for (size_t j = 0; j < numEntites; j++)
 				if (i != j)
 				{
-					float r2 = (Enityes[i]->pos - Enityes[j]->pos).lenght2();
-					float f = G * Enityes[i]->m * Enityes[j]->m / r2;
-					Vector3f force = (Enityes[j]->pos - Enityes[i]->pos).unit() * f;
-					Enityes[i]->applyForce(force);
-					Enityes[j]->applyForce(-force);
+					float r2 = (Entityes[i]->pos - Entityes[j]->pos).lenght2();
+					float f = G * Entityes[i]->m * Entityes[j]->m / r2;
+					Vector3f force = (Entityes[j]->pos - Entityes[i]->pos).unit() * f;
+					Entityes[i]->applyForce(force);
+					Entityes[j]->applyForce(-force);
 				}
 	}
 
-	for (size_t i = 0; i < numEntites; i++) Enityes[i]->simulate(dt);
-	for (size_t i = 0; i < numEntites; i++) if (!Enityes[i]->moved) Enityes[i]->move(dt);
+	for (size_t i = 0; i < numEntites; i++) 
+		Entityes[i]->simulate(dt);
+	for (size_t i = 0; i < numEntites; i++) if (!Entityes[i]->moved) Entityes[i]->move(dt);
 }
 
 void Game::Draw()
@@ -138,8 +139,8 @@ void Game::Draw()
 
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		if (Enityes[i]->isBall())	render->drawSphere(Enityes[i]->pos, dynamic_cast<Ball*>(Enityes[i])->r, Enityes[i]->color);
-		else if (Enityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Enityes[i])->Draw(render);
+		if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, dynamic_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+		else if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
 	}
 	if (drawDebugInfo)
 	{
@@ -182,7 +183,7 @@ void Game::End()
 {
 	delete render;
 	delete input;
-	for(auto entity : Enityes ) delete entity;
-	Enityes.clear();
+	for(auto entity : Entityes ) delete entity;
+	Entityes.clear();
 	delete[] keys;
 }

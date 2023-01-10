@@ -484,7 +484,7 @@ void RenderGL::beginDraw() const
 	glLoadIdentity();
 	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
 	float angle = camera.q.GetAngle();
-	Vector3f axis = camera.axis;
+	Vector3f axis = camera.q.GetAxis();
 	glRotatef(angle, axis.x, axis.y, axis.z);
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
