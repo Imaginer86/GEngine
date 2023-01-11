@@ -1,5 +1,6 @@
 #pragma once
 #include "../Options.h"
+#include "../Math/GMath.h"
 #include "../Math/Vector3f.h"
 #include "../Math/Vector4f.h"
 #include "../Math/Quaternion.h"
@@ -44,7 +45,7 @@ public:
 		, gLightAmbient(option.lightAmbient)
 		, gLightDiffuse(option.lightDiffuse)
 		, gLightPosition(option.lightPosition)
-		, camera(option.cameraPos, option.cameraAngle, option.cameraaxis)
+		, camera(option.cameraPos, degToRad(option.cameraAngle), option.cameraaxis)
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
 	{
@@ -126,7 +127,10 @@ inline Render::Render(InitData& initData)
 
 inline void Render::RotateCamera(const Quaternion &q)
 {
-	camera.Rotate(q * rotateScale);
+	//std::cout << "one deg " << radToDeg(q.GetAngle()) << ' ' << q.GetAxis() << std::endl;
+	//Quaternion q_ = q * rotateScale;
+	//std::cout << "one deg scale " << radToDeg(q_.GetAngle()) << ' ' << q_.GetAxis() << std::endl;
+	camera.Rotate(q);
 }
 
 inline void Render::MoveCamera(const Vector3f &s)

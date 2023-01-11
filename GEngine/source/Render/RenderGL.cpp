@@ -482,10 +482,11 @@ void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
 	glLoadIdentity();
-	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
+	
 	float angle = camera.q.GetAngle();
 	Vector3f axis = camera.q.GetAxis();
-	glRotatef(angle, axis.x, axis.y, axis.z);
+	glRotatef(radToDeg(angle), axis.x, axis.y, axis.z);
+	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
 
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }

@@ -167,7 +167,7 @@ inline float Vector3f::unitize()								// unitize() normalizes this Vector3 tha
 {
 	float length = Length();
 
-	if (length == 0.0f)
+	if (isEqual(length))
 		return 0.0;
 
 	x /= length;
@@ -180,7 +180,7 @@ inline Vector3f Vector3f::unit()								// unit() returns a new Vector3. The ret
 {
 	float length = Length();
 
-	if (length == 0)
+	if (isEqual(length))
 		return *this;
 
 	return Vector3f(x / length, y / length, z / length);
