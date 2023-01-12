@@ -2,6 +2,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <limits>
+#include <cstdlib>
+#include <ctime>
 
 
 const float G = 667.3848080808080808080f * 0.5f; //Gravi constant //Todo
@@ -24,6 +26,25 @@ inline bool isEqual(float f1, float f2 = 0.0f)
 	return (fabsf(f1 - f2)) < std::numeric_limits<float>::epsilon();
 }
 
+inline void srandG()
+{
+	srand(static_cast <unsigned> (time(nullptr)));
+}
+
+inline float randf()
+{
+	return  static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
+
+inline float randfD1(float X)
+{
+	return static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / X));
+}
+
+inline float randfD(float LO, float HI)
+{
+	return LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+}
 
 	//inline int toInt(float val)
 	//{

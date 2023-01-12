@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "Game.h"
+#include "Math/GMath.h"
 #include "Core/FileReader.h"
 
 #include "Math/Plane.h"
@@ -18,13 +19,18 @@ int main ()
 
 	GraviGame game;
 
-	//Entity* Enityes = nullptr;
-	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
+	srandG();
+
+	Entity* Enityes = nullptr;
+	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
+	size_t numE = Core::LoadRandomEntitys(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(10.0f, 10.0f, 10.0f), 100, 1, 100, game.Entityes);
 	if (!numE)
 	{
 		std::cerr << "Can't LoadEntity" << std::endl;
 		return 1;
 	}
+
+	
 
 	Options option;
 	if (!Core::LoadOptions("options.ini", option))

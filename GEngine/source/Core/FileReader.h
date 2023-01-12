@@ -142,6 +142,24 @@ namespace Core
 		return num_entitys;
 	}
 
+	size_t LoadRandomEntitys(const Vector3f& pos, const Vector3f& size, const Vector3f& vel, size_t numEntititys, size_t minMR, size_t maxMR, std::vector<Entity*>& Entitys)
+	{
+		Entitys.resize(numEntititys);
+		for (size_t i = 0; i < numEntititys; ++i)
+		{
+			Ball* entity = new Ball;
+			entity->m = randfD(minMR, maxMR);
+			entity->r = entity->m;
+			Vector3f s2 = size / 2.0f;
+			entity->pos = Vector3f(randfD(pos.x - s2.x, pos.x + s2.x), randfD(pos.y - s2.y, pos.y + s2.y), randfD(pos.z - s2.z, pos.z + s2.z));
+			entity->vel = Vector3f(randfD1(vel.x), randfD1(vel.y), randfD1(vel.z));
+			entity->color = Color4f(randf(), randf(), randf(), 1.0f);
+			Entitys[i] = entity;
+		}
+		return numEntititys;
+
+	}
+
 	bool LoadOptions(const char* filename, Options& options)
 	{
 		FileReader fr(filename);
@@ -178,4 +196,6 @@ namespace Core
 		}
 		return true;
 	}
+
+
 }
