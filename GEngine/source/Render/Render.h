@@ -62,6 +62,7 @@ public:
 	void MoveCamera(const Vector3f& v);
 	void MoveCameraUD(float s);
 	void MoveCameraLR(float s);
+	void MoveCameraNF(float s);
 
 	void SetLight(bool light_);
 	bool GetLight();
@@ -146,6 +147,11 @@ inline void Render::MoveCameraUD(float s)
 inline void Render::MoveCameraLR(float s)
 {
 	camera.MoveLR(s * moveScale);
+}
+
+inline void Render::MoveCameraNF(float s)
+{
+	camera.MoveNF(s * moveScale);
 }
 
 
