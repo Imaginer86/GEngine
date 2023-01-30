@@ -13,8 +13,8 @@ struct Quaternion
 		Vector3f naxis = axis;
 		naxis.unitize();
 		float halfTheta = angle / 2.0f;
-		float s = sin(halfTheta);
-		w = cos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
+		float s = sinf(halfTheta);
+		w = cosf(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 	}
 	~Quaternion() {}
 
@@ -35,6 +35,9 @@ struct Quaternion
 	Quaternion operator*(float scalar) const;
 	Quaternion operator/(float scalar) const;
 
+	bool isReal() const;
+	bool isEqual() const;
+
 	Quaternion conjugate() const;
 
 	void normalize();
@@ -54,12 +57,12 @@ struct Quaternion
 
 	//void rotate(Vector3f &v) const;
 
-	//oid toHeadPitchRoll(float &headDegrees, float &pitchDegrees, float &rollDegrees) const;
+	//void toHeadPitchRoll(float &headDegrees, float &pitchDegrees, float &rollDegrees) const;
 	//atrix4 toMatrix4() const;
 	
 	//void rotate(Vector3 &v) const;
-	//oid fromMatrix(const Matrix4 &m);
-	//oid fromHeadPitchRoll(float headDegrees, float pitchDegrees, float rollDegrees);
+	//void fromMatrix(const Matrix4 &m);
+	//void fromHeadPitchRoll(float headDegrees, float pitchDegrees, float rollDegrees);
 };
 
 //const Quaternion QIDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
@@ -76,8 +79,8 @@ inline Quaternion operator*(Quaternion &q1, const Quaternion &q2)
 
 inline bool Quaternion::operator==(const Quaternion &rhs) const
 {
-	return isEqual(w, rhs.w) && isEqual(x, rhs.x)
-		&& isEqual(y, rhs.y) && isEqual(z, rhs.z);
+	return ::isEqual(w, rhs.w) && ::isEqual(x, rhs.x)
+		&& ::isEqual(y, rhs.y) && ::isEqual(z, rhs.z);
 }
 
 inline bool Quaternion::operator!=(const Quaternion &rhs) const
@@ -182,6 +185,16 @@ inline Quaternion Quaternion::operator/(float scalar) const
 	Quaternion tmp(*this);
 	tmp /= scalar;
 	return tmp;
+}
+
+inline bool Quaternion::isReal() const
+{
+	return ::isEqual(x) && ::isEqual(y) && ::isEqual(z);
+}
+
+inline bool Quaternion::isEqual() const
+{
+	return ::isEqual(w);
 }
 
 inline Quaternion Quaternion::conjugate() const

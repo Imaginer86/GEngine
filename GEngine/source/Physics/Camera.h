@@ -31,20 +31,23 @@ inline void Camera::Rotate(const Quaternion& q_)
 inline void Camera::MoveUD(float s)
 {
 	Vector3f v(0.0f, 1.0f, 0.0f);
-	Quaternion sq = q * v * q.conjugate();
-	pos += sq.GetAxis() * s;
+	Quaternion qv(0.0f, v.x, v.y, v.z);
+	Quaternion sq = q * qv * q.conjugate();
+	pos += sq.GetAxis().unit() * s;
 }
 
 inline void Camera::MoveLR(float s)
 {
 	Vector3f v(1.0f, 0.0f, 0.0f);
-	Quaternion sq = q * v * q.conjugate();
-	pos += sq.GetAxis() * s;
+	Quaternion qv(0.0f, v.x, v.y, v.z);
+	Quaternion sq = q * qv * q.conjugate();
+	pos += sq.GetAxis().unit() * s;
 }
 
 inline void Camera::MoveNF(float s)
 {
-	Vector3f v(0.0f, 0.0f, 1.0f);
-	Quaternion sq = q * v * q.conjugate();
-	pos += sq.GetAxis() * s;
+	Vector3f v(0.0f, 0.0f, 1.0f);	
+	Quaternion qv(0.0f, v.x, v.y, v.z);
+	Quaternion sq = q * qv * q.conjugate();
+	pos += sq.GetAxis().unit() * s;
 }

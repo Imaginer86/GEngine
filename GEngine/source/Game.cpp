@@ -70,8 +70,8 @@ void Game::InputCheck()
 	if (keys[GLFW_KEY_PAGE_DOWN]) Game::render->MoveCameraNF(-10.0f);
 	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(1.0f, 0.0f, 0.0f)));
 	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(-1.0f, 0.0f, 0.0f)));
-	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, 1.0f, 0.0f)));
-	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, -1.0f, 0.0f)));
+	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, -1.0f, 0.0f)));
+	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, 1.0f, 0.0f)));
 
 }
 void Game::Update(float dt)
@@ -79,40 +79,58 @@ void Game::Update(float dt)
 	for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
 	if (Collision)
 	{
-		for (size_t i = 0; i < numEntites; i++)
-			for (size_t j = i + 1; j < numEntites; j++)
-			{
-				if (Entityes[i]->isBall() && Entityes[j]->isBall())
+		bool end = false;
+		do
+		{
+			if (end) end = false;
+			for (size_t i = 0; i < numEntites && !end; i++)
+				for (size_t j = i + 1; j < numEntites && !end; j++)
 				{
-					Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
-					float dr = raxis.unitize();
-					float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
-					if (dr < r)
+					if (Entityes[i]->isBall() && Entityes[j]->isBall())
 					{
-						std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel;
-						Vector3f u1r = raxis * (raxis.dotProduct(Entityes[i]->vel));
-						Vector3f u1p = Entityes[i]->vel - u1r;
+						Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
+						float dr = raxis.unitize();
+						float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
+						if (dr < r)
+						{
+							std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << std::endl;
+							int r = -1;;
+							if (Entityes[i]->m == 5000.0f) r = j;
+							if (Entityes[j]->m == 5000.0f) r = i;
 
-						Vector3f u2r = raxis * (raxis.dotProduct(Entityes[j]->vel));
-						Vector3f u2p = Entityes[j]->vel - u2r;
+							if (r >= 0)
+							{
+								std::cout << "Black Hole Collision" << std::endl;
+								numEntites--;
+								Entityes.erase(Entityes.begin() + r);
+								end = true;
+								continue;
+							}
+							
+							Vector3f u1r = raxis * (raxis.dotProduct(Entityes[i]->vel));
+							Vector3f u1p = Entityes[i]->vel - u1r;
 
-						Vector3f v1r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u1r - u2r) * Entityes[j]->m) / (Entityes[i]->m + Entityes[j]->m);
-						Vector3f v2r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u2r - u1r) * Entityes[i]->m) / (Entityes[i]->m + Entityes[j]->m);
+							Vector3f u2r = raxis * (raxis.dotProduct(Entityes[j]->vel));
+							Vector3f u2p = Entityes[j]->vel - u2r;
 
-						float v = (Entityes[i]->vel - Entityes[j]->vel).Length();
-						float dt0 = (dr - r) / v;
-						Entityes[i]->move(dt0);
-						Entityes[j]->move(dt0);
-						//float testr = (Enityes[i]->pos - Enityes[j]->pos).Length();
-						//testr -= r;
-						Entityes[i]->move(dt + dt0);
-						Entityes[j]->move(dt + dt0);
-						Entityes[i]->vel = v1r + u1p;
-						Entityes[j]->vel = v2r + u2p;
-						std::cout << ". Vel After: " << Entityes[i]->vel << " vs " << Entityes[j]->vel;
+							Vector3f v1r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u1r - u2r) * Entityes[j]->m) / (Entityes[i]->m + Entityes[j]->m);
+							Vector3f v2r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u2r - u1r) * Entityes[i]->m) / (Entityes[i]->m + Entityes[j]->m);
+
+							float v = (Entityes[i]->vel - Entityes[j]->vel).Length();
+							float dt0 = (dr - r) / v;
+							Entityes[i]->move(dt0);
+							Entityes[j]->move(dt0);
+							//float testr = (Enityes[i]->pos - Enityes[j]->pos).Length();
+							//testr -= r;
+							Entityes[i]->move(dt + dt0);
+							Entityes[j]->move(dt + dt0);
+							Entityes[i]->vel = v1r + u1p;
+							Entityes[j]->vel = v2r + u2p;
+							std::cout << ". Vel After: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << std::endl;
+						}
 					}
 				}
-			}
+		}while (end);
 	}
 	if (GraviForce)
 	{

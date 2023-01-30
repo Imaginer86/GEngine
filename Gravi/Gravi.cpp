@@ -19,11 +19,12 @@ int main ()
 
 	GraviGame game;
 
-	//srandG();
+	srandG();
 
 	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
-	size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
-	/*size_t numE = Core::LoadRandomEntitys(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(10.0f, 10.0f, 10.0f), 10, 1, 100, game.Entityes);
+	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
+	
+	size_t numE = Core::LoadRandomEntitys(200, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 25.0f, 50.0f, game.Entityes);
 	if (!numE)
 	{
 		std::cerr << "Can't LoadEntity" << std::endl;
@@ -33,13 +34,13 @@ int main ()
 	numE++;
 	game.Entityes.resize(numE);
 	Ball* entity = new Ball;
-	entity->m = 1000000.0f;
+	entity->m = 5000.0f;
 	entity->r = 1.5f;
 	entity->pos = Vector3f();
 	entity->vel = Vector3f();
 	entity->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
 	game.Entityes[numE - 1] = entity;
-	*/
+	
 	
 
 	Options option;
