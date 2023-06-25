@@ -33,6 +33,7 @@
     <ClInclude Include="source\Physics\Ball.h" />
     <ClInclude Include="source\Physics\Box.h" />
     <ClInclude Include="source\Physics\Camera.h" />
+    <ClInclude Include="source\Physics\Collision.h" />
     <ClInclude Include="source\Physics\Entity.h" />
     <ClInclude Include="source\Physics\ModelOBJ.h" />
     <ClInclude Include="source\Physics\Tank.h" />

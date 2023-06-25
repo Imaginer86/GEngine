@@ -50,6 +50,11 @@ inline float randfD(float LO, float HI)
 	return LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
 }
 
+float inline sqrtG(float f)
+{
+	return sqrtf(f);
+}
+
 	//inline int toInt(float val)
 	//{
 		//return val > 0.0f ? static_cast<int>(val + 0.5f) : static_cast<int>(val - 0.5f);
@@ -61,10 +66,7 @@ inline float randfD(float LO, float HI)
 	}
 
 	
-	float inline sqrt(float f)
-	{
-		return sqrtf(f);
-	}
+
 
 	inline float atan2f(float y, float x)
 	{

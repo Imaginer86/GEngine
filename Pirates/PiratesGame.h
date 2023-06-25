@@ -6,7 +6,7 @@ class PiratesGame :
 public:
 	virtual bool Init(size_t numEntites_, Options option);
 	virtual void Draw();
-	virtual void Update(float dt = 0.1f);
+	//virtual void Update();
 	virtual void InputCheck();	
 };
 

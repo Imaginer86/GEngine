@@ -5,6 +5,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include<thread>
+
 
 #include "Render/RenderGL.h"
 #include "Core/Time.h"
@@ -13,6 +15,7 @@
 #include "Physics/Ball.h"
 #include "Physics/Box.h"
 #include "Physics/ModelOBJ.h"
+#include "Physics/Collision.h"
 
 
 
@@ -74,82 +77,94 @@ void Game::InputCheck()
 	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(degToRad(1.0f), Vector3f(0.0f, 1.0f, 0.0f)));
 
 }
-void Game::Update(float dt)
+void Update(Game& game)
 {
-	for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
-	if (Collision)
-	{
-		bool end = false;
-		do
+
+	game.lastTickCount = Core::GetTickCount();
+	while (!game.done)
+	{		
+		long long tickCount = Core::GetTickCount();
+		tickCount = tickCount - game.lastTickCount;
+		game.dt = static_cast<float>(tickCount);
+		game.dt /= 1000.0f;
+		game.FPS = static_cast<size_t>(1.0f / game.dt);
+		game.dt *= game.timeScale;
+		if (!game.pause)
 		{
-			if (end) end = false;
-			for (size_t i = 0; i < numEntites && !end; i++)
-				for (size_t j = i + 1; j < numEntites && !end; j++)
-				{
-					if (Entityes[i]->isBall() && Entityes[j]->isBall())
+			for (size_t i = 0; i < game.numEntites; i++) game.Entityes[i]->init();
+			if (game.Collision)
+			{
+				for (size_t i = 0; i < game.numEntites; i++)
+					//size_t i = 0;
+					for (size_t j = i + 1; j < game.numEntites; j++)
 					{
-						Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
-						float dr = raxis.unitize();
-						float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
-						if (dr < r)
+						if (game.Entityes[i]->isBall() && game.Entityes[j]->isBall())
 						{
-							std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << std::endl;
-							int r = -1;;
-							if (Entityes[i]->m == 5000.0f) r = j;
-							if (Entityes[j]->m == 5000.0f) r = i;
-
-							if (r >= 0)
+							Vector3f raxis = game.Entityes[i]->pos - game.Entityes[j]->pos;
+							float dr = raxis.Length();
+							float r = (dynamic_cast<Ball*>(game.Entityes[i])->r + dynamic_cast<Ball*>(game.Entityes[j])->r);
+							if (dr <= r)
 							{
-								std::cout << "Black Hole Collision" << std::endl;
-								numEntites--;
-								Entityes.erase(Entityes.begin() + r);
-								end = true;
-								continue;
+								std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << game.Entityes[i]->vel << " vs " << game.Entityes[j]->vel << "m: " << game.Entityes[i]->m << " m: " << game.Entityes[j]->m << std::endl;
+
+								if (i == 0)
+								{
+									std::cout << "!Black Hole Collision " << std::endl;
+								}
+
+								
+								if (InElasticImpact(*game.Entityes[i], *game.Entityes[j]))
+								{
+									game.g_lock.lock();
+									game.numEntites--;
+									game.Entityes[i]->m += game.Entityes[j]->m;
+									std::cout << "m after impact: " << game.Entityes[i]->m << ". Vel After: " << game.Entityes[i]->vel << std::endl;
+									game.Entityes.erase(game.Entityes.begin() + j);
+									//game.g_lock.unlock();
+								}
+								else
+								{
+									std::cerr << "Erorr: collision with not a balls!" << std::endl;
+								}
+
+								//ElasticImpact(*Entityes[i], *Entityes[j], dt);
 							}
-							
-							Vector3f u1r = raxis * (raxis.dotProduct(Entityes[i]->vel));
-							Vector3f u1p = Entityes[i]->vel - u1r;
-
-							Vector3f u2r = raxis * (raxis.dotProduct(Entityes[j]->vel));
-							Vector3f u2p = Entityes[j]->vel - u2r;
-
-							Vector3f v1r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u1r - u2r) * Entityes[j]->m) / (Entityes[i]->m + Entityes[j]->m);
-							Vector3f v2r = ((u1r * Entityes[i]->m) + (u2r * Entityes[j]->m) - (u2r - u1r) * Entityes[i]->m) / (Entityes[i]->m + Entityes[j]->m);
-
-							float v = (Entityes[i]->vel - Entityes[j]->vel).Length();
-							float dt0 = (dr - r) / v;
-							Entityes[i]->move(dt0);
-							Entityes[j]->move(dt0);
-							//float testr = (Enityes[i]->pos - Enityes[j]->pos).Length();
-							//testr -= r;
-							Entityes[i]->move(dt + dt0);
-							Entityes[j]->move(dt + dt0);
-							Entityes[i]->vel = v1r + u1p;
-							Entityes[j]->vel = v2r + u2p;
-							std::cout << ". Vel After: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << std::endl;
 						}
 					}
-				}
-		}while (end);
-	}
-	if (GraviForce)
-	{
-		for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
-		for (size_t i = 0; i < numEntites; i++)
-			for (size_t j = 0; j < numEntites; j++)
-				if (i != j)
-				{
-					float r2 = (Entityes[i]->pos - Entityes[j]->pos).lenght2();
-					float f = G * Entityes[i]->m * Entityes[j]->m / r2;
-					Vector3f force = (Entityes[j]->pos - Entityes[i]->pos).unit() * f;
-					Entityes[i]->applyForce(force);
-					Entityes[j]->applyForce(-force);
-				}
-	}
+			}
 
-	for (size_t i = 0; i < numEntites; i++) 
-		Entityes[i]->simulate(dt);
-	for (size_t i = 0; i < numEntites; i++) if (!Entityes[i]->moved) Entityes[i]->move(dt);
+			if (game.GraviForce)
+			{
+				for (size_t i = 0; i < game.numEntites; i++) game.Entityes[i]->init();
+				for (size_t i = 0; i < game.numEntites; i++)
+					for (size_t j = 0; j < game.numEntites; j++)
+						if (i != j)
+						{
+							float r2 = (game.Entityes[i]->pos - game.Entityes[j]->pos).lenght2();
+							float f = G * game.Entityes[i]->m * game.Entityes[j]->m / r2;
+							Vector3f force = (game.Entityes[j]->pos - game.Entityes[i]->pos).unit() * f;
+							game.g_lock.lock();
+							game.Entityes[i]->applyForce(force);
+							game.Entityes[j]->applyForce(-force);
+							game.g_lock.unlock();
+						}
+			}
+
+			for (size_t i = 0; i < game.numEntites; i++)
+			{
+				game.g_lock.lock();
+				game.Entityes[i]->simulate(game.dt);
+				game.g_lock.unlock();
+			}
+			for (size_t i = 0; i < game.numEntites; i++) 
+				if (!game.Entityes[i]->moved)
+				{
+					game.g_lock.lock();
+					game.Entityes[i]->move(game.dt);
+					game.g_lock.unlock();
+				}
+		}
+	}
 }
 
 void Game::Draw()
@@ -181,19 +196,21 @@ void Game::Draw()
 
 bool Game::Run()
 {
-	lastTickCount = Core::GetTickCount();
+	
 	Draw();
+	std::thread thr(Update, std::ref(*this));
+	thr.detach();
 	while (!done)
 	{
 		InputCheck();
 		Draw();//TT
-		long long tickCount = Core::GetTickCount();
-		tickCount = tickCount - lastTickCount;
-		float dt = static_cast<float>(tickCount);
-		dt /= 1000.0f;
-		FPS = static_cast<size_t>(1.0f / dt);
-		dt *= timeScale;
-		if (!pause)	Update(dt);		
+		//long long tickCount = Core::GetTickCount();
+		//tickCount = tickCount - lastTickCount;
+		//dt = static_cast<float>(tickCount);
+		//dt /= 1000.0f;
+		//FPS = static_cast<size_t>(1.0f / dt);
+		//dt *= timeScale;
+		//if (!pause)	Update(d);		
 	}
 	return true;
 }

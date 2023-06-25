@@ -2,6 +2,7 @@
 #include  "Math/GMath.h"
 
 #include <vector>
+#include <mutex>
 
 #include "Options.h"
 #include "Physics/Entity.h"
@@ -9,6 +10,8 @@
 #include "Core/Input.h"
 
 //bool keys;
+class Game;
+void Update(Game& game);
 
 class Game
 {
@@ -35,7 +38,6 @@ public:
 	bool Run();
 
 	virtual void Draw();
-	virtual void Update(float dt = 0.1f);
 	virtual void InputCheck();
 	void End();
 
@@ -47,7 +49,7 @@ public:
 	static bool* keys;
 
 
-private:
+//private:
 	bool done;
 	bool pause;
 	bool drawDebugInfo;	
@@ -56,6 +58,10 @@ private:
 	float timeScale;
 	bool GraviForce;
 	bool Collision;
+
+	float dt;
+
+	std::mutex g_lock;
 
 	//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 };

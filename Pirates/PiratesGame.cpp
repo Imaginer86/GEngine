@@ -5,10 +5,10 @@ void PiratesGame::Draw()
 	Game::Draw();
 }
 
-void PiratesGame::Update(float dt)
-{
-	Game::Update(dt);
-}
+//void PiratesGame::Update()
+//{
+//	Game::Update();
+//}
 
 void PiratesGame::InputCheck()
 {
