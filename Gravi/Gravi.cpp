@@ -28,7 +28,8 @@ int main ()
 		return 1;
 	}
 
-	size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
+	size_t numE = Core::LoadEntitys("SolarSystem.dat", game.Entityes);
+	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
 	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
 
 	/*

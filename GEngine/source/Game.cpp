@@ -29,7 +29,7 @@ bool Game::Init(size_t numEntites_, Options option)
 	//lastTickCount = 0;
 	pause = true;
 	done = false;
-	timeScale = 100.0f;
+	timeScale = 1.0f;
 	Collision = option.collision;
 	GraviForce = option.graviForce;
 	keys = new bool[512];
