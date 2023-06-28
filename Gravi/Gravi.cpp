@@ -27,8 +27,9 @@ int main ()
 		std::cerr << "Can't Init - game.Entities not empty" << std::endl;
 		return 1;
 	}
-
-	size_t numE = Core::LoadEntitys("SolarSystem.dat", game.Entityes);
+	
+	size_t numE = Core::LoadEntitys("ElasticImpact.dat", game.Entityes);
+	//size_t numE = Core::LoadEntitys("SolarSystem.dat", game.Entityes);
 	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
 	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
 
