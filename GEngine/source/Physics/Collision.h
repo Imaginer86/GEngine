@@ -23,8 +23,6 @@ inline bool ElasticImpact(Entity& A, Entity& B, float dt)
 		float dt0 = (dr - r) / v;
 		A.move(dt0);
 		B.move(dt0);
-		//float testr = (Enityes[i]->pos - Enityes[j]->pos).Length();
-		//testr -= r;
 		A.move(dt + dt0);
 		B.move(dt + dt0);
 		A.vel = v1r + u1p;

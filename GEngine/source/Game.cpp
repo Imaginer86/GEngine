@@ -63,7 +63,7 @@ void Game::InputCheck()
 	}
 void Game::Update(float dt)
 {
-	std::cout << dt << std::endl;
+	//std::cout << dt << std::endl;
 	for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
 	if (Collision)
 	{
@@ -75,13 +75,14 @@ void Game::Update(float dt)
 					Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
 					float dr = raxis.Length();
 					float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
-					if (dr <= r)
+					if (dr <= r) ElasticImpact(*Entityes[i], *Entityes[j], dt);
+					/*
 					{
-						std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
-						if (i == 0)
-						{
-							std::cout << "!Black Hole Collision " << std::endl;
-						}
+						//std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
+						//if (i == 0)	std::cout << "!Black Hole Collision " << std::endl;
+						
+
+						//not elatic and inelastic Impact at the same time
 						if (InElasticImpact(*Entityes[i], *Entityes[j]))
 						{
 							numEntites--;
@@ -89,12 +90,16 @@ void Game::Update(float dt)
 							std::cout << "m after impact: " << Entityes[i]->m << ". Vel After: " << Entityes[i]->vel << std::endl;
 							Entityes.erase(Entityes.begin() + j);
 						}
-						else
+						else std::cerr << "Erorr: collision with not a balls!" << std::endl;
+						
+						
+						if (ElasticImpact(*Entityes[i], *Entityes[j], dt))
 						{
-							std::cerr << "Erorr: collision with not a balls!" << std::endl;
+
 						}
-						//ElasticImpact(*Entityes[i], *Entityes[j], dt);
+						else std::cerr << "Erorr: collision with not a balls!" << std::endl;						
 					}
+				*/
 				}
 			}
 	}
@@ -114,15 +119,10 @@ void Game::Update(float dt)
 				}
 	}
 
-	for (size_t i = 0; i < numEntites; i++)
-	{
-		Entityes[i]->simulate(dt);
-	}
+	for (size_t i = 0; i < numEntites; i++) Entityes[i]->simulate(dt);
+
 	for (size_t i = 0; i < numEntites; i++) 
-		if (!Entityes[i]->moved)
-		{
-			Entityes[i]->move(dt);
-		}
+		if (!Entityes[i]->moved) Entityes[i]->move(dt); 
 }
 
 void Game::Draw()
@@ -152,20 +152,19 @@ void Game::Draw()
 }
 
 bool Game::Run()
-{
-	long long lastTickCount = Core::GetTickCount();
+{	
 	float dt = 0.0f;
-	Draw();
 	while (!done)
-	{	
+	{
+		long long lastTickCount = Core::GetTickCount();
+		//FPS = static_cast<size_t>(1.0f / dt);
+		dt *= timeScale;
 		InputCheck();
 		Draw();//TT
+		if (!pause)	Update(dt);
 		long long tickCount = Core::GetTickCount();
 		long long dTickCount = tickCount - lastTickCount;
 		dt = static_cast<float>(dTickCount) / 1000.0f;;
-		//FPS = static_cast<size_t>(1.0f / dt);
-		dt *= timeScale;
-		if (!pause)	Update(dt);
 		lastTickCount = Core::GetTickCount();
 	}
 	return true;
