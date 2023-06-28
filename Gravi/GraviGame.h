@@ -4,7 +4,7 @@ class GraviGame :
     public Game
 {
 	virtual void Draw();
-	//virtual void Update();
+	virtual void Update(float dt);
 	virtual void InputCheck();
 };
 

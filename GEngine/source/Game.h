@@ -9,19 +9,15 @@
 #include "Render/Render.h"
 #include "Core/Input.h"
 
-//bool keys;
-class Game;
-void Update(Game& game);
-
 class Game
 {
 public:
 	Game()
 		:done(false)
-		,pause(true)
+		,pause(false)
 		,drawDebugInfo(true)
 		,FPS(0)
-		,lastTickCount(0)
+		//,lastTickCount(0)
 		,timeScale(0.1f)
 		,GraviForce(false)
 		,Collision(false)
@@ -37,6 +33,7 @@ public:
 
 	bool Run();
 
+	void Update(float dt);
 	virtual void Draw();
 	virtual void InputCheck();
 	void End();
@@ -54,14 +51,12 @@ public:
 	bool pause;
 	bool drawDebugInfo;	
 	size_t FPS;
-	long long lastTickCount;
+	//long long lastTickCount;
 	float timeScale;
 	bool GraviForce;
 	bool Collision;
 
-	float dt;
-
-	std::mutex g_lock;
+	//std::mutex g_lock;
 
 	//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
