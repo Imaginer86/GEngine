@@ -9,7 +9,7 @@ inline bool ElasticImpact(Entity& A, Entity& B, float dt)
 	{
 		Vector3f raxis = A.pos - B.pos;
 		float dr = raxis.unitize();
-		float r = dynamic_cast<Ball&>(A).r + dynamic_cast<Ball&>(B).r;
+		float r = static_cast<Ball&>(A).r + static_cast<Ball&>(B).r;
 		Vector3f u1r = raxis * (raxis.dotProduct(A.vel));
 		Vector3f u1p = A.vel - u1r;
 

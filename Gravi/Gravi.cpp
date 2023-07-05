@@ -33,6 +33,7 @@ int main ()
 	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
 	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
 
+	
 	/*
 	game.Entityes.resize(1);
 	Ball* entity = new Ball;
@@ -48,8 +49,8 @@ int main ()
 	{
 		std::cerr << "Can't LoadEntity" << std::endl;
 		return 1;
-	}
-	*/
+	}*/
+	
 
 	Options option;
 	if (!Core::LoadOptions("options.ini", option))

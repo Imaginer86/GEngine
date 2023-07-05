@@ -18,7 +18,7 @@ public:
 		,drawDebugInfo(true)
 		,FPS(0)
 		//,lastTickCount(0)
-		,timeScale(0.1f)
+		,timeScale(1.0f)
 		,GraviForce(false)
 		,Collision(false)
 		,numEntites(0)
