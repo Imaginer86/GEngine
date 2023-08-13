@@ -620,6 +620,19 @@ void RenderGL::drawQuad(const Vector3f * vertexs, const Vector3f & n, const Colo
 
 }
 
+void RenderGL::drawQuad(const Vector3f& pos, float w, float h, const Quaternion& rotation, const Color4f& color) const
+{
+	Vector3f ld = Vector3f(pos.x - w / 2.0, pos.y - h / 2.0f, pos.z);
+	Vector3f lu = Vector3f(pos.x - w / 2.0, pos.y + h / 2.0f, pos.z);
+	Vector3f ru = Vector3f(pos.x + w / 2.0, pos.y + h / 2.0f, pos.z);
+	Vector3f rd = Vector3f(pos.x + w / 2.0, pos.y - h / 2.0f, pos.z);
+	glPushMatrix();
+	glTranslatef(pos.x, pos.y, pos.z);
+	Rotate(rotation);
+	drawQuad(ld, lu, ru, rd, color);
+	glPopMatrix();
+}
+
 
 void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Color4f& color) const
 {
@@ -672,10 +685,7 @@ void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Quaterni
 {
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, pos.z);
-	Vector3f axis;
-	float angle;
-	rotation.toAngleAxis(angle, axis);
-	glRotatef(angle, axis.x, axis.y, axis.z);
+	Rotate(rotation);
 	Vector3f ad = Vector3f(-size.x / 2.0f, -size.y / 2.0f, -size.z / 2.0f);
 	Vector3f bd = Vector3f(-size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);
 	Vector3f cd = Vector3f(size.x / 2.0f, size.y / 2.0f, -size.z / 2.0f);

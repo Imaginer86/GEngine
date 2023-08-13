@@ -13,6 +13,7 @@
 #include "Core/Input.h"
 #include "Physics/Entity.h"
 #include "Physics/Ball.h"
+#include "Physics/Rectangle.h"
 #include "Physics/Box.h"
 #include "Physics/ModelOBJ.h"
 #include "Physics/Collision.h"
@@ -135,8 +136,9 @@ void Game::Draw()
 	//render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 50.0, Quaternion(0, Vector3f(0.0f, 0.0f, 1.0f)), Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, dynamic_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
-		else if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
+		if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+		if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->q, Entityes[i]->color);
+		if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
 	}
 	if (drawDebugInfo)
 	{

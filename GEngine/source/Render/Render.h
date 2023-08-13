@@ -101,6 +101,7 @@ public:
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Vector3f& n, const Color4f& color) const = 0;
 	virtual void drawQuad(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& d, const Color4f& color) const = 0;
 	virtual void drawQuad(const Vector3f* vertexs, const Vector3f& n, const Color4f& color) const = 0;
+	virtual void drawQuad(const Vector3f& pos, float w, float h, const Quaternion& rotation, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, float angle, const Vector3f& axis, const Color4f& color) const = 0;
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const = 0;

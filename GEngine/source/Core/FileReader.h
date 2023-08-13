@@ -9,6 +9,7 @@
 
 #include "../Physics/Entity.h"
 #include "../Physics/Ball.h"
+#include "../Physics/Rectangle.h"
 #include "../Physics/ModelOBJ.h"
 #include "../Options.h"
 
@@ -84,6 +85,16 @@ namespace Core
 				num_entitys++;
 				Ball* entity = new Ball;
 				in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				lEntitys.push_back(entity);
+			}
+			else if (name == "Rectangle" || name == "Rec") //Fus
+			{
+				num_entitys++;
+				Rectangle* entity = new Rectangle;
+				Vector3f axic;
+				float angle;
+				in >> entity->m >> entity->pos >> axic >> angle >> entity->vel >> entity->w >> entity->h >> entity->color;
+				entity->q = Quaternion(angle, axic);
 				lEntitys.push_back(entity);
 			}
 			else if (name == "Model")

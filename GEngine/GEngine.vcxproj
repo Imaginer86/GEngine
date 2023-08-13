@@ -36,6 +36,7 @@
     <ClInclude Include="source\Physics\Collision.h" />
     <ClInclude Include="source\Physics\Entity.h" />
     <ClInclude Include="source\Physics\ModelOBJ.h" />
+    <ClInclude Include="source\Physics\Rectangle.h" />
     <ClInclude Include="source\Physics\Tank.h" />
     <ClInclude Include="source\Physics\Tera.h" />
     <ClInclude Include="source\Render\Color4f.h" />

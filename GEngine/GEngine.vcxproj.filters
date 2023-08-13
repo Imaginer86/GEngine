@@ -84,6 +84,9 @@
     <ClInclude Include="source\Physics\Collision.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="source\Physics\Rectangle.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
