@@ -13,6 +13,7 @@ struct Quaternion
 		Vector3f naxis = axis;
 		naxis.unitize();
 		float halfTheta = angle / 2.0f;
+		halfTheta = degToRad(halfTheta);
 		float s = sinf(halfTheta);
 		w = cosf(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 	}
@@ -256,6 +257,7 @@ inline void Quaternion::toAngleAxis(float &angle, Vector3f &axis) const
 	axis.y = y * invSinHalfTheta;
 	axis.z = z * invSinHalfTheta;
 	angle = 2.0f * atan2f(sqrt(sinHalfThetaSq), w);
+	angle = radToDeg(angle);
 }
 
 inline Vector3f Quaternion::GetAxis() const
