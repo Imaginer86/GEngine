@@ -11,17 +11,9 @@ struct Plane
 	Plane(float a, float b, float c, float d);
 	Plane(const Vector3f& N, float d);
 	Plane(const Vector3f&, const Vector3f&, const Vector3f&);
+
 	Vector3f unit();
 	float distance(const Vector3f& p);
-
-	Vector3f proj(const Vector3f& a)
-	{
-		Line L;
-		L.P = a;
-		L.L = unit();
-		return *this * L;
-	}
-	
 
 	Line operator* (const Plane& P);
 	Vector3f operator* (const Line& L);
@@ -33,7 +25,7 @@ inline Plane::Plane() :A(0.0f), B(0.0f), C(0.0f), D(0.0f) {}
 inline Plane::Plane(float a, float b, float c, float d) :D(d)
 {
 	Vector3f N(a, b, c);
-	N.unitize();
+	//N.unitize();
 	A = N.x;
 	B = N.y;
 	C = N.z;
@@ -95,6 +87,12 @@ inline Line Plane::operator*(const Plane& P)
 
 inline Vector3f Plane::operator*(const Line& L)
 {
+	float lymbda = A * L.L.x + B * L.L.y + C * L.L.z;
+	float T = A * L.P.x + B * L.P.y + C * L.P.z + D;
+	lymbda = -T / lymbda;
+	return L.Lymbda(lymbda);
+	
+	/*
 	Vector3f N = unit();
 	float d = -distance(L.P);
 	float e = N.dotProduct(L.L);
@@ -102,11 +100,12 @@ inline Vector3f Plane::operator*(const Line& L)
 		return L.P + L.L * (d / e);
 	else
 		return Vector3f(); //!!!
+	*/
 }
 
 inline Vector3f Plane::operator*(const Vector3f& v)
 {
-	Vector3f n = unit();
+	Vector3f n = Vector3f(A,B,C);
 	Line l(v, v + n);
 	return *this * l;
 }

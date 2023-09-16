@@ -15,13 +15,19 @@ int main ()
 	//Plane P1(Vector3f(2, 1, -1), -1);
 	//Plane P2(Vector3f(1, 3, -2), 0);
 	//Line L = P1 * P2;
-	
+ 	
 	Plane P(2, -3, 1, -2);
 	Vector3f M(-2, 4, 4);
 
-	Vector3f H = P.proj(M);
+	Vector3f H = P * M;
 
 	std::cout << H << std::endl;
+
+	Line L; L.P = Vector3f(-1, 7, 2); L.L = Vector3f(4, -7, -3);
+	Plane P2(1, 4, 1, -2);
+
+	Vector3f M1 = P2 * L;
+	std::cout << M1 << std::endl;
 
 	GraviGame game;
 
