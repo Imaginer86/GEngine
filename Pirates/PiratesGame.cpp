@@ -13,8 +13,8 @@ void PiratesGame::Draw()
 void PiratesGame::Update(float dt)
 {
 	Game::Update(dt);
-	//Quaternion qt(1, Vector3f(0, 1, 1));
-	//Entityes[1]->q *= qt;
+	Quaternion qt(1, Vector3f(0, 1, 1));
+	Entityes[1]->q *= qt;
 }
 
 void PiratesGame::InputCheck()

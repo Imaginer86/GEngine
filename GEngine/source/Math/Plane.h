@@ -7,6 +7,7 @@ struct Plane
 {
 	float A, B, C, D;
 
+	Plane();
 	Plane(float a, float b, float c, float d);
 	Plane(const Vector3f& N, float d);
 	Plane(const Vector3f&, const Vector3f&, const Vector3f&);
@@ -24,9 +25,11 @@ struct Plane
 
 	Line operator* (const Plane& P);
 	Vector3f operator* (const Line& L);
+	Vector3f operator*(const Vector3f& v);
 
 };
 
+inline Plane::Plane() :A(0.0f), B(0.0f), C(0.0f), D(0.0f) {}
 inline Plane::Plane(float a, float b, float c, float d) :D(d)
 {
 	Vector3f N(a, b, c);
@@ -99,4 +102,11 @@ inline Vector3f Plane::operator*(const Line& L)
 		return L.P + L.L * (d / e);
 	else
 		return Vector3f(); //!!!
+}
+
+inline Vector3f Plane::operator*(const Vector3f& v)
+{
+	Vector3f n = unit();
+	Line l(v, v + n);
+	return *this * l;
 }
