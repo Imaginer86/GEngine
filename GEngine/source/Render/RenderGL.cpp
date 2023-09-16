@@ -528,6 +528,21 @@ void RenderGL::LoadIdentity() const
 	glLoadIdentity();
 }
 
+void RenderGL::drawLine(const Line& l, const Color4f& color) const
+{
+	Vector3f a = l.P - l.L.unit() * far;
+	Vector3f b = l.P + l.L.unit() * far;
+	drawLineAB(a, b, color);
+}
+void RenderGL::drawLineAB(const Vector3f& a, const Vector3f& b, const Color4f& color) const
+{
+	glColor4f(color.r, color.g, color.b, color.a);
+	glBegin(GL_LINES);
+		glVertex3f(a.x, a.y, a.z);
+		glVertex3f(b.x, b.y, b.z);
+	glEnd();
+}
+
 
 void RenderGL::drawTriangleStrip(size_t n, const Vector3f * vertexs, const Vector3f * normals, const Color4f & color) const
 {

@@ -12,10 +12,16 @@
 
 int main ()
 {
-	Plane P1(Vector3f(2, 1, -1), -1);
-	Plane P2(Vector3f(1, 3, -2), 0);
-	Line L = P1 * P2;
-	//game;
+	//Plane P1(Vector3f(2, 1, -1), -1);
+	//Plane P2(Vector3f(1, 3, -2), 0);
+	//Line L = P1 * P2;
+	
+	Plane P(2, -3, 1, -2);
+	Vector3f M(-2, 4, 4);
+
+	Vector3f H = P.proj(M);
+
+	std::cout << H << std::endl;
 
 	GraviGame game;
 

@@ -33,7 +33,7 @@ public:
 
 	bool Run();
 
-	void Update(float dt);
+	virtual void Update(float dt);
 	virtual void Draw();
 	virtual void InputCheck();
 	void End();

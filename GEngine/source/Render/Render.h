@@ -4,6 +4,7 @@
 #include "../Math/Vector3f.h"
 #include "../Math/Vector4f.h"
 #include "../Math/Quaternion.h"
+#include "../Math/Line.h"
 #include "../Render/Color4f.h"
 #include "../Physics/Camera.h"
 
@@ -94,6 +95,9 @@ public:
 
 	//virtual void CreateVBO(const float *data, const size_t num_vert, const size_t *index, const size_t num_index) = 0;
 
+
+	virtual void drawLine(const Line& l, const Color4f& color) const = 0;
+	virtual void drawLineAB(const Vector3f& a, const Vector3f& b, const Color4f& color) const = 0;
 	virtual void drawTriangleStrip(size_t n, const Vector3f* vertexs, const Vector3f* normals, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Color4f& color) const = 0;
 	virtual void drawTriangle(const Vector3f& a, const Vector3f& b, const Vector3f& c, const Vector3f& n, const Color4f& color) const = 0;

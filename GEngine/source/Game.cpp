@@ -134,6 +134,8 @@ void Game::Draw()
 {
 	render->beginDraw();
 	//render->drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 50.0, Quaternion(0, Vector3f(0.0f, 0.0f, 1.0f)), Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+
+	//render->drawLineAB(Vector3f(0, 0, 0), Vector3f(25, 0, 0), Color4f(1, 0, 0, 1));
 	for (size_t i = 0; i < numEntites; i++)
 	{
 		if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
@@ -154,7 +156,7 @@ void Game::Draw()
 		//render->print(-0.10f, 0.39f, "P1 P: %f %f %f", Enityes[1]->pos.x, Enityes[1]->pos.y, Enityes[1]->pos.z);
 
 	}
-	render->endDraw();
+	//render->endDraw();//!!!
 }
 
 bool Game::Run()

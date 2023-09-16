@@ -299,6 +299,7 @@ inline void Quaternion::rotate(Vector3f & v) const
 inline void Quaternion::fromAngleAxis(float angle, const Vector3f &axis)
 {
 	float halfTheta = angle / 2.0f;
+	halfTheta = degToRad(halfTheta);
 	float s = sin(halfTheta);
 	w = cos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 }

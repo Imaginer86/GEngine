@@ -25,6 +25,11 @@ inline bool isEqual(float f)
 	return (fabsf(f)) < std::numeric_limits<float>::epsilon();
 }
 
+inline bool isNotZero(float f)
+{
+	return (fabsf(f)) > std::numeric_limits<float>::epsilon();
+}
+
 inline bool isEqual(float f1, float f2)
 {
 	return (fabsf(f1 - f2)) < std::numeric_limits<float>::epsilon();

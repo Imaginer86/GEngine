@@ -3,6 +3,7 @@
 void GraviGame::Draw()
 {
 	Game::Draw();
+	render->endDraw();//!!!
 }
 
 void GraviGame::Update(float dt)

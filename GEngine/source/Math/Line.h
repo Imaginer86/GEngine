@@ -5,7 +5,7 @@ struct Line
 {
 	Vector3f P;
 	Vector3f L;
-
+	Line() {}
 	Line(const Vector3f& A, const Vector3f& B);
 };
 
