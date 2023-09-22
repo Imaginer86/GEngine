@@ -93,7 +93,7 @@ namespace Core
 				Rectangle* entity = new Rectangle;
 				Vector3f axic;
 				float angle;
-				in >> entity->m >> entity->pos >> axic >> angle >> entity->vel >> entity->w >> entity->h >> entity->color;
+				in >> entity->m >> entity->pos >> entity->vel >> angle >> axic >> entity->w >> entity->h >> entity->color;
 				entity->q = Quaternion(angle, axic);
 				lEntitys.push_back(entity);
 			}

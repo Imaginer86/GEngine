@@ -46,7 +46,7 @@ public:
 		, gLightAmbient(option.lightAmbient)
 		, gLightDiffuse(option.lightDiffuse)
 		, gLightPosition(option.lightPosition)
-		, camera(option.cameraPos, degToRad(option.cameraAngle), option.cameraaxis)
+		, camera(option.cameraPos, option.cameraAngle, option.cameraaxis)
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
 	{

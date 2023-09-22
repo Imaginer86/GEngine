@@ -60,6 +60,11 @@ float inline sqrtG(float f)
 	return sqrtf(f);
 }
 
+float inline absG(float f)
+{
+	return fabsf(f);
+}
+
 	//inline int toInt(float val)
 	//{
 		//return val > 0.0f ? static_cast<int>(val + 0.5f) : static_cast<int>(val - 0.5f);

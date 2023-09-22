@@ -642,8 +642,12 @@ void RenderGL::drawQuad(const Vector3f& pos, float w, float h, const Quaternion&
 	Vector3f ru = Vector3f(pos.x + w / 2.0, pos.y + h / 2.0f, pos.z);
 	Vector3f rd = Vector3f(pos.x + w / 2.0, pos.y - h / 2.0f, pos.z);
 	glPushMatrix();
+	float angle;
+	Vector3f axis;
+	rotation.toAngleAxis(angle, axis);
+	axis -= pos;
+	glRotatef(angle, axis.x, axis.y, axis.z);
 	glTranslatef(pos.x, pos.y, pos.z);
-	Rotate(rotation);
 	drawQuad(ld, lu, ru, rd, color);
 	glPopMatrix();
 }

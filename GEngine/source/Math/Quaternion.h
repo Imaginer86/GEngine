@@ -68,6 +68,26 @@ struct Quaternion
 
 //const Quaternion QIDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 
+inline std::istream& operator>> (std::istream& is, Quaternion& q)
+{
+	float angle;
+	Vector3f axic;
+	is >> angle >>  axic;
+	q.fromAngleAxis(angle, axic);
+	return is;
+}
+
+
+
+inline std::ostream& operator<< (std::ostream& os, const Quaternion& q)
+{
+	float angle;
+	Vector3f axic;	
+	q.toAngleAxis(angle, axic);
+	os << angle << ": " << axic;
+	return os;
+}
+
 inline Quaternion operator*(float lhs, const Quaternion &rhs)
 {
 	return rhs * lhs;
