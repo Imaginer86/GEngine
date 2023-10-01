@@ -1,3 +1,4 @@
+#pragma once
 #include "Entity.h"
 #include "../Math/Vector3f.h"
 #include "../Math/Plane.h"
@@ -10,7 +11,7 @@ public:
 	float w;
 	float h;
 	virtual bool isRectangle() { return true; }
-	Plane getPlaneF() const;
+	Plane getPlaneF()  const;
 };
 
 inline Plane Rectangle::getPlaneF() const

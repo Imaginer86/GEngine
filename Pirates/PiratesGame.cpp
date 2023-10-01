@@ -16,7 +16,7 @@ void PiratesGame::Update(float dt)
 {
 	Game::Update(dt);
 	Quaternion qt(1, Vector3f(1, 0, 0));
-	Entityes[1]->q *= qt;
+	Entityes[0]->q *= qt;
 	//std::cout << Entityes[1]->q << std::endl;
 }
 

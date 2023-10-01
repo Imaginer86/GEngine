@@ -57,10 +57,10 @@ void Game::InputCheck()
 	if (keys[GLFW_KEY_D]) Game::render->MoveCameraLR(10.0f);
 	if (keys[GLFW_KEY_PAGE_UP]) Game::render->MoveCameraNF(10.0f);
 	if (keys[GLFW_KEY_PAGE_DOWN]) Game::render->MoveCameraNF(-10.0f);
-	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(10.0f, Vector3f(1.0f, 0.0f, 0.0f)));
-	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(10.0f, Vector3f(-1.0f, 0.0f, 0.0f)));
-	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(10.0f, Vector3f(0.0f, -1.0f, 0.0f)));
-	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(10.0f, Vector3f(0.0f, 1.0f, 0.0f)));
+	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(1.0f, 0.0f, 0.0f)));
+	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(-1.0f, 0.0f, 0.0f)));
+	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, -1.0f, 0.0f)));
+	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, 1.0f, 0.0f)));
 	if (keys[GLFW_KEY_KP_ADD]) timeScale *= 1.1f;
 	if (keys[GLFW_KEY_KP_SUBTRACT]) timeScale *= 0.9f;
 	if (keys[GLFW_KEY_KP_ENTER]) timeScale = 1.0f;
