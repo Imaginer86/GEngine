@@ -637,17 +637,22 @@ void RenderGL::drawQuad(const Vector3f * vertexs, const Vector3f & n, const Colo
 
 void RenderGL::drawQuad(const Vector3f& pos, float w, float h, const Quaternion& rotation, const Color4f& color) const
 {
-	Vector3f ld = Vector3f(pos.x - w / 2.0, pos.y - h / 2.0f, pos.z);
-	Vector3f lu = Vector3f(pos.x - w / 2.0, pos.y + h / 2.0f, pos.z);
-	Vector3f ru = Vector3f(pos.x + w / 2.0, pos.y + h / 2.0f, pos.z);
-	Vector3f rd = Vector3f(pos.x + w / 2.0, pos.y - h / 2.0f, pos.z);
+	//Vector3f ld = Vector3f(pos.x - w / 2.0, pos.y - h / 2.0f, pos.z);
+	//Vector3f lu = Vector3f(pos.x - w / 2.0, pos.y + h / 2.0f, pos.z);
+	//Vector3f ru = Vector3f(pos.x + w / 2.0, pos.y + h / 2.0f, pos.z);
+	//Vector3f rd = Vector3f(pos.x + w / 2.0, pos.y - h / 2.0f, pos.z);
+	Vector3f ld = Vector3f(- w / 2.0, - h / 2.0f, 0.0f);
+	Vector3f lu = Vector3f(- w / 2.0, h / 2.0f, 0.0f);
+	Vector3f ru = Vector3f(w / 2.0, h / 2.0f, 0.0f);
+	Vector3f rd = Vector3f(w / 2.0, - h / 2.0f, 0.0f);
 	glPushMatrix();
 	float angle;
 	Vector3f axis;
 	rotation.toAngleAxis(angle, axis);
-	axis -= pos;
-	glRotatef(angle, axis.x, axis.y, axis.z);
+	//axis -= pos;
 	glTranslatef(pos.x, pos.y, pos.z);
+	glRotatef(angle, axis.x, axis.y, axis.z);
+	
 	drawQuad(ld, lu, ru, rd, color);
 	glPopMatrix();
 }
