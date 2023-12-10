@@ -8,7 +8,7 @@ struct Quaternion
 
 	Quaternion():w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
 	Quaternion(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
-	Quaternion(float angle, const Vector3f &axis)
+	Quaternion(float angle, const Vector3f& axis)
 	{
 		Vector3f naxis = axis;
 		naxis.unitize();
@@ -19,20 +19,20 @@ struct Quaternion
 	}
 	~Quaternion() {}
 
-	bool operator==(const Quaternion &rhs) const;
-	bool operator!=(const Quaternion &rhs) const;
+	bool operator==(const Quaternion& rhs) const;
+	bool operator!=(const Quaternion& rhs) const;
 
-	Quaternion &operator+=(const Quaternion &rhs);
-	Quaternion &operator-=(const Quaternion &rhs);
-	Quaternion &operator*=(const Quaternion &rhs);
-	Quaternion &operator*=(const Vector3f &vec);
+	Quaternion &operator+=(const Quaternion& rhs);
+	Quaternion &operator-=(const Quaternion& rhs);
+	Quaternion &operator*=(const Quaternion& rhs);
+	Quaternion &operator*=(const Vector3f& vec);
 	Quaternion &operator*=(float scalar);
 	Quaternion &operator/=(float scalar);
 
-	Quaternion operator+(const Quaternion &rhs) const;
-	Quaternion operator-(const Quaternion &rhs) const;
-	Quaternion operator*(const Quaternion &rhs) const;
-	Quaternion operator*(const Vector3f &vec) const;
+	Quaternion operator+(const Quaternion& rhs) const;
+	Quaternion operator-(const Quaternion& rhs) const;
+	Quaternion operator*(const Quaternion& rhs) const;
+	Quaternion operator*(const Vector3f& vec) const;
 	Quaternion operator*(float scalar) const;
 	Quaternion operator/(float scalar) const;
 
@@ -43,20 +43,20 @@ struct Quaternion
 
 	void normalize();
 
-	Vector3f Normal(const Vector3f &p);
+	Vector3f Normal(const Vector3f& p);
 
 	
-	void fromAngleXYZ(const Vector3f &angle);
+	void fromAngleXYZ(const Vector3f& angle);
 	void identity();
 	Quaternion inverse() const;
 	float magnitude() const;
 	
-	void fromAngleAxis(float angle, const Vector3f &axis);
-	void toAngleAxis(float &angle, Vector3f &axis) const;
+	void fromAngleAxis(float angle, const Vector3f& axis);
+	void toAngleAxis(float &angle, Vector3f& axis) const;
 	Vector3f GetAxis() const;
 	float GetAngle() const;
 
-	//void rotate(Vector3f &v) const;
+	Vector3f rotate(const Vector3f& v) const;
 
 	//void toHeadPitchRoll(float &headDegrees, float &pitchDegrees, float &rollDegrees) const;
 	//atrix4 toMatrix4() const;
@@ -295,26 +295,28 @@ inline float Quaternion::GetAngle() const
 	return angle;
 }
 
-/*
-inline void Quaternion::rotate(Vector3f & v) const
+
+inline Vector3f Quaternion::rotate(const Vector3f &v) const
 {
+	Vector3f p(x, y, z);
+	Vector3f t = (p * v) * 2.0f;
+	return v + t * w + p * t;
 	//Quaternion t;
 	//t = *this * v;
 	//t *= inverse();
 
-	Quaternion u = *this;
+	//Quaternion u = *this;
 
-	Quaternion t(0.0f, v.x, v.y, v.z);
-	t = u * t;
-	t *= u.inverse();
+	//Quaternion t(0.0f, v.x, v.y, v.z);
+	//t = u * t;
+	//t *= u.inverse();
 
-	v.x = t.x; v.y = t.y; v.z = t.z;
+	//v.x = t.x; v.y = t.y; v.z = t.z;
 	
 	//Vector3f u(x, y, z);
 	//float sinHalfAlpha = u.unitize();
 	//v = v*(w*w) + (u*v - v*u)*sinHalfAlpha*w - u*v*u*(sinHalfAlpha*sinHalfAlpha);
 }
-*/
 
 inline void Quaternion::fromAngleAxis(float angle, const Vector3f &axis)
 {
@@ -397,6 +399,7 @@ inline Matrix4 Quaternion::toMatrix4() const
 
 	return m;
 }
+
 
 
 inline Vector3f Quaternion::rotate(const Vector3f &p)

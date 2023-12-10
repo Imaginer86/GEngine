@@ -99,6 +99,10 @@ int main()
 
 	if (game.Init(numE, option))
 	{
+		//Entity* e = game.Entityes[0];
+		//Vector3f N(1, 1, 0);
+		//N = e->q.rotate(N);
+		//std::cout << N;
 		game.Run();
 		game.End();
 	}

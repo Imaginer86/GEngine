@@ -11,10 +11,14 @@ public:
 	float w;
 	float h;
 	virtual bool isRectangle() { return true; }
-	Plane getPlaneF()  const;
+	Plane getPlane()  const;
 };
 
-inline Plane Rectangle::getPlaneF() const
+inline Plane Rectangle::getPlane() const
 {
-	return Plane();
+	Vector3f N(0, 0, 1);
+	N = q.rotate(N);
+	float d = -N.x * pos.x - N.y * pos.y - N.z * pos.z;
+	//Vector3f N = q * N;
+	return Plane(N, d);
 }

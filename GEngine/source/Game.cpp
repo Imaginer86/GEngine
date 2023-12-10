@@ -78,9 +78,9 @@ void Game::Update(float dt)
 				if (Entityes[i]->isBall() && Entityes[j]->isBall())
 				{
 					Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
-					float dr = raxis.Length();
-					float r = (dynamic_cast<Ball*>(Entityes[i])->r + dynamic_cast<Ball*>(Entityes[j])->r);
-					if (dr <= r) ElasticImpact(*Entityes[i], *Entityes[j], dt);
+					float dr = raxis.length();
+					float r = (static_cast<Ball*>(Entityes[i])->r + static_cast<Ball*>(Entityes[j])->r);
+					if (dr <= r) ElasticImpact(Entityes[i], Entityes[j], dt);
 					/*
 					{
 						//std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
@@ -105,6 +105,25 @@ void Game::Update(float dt)
 						else std::cerr << "Erorr: collision with not a balls!" << std::endl;						
 					}
 				*/
+				}
+				else if ((Entityes[i]->isBall() && Entityes[j]->isRectangle()) || (Entityes[i]->isRectangle() && Entityes[j]->isBall()))
+				{
+					float dr, r;
+					if (Entityes[i]->isBall() && Entityes[j]->isRectangle())
+					{
+						Plane l = static_cast<Rectangle*>(Entityes[j])->getPlane();
+						dr = l.distance(Entityes[i]->pos);
+						r = static_cast<Ball*>(Entityes[i])->r;
+					}
+					else
+					{
+						Plane l = static_cast<Rectangle*>(Entityes[i])->getPlane();
+						Vector3f P = l * Entityes[j]->pos;
+						dr = (P - Entityes[j]->pos).length();
+						//dr = l.distance();
+						r = static_cast<Ball*>(Entityes[j])->r;
+					}
+					if (dr <= r) ElasticImpact(Entityes[i], Entityes[j], dt);
 				}
 			}
 	}

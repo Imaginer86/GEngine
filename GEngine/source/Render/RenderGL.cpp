@@ -649,7 +649,6 @@ void RenderGL::drawQuad(const Vector3f& pos, float w, float h, const Quaternion&
 	float angle;
 	Vector3f axis;
 	rotation.toAngleAxis(angle, axis);
-	//axis -= pos;
 	glTranslatef(pos.x, pos.y, pos.z);
 	glRotatef(angle, axis.x, axis.y, axis.z);
 	

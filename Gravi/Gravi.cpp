@@ -23,7 +23,7 @@ int main ()
 
 	std::cout << H << std::endl;
 
-	std::cout << (M - H).Length() << std::endl;
+	std::cout << (M - H).length() << std::endl;
 	std::cout << P.distance(M) << std::endl;
 
 	Line L; L.P = Vector3f(-1, 7, 2); L.L = Vector3f(4, -7, -3);

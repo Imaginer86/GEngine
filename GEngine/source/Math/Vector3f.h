@@ -33,7 +33,7 @@ struct Vector3f
 	Vector3f operator*(const Vector3f& v);	// cross product (vector product)
 	float dotProduct(const Vector3f& v);
 
-	float Length() const;	// length() returns the length of this Vector3
+	float length() const;	// length() returns the length of this Vector3
 	float lenght2() const;
 	float unitize();	// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 	Vector3f unit() const;	// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
@@ -153,7 +153,7 @@ inline float Vector3f::dotProduct(const Vector3f& v)
 	return this->x*v.x + this->y*v.y + this->z*v.z;
 }
 
-inline float Vector3f::Length()	const							// length() returns the length of this Vector3
+inline float Vector3f::length()	const							// length() returns the length of this Vector3
 {
 	return sqrtf(x*x + y*y + z*z);
 };
@@ -165,25 +165,25 @@ inline float Vector3f::lenght2() const
 
 inline float Vector3f::unitize()								// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 {
-	float length = Length();
+	float l = length();
 
-	if (isEqual(length))
+	if (isEqual(l))
 		return 0.0f;
 
-	x /= length;
-	y /= length;
-	z /= length;
-	return length;
+	x /= l;
+	y /= l;
+	z /= l;
+	return l;
 }
 
 inline Vector3f Vector3f::unit() const								// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
 {
-	float length = Length();
+	float l = length();
 
-	if (isEqual(length))
+	if (isEqual(l))
 		return *this;
 
-	return Vector3f(x / length, y / length, z / length);
+	return Vector3f(x / l, y / l, z / l);
 }
 
 inline const Vector3f Vector3f::operator+ (const Vector3f& rv) const				// operator- is used to take difference of two Vector3's. operator- returns a new Vector3

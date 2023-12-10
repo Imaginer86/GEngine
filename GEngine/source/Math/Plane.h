@@ -61,12 +61,19 @@ inline Vector3f Plane::unit()
 
 inline float Plane::distance(const Vector3f& p)
 {
+	return ((*this * p) - p).length();
+}
+
+/*
+inline float Plane::distance(const Vector3f& p)
+{
 	float length = sqrt(A*A + B*B + C*C);
 	if (isNotZero(length))
 		return absG((A*p.x + B*p.y + C*p.z + D) / length);
 	else
 		return 0.0f;//!!!
 }
+*/
 
 
 
