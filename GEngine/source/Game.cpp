@@ -118,9 +118,7 @@ void Game::Update(float dt)
 					else
 					{
 						Plane l = static_cast<Rectangle*>(Entityes[i])->getPlane();
-						Vector3f P = l * Entityes[j]->pos;
-						dr = (P - Entityes[j]->pos).length();
-						//dr = l.distance();
+						dr = l.distance(Entityes[j]->pos);
 						r = static_cast<Ball*>(Entityes[j])->r;
 					}
 					if (dr <= r) ElasticImpact(Entityes[i], Entityes[j], dt);

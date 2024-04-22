@@ -15,3 +15,4 @@ Gravi/options.ini.bak
 *.log
 Pirates/x64/
 *.idb
+/GEngine/GEngine/x64

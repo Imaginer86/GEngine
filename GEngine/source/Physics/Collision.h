@@ -47,11 +47,17 @@ inline void ElasticImpactBallRec(Entity* A, Entity* B, float dt)
 		return;
 	}
 	
-		
 	Plane P = rec->getPlane();
-	Vector3f O = P * rec->pos;
-	//Vector3f
-	//todo
+	std::cout << P.unit() << std::endl;
+	std::cout << ball->vel << std::endl;
+	Vector3f O = P * ball->vel;
+	float Dsc = (ball->pos - O).length();
+	float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();
+	float Tc = Dsc * dt / Dsc;
+	ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
+	ball->vel =  P.unit() * (((-ball->vel).dotProduct(P.unit())) * 2) + ball->vel;
+	ball->pos = ball->pos + ball->vel * (dt - Tc);
+	std::cout << ball->vel << std::endl;
 }
 
 inline void ElasticImpact(Entity* A, Entity* B, float dt)
