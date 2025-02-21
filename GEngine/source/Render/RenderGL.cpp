@@ -17,119 +17,21 @@
 //#include <gl/glu.h>
 
 GLFWwindow* window;
-GLuint  base;      // База списка отображения для фонта
+//GLuint  base;      // База списка отображения для фонта
 GLUquadricObj* quadratic;
 
 GLuint texture[1];
 
 float rot = 0.0f;
+//#pragma comment(lib, "OpenGL32.lib")
+//#pragma comment(lib, "GLu32.lib")
 
-//WWWin Файлы заголовков Windows:
-//#ifndef WIN32_LEAN_AND_MEAN
-//#define WIN32_LEAN_AND_MEAN 1            // Исключите редко используемые компоненты из заголовков Windows
-//#endif
-//#include <Windows.h>
-
-/*
-#include <gl/glext.h>
-PFNGLGENBUFFERSPROC					glGenBuffers = 0;                     // VBO Name Generation Procedure
-PFNGLBINDBUFFERPROC					glBindBuffer = 0;                     // VBO Bind Procedure
-PFNGLBUFFERDATAPROC					glBufferData = 0;
-PFNGLDELETEBUFFERSPROC				glDeleteBuffers = 0;
-PFNGLGENVERTEXARRAYSPROC			glGenVertexArrays = 0;
-PFNGLBINDVERTEXARRAYPROC			glBindVertexArray = 0;
-PFNGLVERTEXATTRIBPOINTERPROC		glVertexAttribPointer = 0;
-PFNGLENABLEVERTEXATTRIBARRAYPROC	glEnableVertexAttribArray = 0;
-PFNGLDISABLEVERTEXATTRIBARRAYPROC	glDisableVertexAttribArray = 0;
-PFNGLCREATESHADERPROC				glCreateShader = 0;
-PFNGLSHADERSOURCEPROC				glShaderSource = 0;
-PFNGLCOMPILESHADERPROC				glCompileShader = 0;
-PFNGLGETSHADERIVPROC				glGetShaderiv = 0;
-PFNGLGETSHADERINFOLOGPROC			glGetShaderInfoLog = 0;
-PFNGLCREATEPROGRAMPROC				glCreateProgram = 0;
-PFNGLATTACHSHADERPROC				glAttachShader = 0;
-PFNGLLINKPROGRAMPROC				glLinkProgram = 0;
-PFNGLDELETESHADERPROC				glDeleteShader = 0;
-PFNGLGETPROGRAMIVPROC				glGetProgramiv = 0;
-PFNGLGETPROGRAMINFOLOGPROC			glGetProgramInfoLog = 0;
-PFNGLUSEPROGRAMPROC					glUseProgram = 0;
-
-#pragma comment(lib, "OpenGL32.lib")
-#pragma comment(lib, "GLu32.lib")
-*/
-//#include <cstdio>
-//#include <stdarg.h>
-
-//#include <string>
-//#include <fstream>
-//#include <iostream>
-//#include <vector>
-
-//Render* Render::p_instance = nullptr;
-
-/*
-HDC		hDC;
-HGLRC	hRC;
-HWND	hWnd;
-HINSTANCE  hInstance;
-
-Light
-
-
-
-
-
-Test Triangle
-
-GLfloat g_vertex_buffer_data[] = {
-	-100.0f, -100.0f, -1.0f,
-	100.0f, -100.0f, -1.0f,
-	0.0f, 100.0f, -1.0f
-};
-
-GLuint VBO;
-GLuint NBO;
-GLuint IBO;
-
-GLuint vertexbuffer;;
-GLuint VertexArrayID;
-
-
- Это имя программы шейдера 
-GLuint shaderProgram;
-*/
 
 void error_callback(int error, const char* description)
 {
 	//fprintf(stderr, "Error: %s\n", description);
 	std::cerr << description << std::endl << "Error code: " << error << std::endl;
 }
-
-/*
-bool RenderGL::createWindow()
-{
-	glfwSetErrorCallback(error_callback);
-	if(!glfwInit())
-	{
-		return false;	// Ошибка инициализации
-	}
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
-	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return false;	// Window or OpenGL context creation failed
-	}	
-	glfwMakeContextCurrent(window);
-
-	// Initialize GLEW
-	glewExperimental = GL_TRUE;
-	glewInit();
-	//glfwSwapInterval(1);	
-	return true;
-}*/
 
 void RenderGL::killWindow()
 {
@@ -141,140 +43,77 @@ void RenderGL::killWindow()
 
 void* RenderGL::Init()
 {
-	//ptr_wndProc = wndProc;
 
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 	{
-		return false;	// Ошибка инициализации
+		return nullptr;	// Ошибка инициализации
 	}
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
+	window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
-		return false;	// Window or OpenGL context creation failed
+		return nullptr;	// Window or OpenGL context creation failed
 	}
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
 	glewExperimental = GL_TRUE;
 	
-	//old
-	//glfwSwapInterval(1);	
-	//if (!createWindow())
-	//{
-		//std::cerr << "Cannot Create Window." << std::endl;
-		//return nullptr;
-	//}
-	
-
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		//fprintf(stderr, «Ошибка: % s \ n», glewGetErrorString(err));
 		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
 		return nullptr;
 	}
 
 
-	if (height == 0) height = 1;
-	float aspect = static_cast<float>(width) / static_cast<float>(height);
+	Resize(width, height);
 
-	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-	//glOrtho(-50.0 * aspect, 50.0 * aspect, -50.0, 50.0, 1.0, -1.0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(fovy, aspect, near, far);
-	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	//if (!InitGL())
-	//{
-		//std::cout << "Error: Cannot InitGL()" << std::endl;
-		//return nullptr;
-	//}
-	//if (!LoadTextures())
-	//{
-		//std::cout << "Error: LoadTextures()" << std::endl;
-		//return nullptr;
-	//}
-	// 
-	// 
-	//buildFont();
-	glEnable(GL_DEPTH_TEST);
-
-	glEnable(GL_NORMALIZE);
-
-	glEnable(GL_COLOR_MATERIAL);
-
-		// Load image
+	// Load image
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load("data/EarthMap.png", &width, &height, &nrChannels, 0);
-
 	if (data)
 	{
 		// Создание текстуры
 		glGenTextures(1, &texture[0]);
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
 			GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		stbi_image_free(data);
-
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 	else
 		return nullptr;
 
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
 
-	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
-
-	glEnable(GL_AUTO_NORMAL);
-
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-
-
-	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR); // горизонтальная координата
-	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR); // вертикальная координата
-
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//buildFont();
 
 	
+
+	// Установка параметров текстуры
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	// Включение текстурирования
+	glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, texture[0]);
 
+	// Создание объекта квадрики
+	//GLUquadric* quad = gluNewQuadric();
+	//gluQuadricTexture(quad, GL_TRUE);
 
-
+	// Создание объекта квадрики
 	quadratic = gluNewQuadric();
 	gluQuadricTexture(quadratic, GL_TRUE);
-
-	gluQuadricDrawStyle(quadratic, GLU_LINE);
-	
-	glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
-	glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
-
-
-
 
 	return window;
 } 
@@ -404,9 +243,7 @@ bool RenderGL::LoadTextures()
 		glGenTextures(1, &texture[0]);
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+	
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
 			GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -432,18 +269,15 @@ void RenderGL::Resize(size_t width_, size_t height_)
 	height = height_;
 	if (height == 0) height = 1;
 	float aspect = static_cast<float>(width) / static_cast<float>(height);
-
-	
-	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-	//glOrtho(-50.0 * aspect, 50.0 * aspect, -50.0, 50.0, 1.0, -1.0);
-
+		
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
 	gluPerspective(fovy, aspect, near, far);
-	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
+	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0); //ex
+	//glOrtho(-50.0 * aspect, 50.0 * aspect, -50.0, 50.0, 1.0, -1.0); //ex
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 /*
@@ -624,21 +458,20 @@ void RenderGL::UpdateLight()
 void RenderGL::beginDraw() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
+
 	float angle = camera.q.GetAngle();
 	Vector3f axis = camera.q.GetAxis();
 	glRotatef(radToDeg(angle), axis.x, axis.y, axis.z);
 	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
 
-	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	//gluLookAt(camera.pos.x, camera.pos.y,-camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void RenderGL::endDraw() const
 {
 	//gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	//glFlush();
-	//SwapBuffers(hDC);//_WIN32
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }
@@ -874,9 +707,9 @@ void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Quaterni
 void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & color) const
 {
 
-	gluQuadricDrawStyle(quadratic, GLU_FILL);
-	gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
-	gluQuadricTexture(quadratic, GLU_FALSE);
+	//gluQuadricDrawStyle(quadratic, GLU_FILL);
+	//gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
+	//gluQuadricTexture(quadratic, GLU_FALSE);
 
 	glPushMatrix();
 
@@ -897,34 +730,22 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const
 {
 
-	//gluQuadricDrawStyle(quadratic, GLU_FILL);
-	//gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
-	//gluQuadricTexture(quadratic, GLU_TRUE);
 
 	glPushMatrix();
-
+	
 	glTranslatef(pos.x, pos.y, pos.z);
-	glRotatef(rot, 0, 1, 0);
+	//glRotatef(rot, 0, 1, 0);
 	rot += 1;
 	glColor4f(color.r, color.g, color.b, color.a);
 
-
-	//glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
-	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-
-
-	//glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
-	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
-
+	//glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	gluSphere(quadratic, r, 64, 64);
-	//glDisable(GL_TEXTURE_GEN_S);
-	//glDisable(GL_TEXTURE_GEN_T);
-
-
+	glBindTexture(GL_TEXTURE_2D, 0);
+	//glDisable(GL_TEXTURE_2D);
+	
 	glPopMatrix();
-
-	//gluDeleteQuadric(quadratic);
+	
 }
 
 void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const
