@@ -54,8 +54,11 @@ inline void Entity::init()
 
 inline void Entity::simulate(float dt)
 {
-	vel += (force / m) * dt;  // Изменение в скорости добавляем к текущей скорости. Изменение пропорционально ускорению (сила/масса) и изменению времени	
-	move(dt);
+	if (isNotZero(m))
+	{
+		vel += (force / m) * dt;  // Изменение в скорости добавляем к текущей скорости. Изменение пропорционально ускорению (сила/масса) и изменению времени	
+		move(dt);
+	}
 }
 
 inline void Entity::move(float dt)

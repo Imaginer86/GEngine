@@ -152,7 +152,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>
       </CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\LIB\glew-2.1.0\include;$(ProjectDir)..\LIB\glfw-3.3.6\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\LIB\glew-2.1.0\include;$(ProjectDir)..\LIB\stb;$(ProjectDir)..\LIB\glfw-3.3.6\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

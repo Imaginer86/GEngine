@@ -44,6 +44,7 @@ public:
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const;
+	virtual void drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const;
 	virtual void drawVBO() const;
 
 	//static Render* getInstance() {
@@ -54,10 +55,10 @@ public:
 
 protected:
 	//static void key_callback(int key, GLFWwindow* window, int scancode, int action, int mods);
-	virtual bool createWindow();
+	//virtual bool createWindow();
 	virtual void killWindow();
 
-	bool InitGL();
+	//bool InitGL();
 	//static void key_callback(int key, int scancode, int action, int mods);
 private:   
 };

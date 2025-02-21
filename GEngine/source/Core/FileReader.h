@@ -114,6 +114,14 @@ namespace Core
 				entity->Save((path + '/' + fileName + ".objm").c_str());
 				lEntitys.push_back(entity);
 			}
+			else if (name == "SBall" || name == "SataticBall") {
+				/*!!!Todo*/
+				num_entitys++;
+				std::string textureName;
+				in >> textureName;
+				Ball* entity = new Ball;
+				in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				lEntitys.push_back(entity);			}
 			else return 0;
 		} while (!in.eof());
 		in.close();

@@ -131,7 +131,7 @@ void Game::Update(float dt)
 		for (size_t i = 0; i < numEntites; i++) Entityes[i]->init();
 		for (size_t i = 0; i < numEntites; i++)
 			for (size_t j = 0; j < numEntites; j++)
-				if (i != j)
+				if (i != j && isNotZero(Entityes[i]->m) && isNotZero(Entityes[j]->m))
 				{
 					float r2 = (Entityes[i]->pos - Entityes[j]->pos).lenght2();
 					float f = G * Entityes[i]->m * Entityes[j]->m / r2;
@@ -155,9 +155,16 @@ void Game::Draw()
 	//render->drawLineAB(Vector3f(0, 0, 0), Vector3f(25, 0, 0), Color4f(1, 0, 0, 1));
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
-		if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->q, Entityes[i]->color);
-		if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
+		if ((i == numEntites - 1) && Entityes[i]->isBall())
+		{ 
+			render->drawSphereT(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+		}
+		else
+		{
+			if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+			if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->q, Entityes[i]->color);
+			if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
+		}
 	}
 	if (drawDebugInfo)
 	{

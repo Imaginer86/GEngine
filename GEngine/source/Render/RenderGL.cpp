@@ -5,6 +5,9 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "../Game.h"
 #include "../Core/Input.h"
 
@@ -16,6 +19,10 @@
 GLFWwindow* window;
 GLuint  base;      // База списка отображения для фонта
 GLUquadricObj* quadratic;
+
+GLuint texture[1];
+
+float rot = 0.0f;
 
 //WWWin Файлы заголовков Windows:
 //#ifndef WIN32_LEAN_AND_MEAN
@@ -69,7 +76,7 @@ HINSTANCE  hInstance;
 Light
 
 
-GLuint texture[1];
+
 
 
 Test Triangle
@@ -98,7 +105,7 @@ void error_callback(int error, const char* description)
 	std::cerr << description << std::endl << "Error code: " << error << std::endl;
 }
 
-
+/*
 bool RenderGL::createWindow()
 {
 	glfwSetErrorCallback(error_callback);
@@ -106,8 +113,8 @@ bool RenderGL::createWindow()
 	{
 		return false;	// Ошибка инициализации
 	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
 	if (!window)
@@ -116,12 +123,17 @@ bool RenderGL::createWindow()
 		return false;	// Window or OpenGL context creation failed
 	}	
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);	
+
+	// Initialize GLEW
+	glewExperimental = GL_TRUE;
+	glewInit();
+	//glfwSwapInterval(1);	
 	return true;
-}
+}*/
 
 void RenderGL::killWindow()
 {
+	gluDeleteQuadric(quadratic);
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
 	glfwDestroyWindow(window);
 }
@@ -130,11 +142,33 @@ void RenderGL::killWindow()
 void* RenderGL::Init()
 {
 	//ptr_wndProc = wndProc;
-	if (!createWindow())
+
+	glfwSetErrorCallback(error_callback);
+	if (!glfwInit())
 	{
-		std::cerr << "Cannot Create Window." << std::endl;
-		return nullptr;
+		return false;	// Ошибка инициализации
 	}
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return false;	// Window or OpenGL context creation failed
+	}
+	glfwMakeContextCurrent(window);
+
+	// Initialize GLEW
+	glewExperimental = GL_TRUE;
+	
+	//old
+	//glfwSwapInterval(1);	
+	//if (!createWindow())
+	//{
+		//std::cerr << "Cannot Create Window." << std::endl;
+		//return nullptr;
+	//}
 	
 
 	GLenum err = glewInit();
@@ -144,17 +178,113 @@ void* RenderGL::Init()
 		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
 		return nullptr;
 	}
-	InitGL();
+
+
+	if (height == 0) height = 1;
+	float aspect = static_cast<float>(width) / static_cast<float>(height);
+
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	//glOrtho(-50.0 * aspect, 50.0 * aspect, -50.0, 50.0, 1.0, -1.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(fovy, aspect, near, far);
+	//glFrustum(-aspect, aspect, -1.0, 1.0, 1.5, 20.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	//if (!InitGL())
+	//{
+		//std::cout << "Error: Cannot InitGL()" << std::endl;
+		//return nullptr;
+	//}
+	//if (!LoadTextures())
+	//{
+		//std::cout << "Error: LoadTextures()" << std::endl;
+		//return nullptr;
+	//}
+	// 
+	// 
 	//buildFont();
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_NORMALIZE);
+
+	glEnable(GL_COLOR_MATERIAL);
+
+		// Load image
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("data/EarthMap.png", &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		// Создание текстуры
+		glGenTextures(1, &texture[0]);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else
+		return nullptr;
+
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
+
+	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+
+	glEnable(GL_AUTO_NORMAL);
+
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+
+
+	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR); // горизонтальная координата
+	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR); // вертикальная координата
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+
+
+	quadratic = gluNewQuadric();
+	gluQuadricTexture(quadratic, GL_TRUE);
+
+	gluQuadricDrawStyle(quadratic, GLU_LINE);
+	
+	glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
+	glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
+
+
+
+
 	return window;
-}
+} 
 
 bool RenderGL::swithFullscreen()
 {
 	//return false;
 
 	fullscreen = !fullscreen;
-	if (!createWindow())
+	//if (!createWindow())
 	{
 		std::cerr << "Cannot Switch FullScreen.";
 		//MessageBox(NULL, "Cannot Switch FullScreen.", "ERROR", MB_OK | MB_ICONSTOP);
@@ -162,7 +292,7 @@ bool RenderGL::swithFullscreen()
 	}
 	return true;
 }
-
+/*
 bool RenderGL::InitGL()
 {
 	//gLightAmbient[0] = 0.25f;; 
@@ -177,20 +307,23 @@ bool RenderGL::InitGL()
 	//gLightPosition[1] = 500.0f;
 	//gLightPosition[2] = 0.0f;
 	//gLightPosition[3] = 1.0f;
-	quadratic = gluNewQuadric();
+	
 	Resize(width, height);              // Настроим перспективу для нашего OpenGL экрана.
 
-	glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
-	glEnable(GL_DEPTH_TEST);
+	//glClearDepth(1.0f);              // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‡Ð¸ÑÑ‚ÐºÑƒ Ð±ÑƒÑ„ÐµÑ€Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	//glDepthFunc(GL_LEQUAL);            // Ð¢Ð¸Ð¿ Ñ‚ÐµÑÑ‚Ð° Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	//glShadeModel(GL_SMOOTH);            // Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ð¿Ð»Ð°Ð²Ð½Ð¾Ðµ Ñ†Ð²ÐµÑ‚Ð¾Ð²Ð¾Ðµ ÑÐ³Ð»Ð°Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ
+	//glEnable(GL_DEPTH_TEST);
+
+	
 
 
-	UpdateLight();
 
-	glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	//UpdateLight();
+
+	//glEnable(GL_COLOR_MATERIAL);	// Set Material properties to follow glColor values
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
 	return true;
 	
@@ -198,7 +331,7 @@ bool RenderGL::InitGL()
 
 
 	//----------
-	/*
+
 	//glEnable(GL_TEXTURE_2D);
 
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
@@ -252,32 +385,42 @@ bool RenderGL::InitGL()
 	//std::cout << "OpenGL version: " << version << std::endl;
 	//std::cout << "OpenGL vendor: " << vendorInfo << std::endl;
 	//std::cout << "Full OpenGL extensions list: " << extensionsInfo << std::endl;
-	*/
+	
 }
+*/
 
 // Загрузка картинки и конвертирование в текстуру
+
 /*
 bool RenderGL::LoadTextures()
 {
-	// Загрузка картинки
-	AUX_RGBImageRec *texture1;
-	texture1 = auxDIBImageLoad("data/EarthMap.bmp");
-	//texture1 = auxDIBImageLoad("data/astronomy.bmp");
+	// Load image
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("data/EarthMap.png", &width, &height, &nrChannels, 0);
 
-	// Создание текстуры
-	glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	if (data)
+	{
+		// Создание текстуры
+		glGenTextures(1, &texture[0]);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, texture1->sizeX, texture1->sizeY, 0,
-		GL_RGB, GL_size_t_BYTE, texture1->data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
 
-	if (!texture1) return false;
-	delete texture1;
-	
-	return true;;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			return true;
+	}
+	else
+		return false;	
 }
 */
 
@@ -480,7 +623,7 @@ void RenderGL::UpdateLight()
 
 void RenderGL::beginDraw() const
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);      // ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð°Ð½ Ð¸ Ð±ÑƒÑ„ÐµÑ€ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
 	float angle = camera.q.GetAngle();
@@ -741,9 +884,35 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	glColor4f(color.r, color.g, color.b, color.a);
 
 
+	gluSphere(quadratic, r, 64, 64);
+	//glDisable(GL_TEXTURE_GEN_S);
+	//glDisable(GL_TEXTURE_GEN_T);
+
+	
+	glPopMatrix();
+
+	//gluDeleteQuadric(quadratic);
+}
+
+void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const
+{
+
+	//gluQuadricDrawStyle(quadratic, GLU_FILL);
+	//gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
+	//gluQuadricTexture(quadratic, GLU_TRUE);
+
+	glPushMatrix();
+
+	glTranslatef(pos.x, pos.y, pos.z);
+	glRotatef(rot, 0, 1, 0);
+	rot += 1;
+	glColor4f(color.r, color.g, color.b, color.a);
+
+
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture 2 (1)
 	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+
 
 	//glEnable(GL_TEXTURE_GEN_S);							// Enable Sphere Mapping
 	//glEnable(GL_TEXTURE_GEN_T);							// Enable Sphere Mapping	
@@ -752,7 +921,7 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	//glDisable(GL_TEXTURE_GEN_S);
 	//glDisable(GL_TEXTURE_GEN_T);
 
-	
+
 	glPopMatrix();
 
 	//gluDeleteQuadric(quadratic);
