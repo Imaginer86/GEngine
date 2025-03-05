@@ -55,6 +55,8 @@ void Game::InputCheck()
 	if (keys[GLFW_KEY_S]) Game::render->MoveCameraUD(-10.0f);
 	if (keys[GLFW_KEY_A]) Game::render->MoveCameraLR(-10.0f);
 	if (keys[GLFW_KEY_D]) Game::render->MoveCameraLR(10.0f);
+	if (keys[GLFW_KEY_L]) Game::render->LightSwitch();
+	if (keys[GLFW_KEY_T]) Game::render->TextuteSwitch();
 	if (keys[GLFW_KEY_PAGE_UP]) Game::render->MoveCameraNF(10.0f);
 	if (keys[GLFW_KEY_PAGE_DOWN]) Game::render->MoveCameraNF(-10.0f);
 	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(1.0f, 0.0f, 0.0f)));

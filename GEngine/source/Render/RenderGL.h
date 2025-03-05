@@ -12,8 +12,8 @@ public:
 	virtual void* Init();
 	virtual void Resize(size_t  width_, size_t height_);
 	//virtual bool LoadTextures();
-	virtual bool swithFullscreen();
-	virtual void UpdateLight();
+	//virtual bool swithFullscreen();
+	
 	virtual void beginDraw() const;
 	virtual void endDraw() const;
 
@@ -57,6 +57,9 @@ protected:
 	//static void key_callback(int key, GLFWwindow* window, int scancode, int action, int mods);
 	//virtual bool createWindow();
 	virtual void killWindow();
+
+	virtual void LightUpdate();
+	virtual void TextureUpdate();
 
 	//bool InitGL();
 	//static void key_callback(int key, int scancode, int action, int mods);

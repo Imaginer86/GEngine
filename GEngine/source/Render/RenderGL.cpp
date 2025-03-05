@@ -1,5 +1,9 @@
 #include "RenderGL.h"
 
+#include "../Game.h"
+#include "../Core/Input.h"
+
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
@@ -8,8 +12,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "../Game.h"
-#include "../Core/Input.h"
+
 
 
 //#define GL_GLEXT_PROTOTYPES
@@ -17,7 +20,7 @@
 //#include <gl/glu.h>
 
 GLFWwindow* window;
-//GLuint  base;      // База списка отображения для фонта
+GLuint  base;      // База списка отображения для фонта
 GLUquadricObj* quadratic;
 
 GLuint texture[1];
@@ -103,9 +106,17 @@ void* RenderGL::Init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Включение текстурирования
-	glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	TextureUpdate();
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient.v);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse.v);
+	glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition.v);
+	glEnable(GL_LIGHT0);
+
+	LightUpdate();
+
 
 	// Создание объекта квадрики
 	//GLUquadric* quad = gluNewQuadric();
@@ -118,6 +129,21 @@ void* RenderGL::Init()
 	return window;
 } 
 
+void RenderGL::TextureUpdate()
+{
+	if (textured)
+	{
+		glEnable(GL_TEXTURE_2D);
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+
+}
+
+
+/*
 bool RenderGL::swithFullscreen()
 {
 	//return false;
@@ -131,6 +157,7 @@ bool RenderGL::swithFullscreen()
 	}
 	return true;
 }
+*/
 /*
 bool RenderGL::InitGL()
 {
@@ -438,15 +465,10 @@ size_t int RenderGL::LoadShaders(const char * vertex_file_path, const char * fra
 }
 */
 
-void RenderGL::UpdateLight()
+void RenderGL::LightUpdate()
 {
 	if (light)
 	{
-		glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient.v);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse.v);
-		glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition.v);
-		glEnable(GL_LIGHT0);
-
 		glEnable(GL_LIGHTING);
 	}
 	else
@@ -734,7 +756,8 @@ void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& co
 	glPushMatrix();
 	
 	glTranslatef(pos.x, pos.y, pos.z);
-	//glRotatef(rot, 0, 1, 0);
+	glRotatef(90, 1, 0, 0);
+	glRotatef(rot, 0, 0, 1);
 	rot += 1;
 	glColor4f(color.r, color.g, color.b, color.a);
 

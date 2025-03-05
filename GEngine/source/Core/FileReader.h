@@ -217,8 +217,7 @@ namespace Core
 			else if (pName == "camera_axic") options.cameraaxis = fr.getVector3f();
 			else if (pName == "fullscreen") options.fullscreen = fr.getBool();
 			else if (pName == "move_scale") options.moveScale = fr.getFloat();
-			else if (pName == "rotate_scale") options.rotateScale = fr.getFloat();
-			else if (pName == "light") options.light = fr.getBool();
+			else if (pName == "rotate_scale") options.rotateScale = fr.getFloat();			
 			else if (pName == "light_ambient") options.lightAmbient = fr.getVector4f();
 			else if (pName == "light_diffuse") options.lightDiffuse = fr.getVector4f();
 			else if (pName == "light_position") options.lightPosition = fr.getVector4f();

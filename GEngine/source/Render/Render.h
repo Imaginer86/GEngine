@@ -20,6 +20,7 @@ protected:
 
 	bool	fullscreen;
 	bool	light;
+	bool	textured;
 	size_t width;
 	size_t height;
 	float fovy;
@@ -42,13 +43,14 @@ public:
 		, near(option.near)
 		, far(option.far)
 		, fullscreen(option.fullscreen)
-		, light(option.light)
 		, gLightAmbient(option.lightAmbient)
 		, gLightDiffuse(option.lightDiffuse)
 		, gLightPosition(option.lightPosition)
 		, camera(option.cameraPos, option.cameraAngle, option.cameraaxis)
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
+		, light(true)
+		, textured(true)
 	{
 		//size_t lenght = strlen(option.name);
 		//title = new char[lenght+1];
@@ -71,14 +73,18 @@ public:
 	float getMoveScale() { return moveScale; }
 	float getRotateScale() { return rotateScale; }
 
+	void LightSwitch() { light = !light; LightUpdate(); }
 	void LightOn() { light = true; }
 	void LightOff() { light = false; }
+
+	void TextuteSwitch() { textured = !textured; TextureUpdate(); }
+	void TextureOn() { textured = true; }
+	void TextureOff() { textured = false; }
 
 	virtual void* Init() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
 	//virtual bool LoadTextures() = 0;
-	virtual bool swithFullscreen() = 0;
-	virtual void UpdateLight() = 0;
+	//virtual bool swithFullscreen() = 0;
 
 //	virtual void buildFont() = 0;
 //	virtual void killFont() = 0;
@@ -117,6 +123,8 @@ public:
 protected:
 	//virtual bool createWindow() = 0;
 	virtual void killWindow() = 0;
+	virtual void TextureUpdate() = 0;
+	virtual void LightUpdate() = 0;
 };
 
 /*
