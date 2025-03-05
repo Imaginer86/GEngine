@@ -2,14 +2,21 @@
 #include "Render.h"
 class RenderGL:	public Render
 {
-public:		
+//public:
+	//static RenderGL& getInstance() {
+		//static RenderGL& instance;
+		//return instance;
+	//}
+//private:
+// 
+public:
 	RenderGL(const Options& option)
 		:Render(option) {}
-		//p_instance = this;//}
-
 	virtual ~RenderGL() {};
 
+
 	virtual void* Init();
+	virtual void DeInit();
 	virtual void Resize(size_t  width_, size_t height_);
 	//virtual bool LoadTextures();
 	//virtual bool swithFullscreen();
@@ -55,13 +62,8 @@ public:
 
 protected:
 	//static void key_callback(int key, GLFWwindow* window, int scancode, int action, int mods);
-	//virtual bool createWindow();
-	virtual void killWindow();
 
 	virtual void LightUpdate();
-	virtual void TextureUpdate();
-
-	//bool InitGL();
+	virtual void TextureUpdate();	
 	//static void key_callback(int key, int scancode, int action, int mods);
-private:   
 };

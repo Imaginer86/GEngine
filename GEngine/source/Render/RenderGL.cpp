@@ -36,13 +36,6 @@ void error_callback(int error, const char* description)
 	std::cerr << description << std::endl << "Error code: " << error << std::endl;
 }
 
-void RenderGL::killWindow()
-{
-	gluDeleteQuadric(quadratic);
-	glfwSetWindowShouldClose(window, GLFW_TRUE);
-	glfwDestroyWindow(window);
-}
-
 
 void* RenderGL::Init()
 {
@@ -129,6 +122,14 @@ void* RenderGL::Init()
 	return window;
 } 
 
+void RenderGL::DeInit()
+{
+	gluDeleteQuadric(quadratic);
+	glfwSetWindowShouldClose(window, GLFW_TRUE);
+	glfwDestroyWindow(window);
+
+}
+
 void RenderGL::TextureUpdate()
 {
 	if (textured)
@@ -139,7 +140,6 @@ void RenderGL::TextureUpdate()
 	{
 		glDisable(GL_TEXTURE_2D);
 	}
-
 }
 
 

@@ -10,31 +10,11 @@
 
 class Render
 {
-private:
-	//Render(const Render& r);
-	//virtual Render& operator=(Render&) = 0;
-	//static Render* p_instance;
-
-protected:
-	Camera	camera;
-
-	bool	fullscreen;
-	bool	light;
-	bool	textured;
-	size_t width;
-	size_t height;
-	float fovy;
-	float near;
-	float far;
-	
-	float moveScale;
-	float rotateScale;
-	//void* ptr_wndProc;
-	char title[20];	
-
-	Vector4f gLightAmbient;
-	Vector4f gLightDiffuse;
-	Vector4f gLightPosition;
+//public:
+	//static Render& getInstance();
+	//Render(const Render&) = delete;
+	//Render& operator=(const Render&) = delete;
+//protected:
 public:
 	Render(const Options& option)
 		: width(option.width)
@@ -58,17 +38,37 @@ public:
 		strncpy_s(title, sizeof title, option.name, strlen(option.name));
 		if (height == 0) height = 1;
 	}
+	virtual ~Render() {}
+
+protected:
+	Camera	camera;
+
+	bool	fullscreen;
+	bool	light;
+	bool	textured;
+	size_t width;
+	size_t height;
+	float fovy;
+	float near;
+	float far;
+	
+	float moveScale;
+	float rotateScale;
+	//void* ptr_wndProc;
+	char title[20];	
+
+	Vector4f gLightAmbient;
+	Vector4f gLightDiffuse;
+	Vector4f gLightPosition;
+public:
 	//Render(InitData& initData);
-	virtual ~Render() {/* delete[] title; */};
+	//virtual ~Render() {/* delete[] title; */};
 
 	void RotateCamera(const Quaternion& q);
 	void MoveCamera(const Vector3f& v);
 	void MoveCameraUD(float s);
 	void MoveCameraLR(float s);
 	void MoveCameraNF(float s);
-
-	void SetLight(bool light_);
-	bool GetLight();
 
 	float getMoveScale() { return moveScale; }
 	float getRotateScale() { return rotateScale; }
@@ -82,6 +82,7 @@ public:
 	void TextureOff() { textured = false; }
 
 	virtual void* Init() = 0;
+	virtual void DeInit() = 0;
 	virtual void Resize(size_t width_, size_t height_) = 0;
 	//virtual bool LoadTextures() = 0;
 	//virtual bool swithFullscreen() = 0;
@@ -122,7 +123,6 @@ public:
 	//virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 protected:
 	//virtual bool createWindow() = 0;
-	virtual void killWindow() = 0;
 	virtual void TextureUpdate() = 0;
 	virtual void LightUpdate() = 0;
 };
@@ -166,15 +166,4 @@ inline void Render::MoveCameraLR(float s)
 inline void Render::MoveCameraNF(float s)
 {
 	camera.MoveNF(s * moveScale);
-}
-
-
-inline void Render::SetLight(bool light_)
-{
-	light = light_;
-}
-
-inline bool Render::GetLight()
-{
-	return light;
 }

@@ -16,3 +16,4 @@ Gravi/options.ini.bak
 Pirates/x64/
 *.idb
 /GEngine/GEngine/x64
+/Test/x64/Debug
