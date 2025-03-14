@@ -1,14 +1,6 @@
-#include "Game.h"
-
-#define GLEW_STATIC
-#include <GL/glew.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
-//#include<thread>
-
-
+#include "Game.h"77
 #include "Render/RenderGL.h"
+#include "Core/FileReader.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "Physics/Entity.h"
@@ -23,9 +15,45 @@ bool* Game::keys = nullptr;
 //const size_t numEntites = 2;// 51;
 //void Game::Input(int key, bool press){keys[key] = press;}
 
-bool Game::Init(size_t numEntites_, Options option)
+bool Game::Init(const char* filename)
 {
-	numEntites = numEntites_;
+
+	if (!Game::Entityes.empty()) {
+		std::cerr << "Can't Init - game.Entities not empty" << std::endl;
+		return 1;
+	}
+
+	//size_t numE = Core::LoadEntitys("ElasticImpact.dat", game.Entityes);
+	Game::numEntites = Core::LoadEntitys(filename, Game::Entityes);
+	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
+	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
+
+
+	/*
+	game.Entityes.resize(1);
+	Ball* entity = new Ball;
+	entity->m = 5000.0f;
+	entity->r = 250;// sqrtG(entity->m);
+	entity->pos = Vector3f();
+	entity->vel = Vector3f();
+	entity->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
+	game.Entityes[0] = entity;
+
+	size_t numE = Core::LoadRandomEntitys(400, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, game.Entityes);
+	if (numE <= 1)
+	{
+		std::cerr << "Can't LoadEntity" << std::endl;
+		return 1;
+	}*/
+
+
+	Options option;
+	if (!Core::LoadOptions("options.ini", option))
+	{
+		std::cerr << "Can't LoadOptions" << std::endl;
+		return 1;
+	}
+
 	//Enityes = new Entity[numEntites];
 	//lastTickCount = 0;
 	pause = true;
@@ -48,24 +76,24 @@ bool Game::Init(size_t numEntites_, Options option)
 
 void Game::InputCheck()
 {
-	if (keys[GLFW_KEY_ESCAPE]) Game::done = true;
-	if (keys[GLFW_KEY_SPACE]) { keys[GLFW_KEY_SPACE] = false; Game::pause = !Game::pause; }
-	if (keys[GLFW_KEY_TAB]) { keys[GLFW_KEY_TAB] = false;  Game::drawDebugInfo = !Game::drawDebugInfo; }
-	if (keys[GLFW_KEY_W]) Game::render->MoveCameraUD(10.0f);
-	if (keys[GLFW_KEY_S]) Game::render->MoveCameraUD(-10.0f);
-	if (keys[GLFW_KEY_A]) Game::render->MoveCameraLR(-10.0f);
-	if (keys[GLFW_KEY_D]) Game::render->MoveCameraLR(10.0f);
-	if (keys[GLFW_KEY_L]) { keys[GLFW_KEY_L] = false;  Game::render->LightSwitch(); }
-	if (keys[GLFW_KEY_T]) { keys[GLFW_KEY_T] = false;  Game::render->TextuteSwitch(); }
-	if (keys[GLFW_KEY_PAGE_UP]) Game::render->MoveCameraNF(10.0f);
-	if (keys[GLFW_KEY_PAGE_DOWN]) Game::render->MoveCameraNF(-10.0f);
-	if (keys[GLFW_KEY_UP]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(1.0f, 0.0f, 0.0f)));
-	if (keys[GLFW_KEY_DOWN]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(-1.0f, 0.0f, 0.0f)));
-	if (keys[GLFW_KEY_LEFT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, -1.0f, 0.0f)));
-	if (keys[GLFW_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, 1.0f, 0.0f)));
-	if (keys[GLFW_KEY_KP_ADD]) timeScale *= 1.1f;
-	if (keys[GLFW_KEY_KP_SUBTRACT]) timeScale *= 0.9f;
-	if (keys[GLFW_KEY_KP_ENTER]) timeScale = 1.0f;
+	if (keys[G_KEY_ESCAPE]) Game::done = true;
+	if (keys[G_KEY_SPACE]) { keys[G_KEY_SPACE] = false; Game::pause = !Game::pause; }
+	if (keys[G_KEY_TAB]) { keys[G_KEY_TAB] = false;  Game::drawDebugInfo = !Game::drawDebugInfo; }
+	if (keys[G_KEY_W]) Game::render->MoveCameraUD(10.0f);
+	if (keys[G_KEY_S]) Game::render->MoveCameraUD(-10.0f);
+	if (keys[G_KEY_A]) Game::render->MoveCameraLR(-10.0f);
+	if (keys[G_KEY_D]) Game::render->MoveCameraLR(10.0f);
+	if (keys[G_KEY_L]) { keys[G_KEY_L] = false;  Game::render->LightSwitch(); }
+	if (keys[G_KEY_T]) { keys[G_KEY_T] = false;  Game::render->TextuteSwitch(); }
+	if (keys[G_KEY_PAGE_UP]) Game::render->MoveCameraNF(10.0f);
+	if (keys[G_KEY_PAGE_DOWN]) Game::render->MoveCameraNF(-10.0f);
+	if (keys[G_KEY_UP]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(1.0f, 0.0f, 0.0f)));
+	if (keys[G_KEY_DOWN]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(-1.0f, 0.0f, 0.0f)));
+	if (keys[G_KEY_LEFT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, -1.0f, 0.0f)));
+	if (keys[G_KEY_RIGHT]) Game::render->RotateCamera(Quaternion(1.0f, Vector3f(0.0f, 1.0f, 0.0f)));
+	if (keys[G_KEY_KP_ADD]) timeScale *= 1.1f;
+	if (keys[G_KEY_KP_SUBTRACT]) timeScale *= 0.9f;
+	if (keys[G_KEY_KP_ENTER]) timeScale = 1.0f;
 }
 
 void Game::Update(float dt)
@@ -138,8 +166,11 @@ void Game::Update(float dt)
 					float r2 = (Entityes[i]->pos - Entityes[j]->pos).lenght2();
 					float f = G * Entityes[i]->m * Entityes[j]->m / r2;
 					Vector3f force = (Entityes[j]->pos - Entityes[i]->pos).unit() * f;
-					Entityes[i]->applyForce(force);
-					Entityes[j]->applyForce(-force);
+					if (isNotZero(force.lenght2()))
+					{
+						Entityes[i]->applyForce(force);
+						//Entityes[j]->applyForce(-force);
+					}
 				}
 	}
 

@@ -3,7 +3,6 @@
 
 #include "PiratesGame.h"
 #include "Game.h"
-#include "Core/FileReader.h"
 
 
 //#include "GEngine.h"
@@ -82,6 +81,7 @@ int main()
 {
 	PiratesGame game;
 
+	/*
 	//Entity* Enityes = nullptr;
 	size_t numE = Core::LoadEntitys("Pirates.dat", game.Entityes);
 	if (!numE)
@@ -96,8 +96,9 @@ int main()
 		std::cerr << "Can't LoadOptions" << std::endl;
 		return 2;
 	}
+	*/
 
-	if (game.Init(numE, option))
+	if (game.Init("Pirates.dat"))
 	{
 		//Entity* e = game.Entityes[0];
 		//Vector3f N(1, 1, 0);

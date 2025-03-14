@@ -6,7 +6,7 @@
 #include <ctime>
 
 
-const float G = 118.57614113176565795195009712934 * 0.001;////667.3848080808080808080f * 0.5f; //Gravi constant //Todo
+const float G = 118.57614113176565795195009712934 * 0.001 * 2.0f;////667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
 const float GM_PI = static_cast<float>(M_PI);
 

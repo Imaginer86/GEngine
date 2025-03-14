@@ -24,11 +24,10 @@ public:
 		,numEntites(0)
 		//,Enityes(nullptr)
 		,render(nullptr)
-		,input(nullptr)
-		
+		,input(nullptr)		
 	{
 	};
-	virtual bool Init(size_t numEntites_, Options option);
+	virtual bool Init(const char* filename);
 	//void Input(int key, bool press);
 
 	bool Run();

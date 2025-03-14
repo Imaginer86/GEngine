@@ -25,7 +25,7 @@ void PiratesGame::InputCheck()
 	Game::InputCheck();
 }
 
-bool PiratesGame::Init(size_t numEntites_, Options option)
+bool PiratesGame::Init()
 {
-	return Game::Init(numEntites_, option);
+	return Game::Init();
 }
