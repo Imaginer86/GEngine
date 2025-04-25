@@ -57,7 +57,7 @@ void* RenderGL::Init()
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
-	glewExperimental = GL_TRUE;
+	//glewExperimental = GL_TRUE;
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
@@ -91,17 +91,19 @@ void* RenderGL::Init()
 
 	//buildFont();
 
+	glEnable(GL_DEPTH_TEST);
+
 	
 
 	// Установка параметров текстуры
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-	TextureUpdate();
+	//TextureUpdate();
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient.v);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse.v);
@@ -110,10 +112,6 @@ void* RenderGL::Init()
 
 	LightUpdate();
 
-
-	// Создание объекта квадрики
-	//GLUquadric* quad = gluNewQuadric();
-	//gluQuadricTexture(quad, GL_TRUE);
 
 	// Создание объекта квадрики
 	quadratic = gluNewQuadric();
@@ -729,6 +727,12 @@ void RenderGL::drawBox(const Vector3f& pos, const Vector3f& size, const Quaterni
 void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & color) const
 {
 
+	//GLUquadricObj* quadratic = gluNewQuadric();
+	//gluQuadricTexture(quadratic, GL_TRUE);
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, texture[0]);
+
 	//gluQuadricDrawStyle(quadratic, GLU_FILL);
 	//gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
 	//gluQuadricTexture(quadratic, GLU_FALSE);
@@ -752,28 +756,36 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const
 {
 
+	//GLUquadricObj* quad = gluNewQuadric();
+	//gluQuadricTexture(quad, GL_TRUE);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 
 	glPushMatrix();
-	
+
 	glTranslatef(pos.x, pos.y, pos.z);
 	glRotatef(90, 1, 0, 0);
 	glRotatef(rot, 0, 0, 1);
 	rot += 1;
 	glColor4f(color.r, color.g, color.b, color.a);
 
-	//glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	gluSphere(quadratic, r, 64, 64);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
+	
 	
 	glPopMatrix();
+	//gluQuadricTexture(quad, GLU_FALSE);
+	//glDisable(GL_TEXTURE_2D);
+	
+	//gluDeleteQuadric(quad);
 	
 }
 
 void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const
 {
-	
+	//GLUquadricObj* quadratic = gluNewQuadric();
 	//gluQuadricTexture(quadratic, GLU_TRUE);
 
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);			// Select Texture
@@ -792,8 +804,8 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	glTranslatef(pos.x, pos.y, pos.z);
 	glRotatef(-angle, q.x, q.y, q.z);
 	//GLUquadric *qobj = gluNewQuadric();
-	gluQuadricDrawStyle(quadratic, GLU_FILL);
-	gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
+	//gluQuadricDrawStyle(quadratic, GLU_FILL);
+	//gluQuadricNormals(quadratic, GLU_SMOOTH);			// Create Smooth Normals (NEW)
 	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 
@@ -802,16 +814,16 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 
 
 	//gluQuadricTexture(qobj, GL_TRUE);
-	gluSphere(quadratic, r, 128, 128);
+	//gluSphere(quadratic, r, 128, 128);
 	//gluDeleteQuadric(qobj);
 	//glDisable(GL_TEXTURE_GEN_S);
 	//glDisable(GL_TEXTURE_GEN_T);
 
-	glPopMatrix();
+	//glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
 
 	
-	//glPushMatrix();
+	glPushMatrix();
 	//glLoadIdentity();
 	//glColor4f(color.r, color.g, color.b, color.a);
 
@@ -820,8 +832,8 @@ void RenderGL::drawSphere(const Vector3f& pos, const float r, const Quaternion& 
 	//gluQuadricNormals(quadratic, GLU_SMOOTH);
 	//gluQuadricTexture(quadratic, GL_TRUE);
 
-	//gluSphere(quadratic, r, 16, 16);
-	//glPopMatrix();
+	gluSphere(quadratic, r, 16, 16);
+	glPopMatrix();
 	
 	//gluDeleteQuadric(quadratic);
 }

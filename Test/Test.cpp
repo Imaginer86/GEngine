@@ -7,68 +7,92 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-int main() {
-    // Инициализация GLFW
-    glfwInit();
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Sphere", NULL, NULL);
-    glfwMakeContextCurrent(window);
+// Ідентифікатор текстури
+GLuint texture;
 
-    // Инициализация GLEW
-    glewExperimental = GL_TRUE;
-    glewInit();
+// Кути обертання
+float angleX = 0.0f;
+float angleY = 0.0f;
 
-    GLuint texture;
+// Функція для завантаження текстури
+void loadTexture() {
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-    // Загрузка изображения
+    // Завантаження зображення текстури
     int width, height, nrChannels;
     unsigned char* data = stbi_load("EarthMap.png", &width, &height, &nrChannels, 0);
     if (data) {
-        //GLuint texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
-        stbi_image_free(data);
     }
     else {
-        std::cout << "Failed to load texture" << std::endl;
+        printf("Failed to load texture\n");
     }
+    stbi_image_free(data);
 
-    // Установка параметров текстуры
+    // Налаштування параметрів текстури
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 
-    // Включение текстурирования
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    // Создание объекта квадрики
+// Функція для налаштування GLUquadric і відображення сфери з текстурою
+void display() {
     GLUquadric* quad = gluNewQuadric();
     gluQuadricTexture(quad, GL_TRUE);
 
-    // Цикл рендеринга
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glPushMatrix();
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    gluSphere(quad, 1.0, 36, 18);
+    glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
+    gluDeleteQuadric(quad);
+
+    glfwSwapBuffers(glfwGetCurrentContext());
+}
+
+// Функція для оновлення кута обертання
+void update() {
+    angleX += 1.0f;
+    angleY += 1.0f;
+    if (angleX > 360) angleX -= 360;
+    if (angleY > 360) angleY -= 360;
+}
+
+// Основна функція
+int main() {
+    if (!glfwInit()) {
+        printf("Failed to initialize GLFW\n");
+        return -1;
+    }
+
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Textured and Rotating Sphere", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+    glewInit();
+
+    glEnable(GL_DEPTH_TEST);
+    loadTexture();
+
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Отображение текстурированной сферы
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        //glColor3f(1, 0, 0);
-        gluSphere(quad, 1.0, 32, 32);
-
-        gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
- 
-
-        glfwSwapBuffers(window);
+        display();
+        update();
         glfwPollEvents();
     }
 
-    gluDeleteQuadric(quad);
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }

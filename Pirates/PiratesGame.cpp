@@ -25,7 +25,7 @@ void PiratesGame::InputCheck()
 	Game::InputCheck();
 }
 
-bool PiratesGame::Init()
+bool PiratesGame::Init(const char* filename)
 {
-	return Game::Init();
+	return Game::Init(filename);
 }
