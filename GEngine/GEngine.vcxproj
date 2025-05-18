@@ -147,12 +147,12 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>
       </CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\LIB\glew-2.1.0\include;$(ProjectDir)..\LIB\stb;$(ProjectDir)..\LIB\glfw-3.3.6\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\LIB\glew-2.1.0\include;$(ProjectDir)..\LIB\stb;$(ProjectDir)..\LIB\glfw-3.3.6\include;$(ProjectDir)source</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -165,6 +165,7 @@
       <OutputFile>$(ProjectDir)\lib\GEngine.lib</OutputFile>
       <AdditionalLibraryDirectories>$(ProjectDir)..\LIB\glew-2.1.0\lib\Release\x64;$(ProjectDir)..\LIB\glfw-3.3.6\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.LIB;GLU32.lib;</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

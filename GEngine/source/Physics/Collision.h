@@ -1,5 +1,5 @@
 #pragma once
-#include "../Math/Vector3f.h"
+#include "Math/Vector3f.h"
 #include "Entity.h"
 #include "Ball.h"
 #include "Rectangle.h"
@@ -52,7 +52,7 @@ inline void ElasticImpactBallRec(Entity* A, Entity* B, float dt)
 	std::cout << ball->vel << std::endl;
 	Vector3f O = P * ball->vel;
 	float Dsc = (ball->pos - O).length();
-	float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();
+	float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();//TODO
 	float Tc = Dsc * dt / Dsc;
 	ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
 	ball->vel =  P.unit() * (((-ball->vel).dotProduct(P.unit())) * 2) + ball->vel;

@@ -1,6 +1,6 @@
 #pragma once
-#include "../Math/Vector3f.h"
-#include "../Math/Quaternion.h"
+#include "Math/Vector3f.h"
+#include "Math/Quaternion.h"
 struct Camera
 {
 	Vector3f	pos;

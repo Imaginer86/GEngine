@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "Input.h"
 
 #define GLEW_STATIC
@@ -5,7 +6,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "../Game.h"
+
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

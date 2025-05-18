@@ -1,12 +1,12 @@
 #pragma once
-#include "../Options.h"
-#include "../Math/GMath.h"
-#include "../Math/Vector3f.h"
-#include "../Math/Vector4f.h"
-#include "../Math/Quaternion.h"
-#include "../Math/Line.h"
-#include "../Render/Color4f.h"
-#include "../Physics/Camera.h"
+#include "Options.h"
+#include "Math/GMath.h"
+#include "Math/Vector3f.h"
+#include "Math/Vector4f.h"
+#include "Math/Quaternion.h"
+#include "Math/Line.h"
+#include "Render/Color4f.h"
+#include "Physics/Camera.h"
 
 class Render
 {

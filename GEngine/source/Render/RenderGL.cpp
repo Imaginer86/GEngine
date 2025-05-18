@@ -1,7 +1,7 @@
 #include "RenderGL.h"
 
-#include "../Game.h"
-#include "../Core/Input.h"
+#include "Game.h"
+#include "Core/Input.h"
 
 
 #define GLEW_STATIC
@@ -48,7 +48,7 @@ void* RenderGL::Init()
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	window = glfwCreateWindow(width, height, title, NULL, NULL);
+	window = glfwCreateWindow(static_cast<int>(width), static_cast<int>(height), title, NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -70,15 +70,15 @@ void* RenderGL::Init()
 	Resize(width, height);
 
 	// Load image
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("data/EarthMap.png", &width, &height, &nrChannels, 0);
+	int texture_width, texture_height, nrChannels;
+	unsigned char* data = stbi_load("data/EarthMap.png", &texture_width, &texture_height, &nrChannels, 0);
 	if (data)
 	{
 		// Создание текстуры
 		glGenTextures(1, &texture[0]);
 		glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0,
 			GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -637,10 +637,10 @@ void RenderGL::drawQuad(const Vector3f& pos, float w, float h, const Quaternion&
 	//Vector3f lu = Vector3f(pos.x - w / 2.0, pos.y + h / 2.0f, pos.z);
 	//Vector3f ru = Vector3f(pos.x + w / 2.0, pos.y + h / 2.0f, pos.z);
 	//Vector3f rd = Vector3f(pos.x + w / 2.0, pos.y - h / 2.0f, pos.z);
-	Vector3f ld = Vector3f(- w / 2.0, - h / 2.0f, 0.0f);
-	Vector3f lu = Vector3f(- w / 2.0, h / 2.0f, 0.0f);
-	Vector3f ru = Vector3f(w / 2.0, h / 2.0f, 0.0f);
-	Vector3f rd = Vector3f(w / 2.0, - h / 2.0f, 0.0f);
+	Vector3f ld = Vector3f(- w / 2.0f, - h / 2.0f, 0.0f);
+	Vector3f lu = Vector3f(- w / 2.0f, h / 2.0f, 0.0f);
+	Vector3f ru = Vector3f(w / 2.0f, h / 2.0f, 0.0f);
+	Vector3f rd = Vector3f(w / 2.0f, - h / 2.0f, 0.0f);
 	glPushMatrix();
 	float angle;
 	Vector3f axis;

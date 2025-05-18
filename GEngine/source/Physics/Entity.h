@@ -1,7 +1,7 @@
 #pragma once
-#include "../Math/Vector3f.h"
-#include "../Render/Color4f.h"
-#include "../Math/Quaternion.h"
+#include "Math/Vector3f.h"
+#include "Render/Color4f.h"
+#include "Math/Quaternion.h"
 
 class Entity
 {
@@ -14,16 +14,13 @@ public:
 	Color4f   color;
 	bool moved;
 
-	Entity() {}
+	Entity() :m(1.0f), pos(), q(), vel(), force(), color(), moved(false) {}
 	
 	Entity(float m_, const Vector3f& pos_, const Quaternion& q_, const Vector3f& vel_)
-		:m(m_)
-		,pos(pos_)
-		,q(q_)
-		,vel(vel_)
+		:m(m_), pos(pos_), q(q_), vel(vel_), moved(false) 
 	{}
 
-
+	virtual ~Entity() {}
 
 	void applyForce(Vector3f _force);
 
@@ -33,7 +30,7 @@ public:
 
 	void move(float dt);
 
-	virtual void draw() {};
+	virtual void draw() {}
 
 	virtual bool isBall() {	return false; }
 	virtual bool isModel() { return false; }

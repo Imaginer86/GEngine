@@ -36,7 +36,7 @@ int main ()
 	GraviGame game;		
 
 	//if (game.Init("SolarSystem.dat"))
-	if (game.Init("ElasticImpact.dat"))	
+	if (game.Init("ElasticImpact1.dat"))	
 	{
 		game.Run();
 		game.End();

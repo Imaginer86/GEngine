@@ -17,6 +17,21 @@ struct Quaternion
 		float s = sinf(halfTheta);
 		w = cosf(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 	}
+	// Explicitly define the copy constructor
+	Quaternion(const Quaternion& other) : w(other.w), x(other.x), y(other.y), z(other.z) {}
+
+	// Explicitly define the copy assignment operator
+	Quaternion& operator=(const Quaternion& other)
+	{
+		if (this != &other)
+		{
+			w = other.w;
+			x = other.x;
+			y = other.y;
+			z = other.z;
+		}
+		return *this;
+	}
 	~Quaternion() {}
 
 	bool operator==(const Quaternion& rhs) const;
@@ -37,7 +52,7 @@ struct Quaternion
 	Quaternion operator/(float scalar) const;
 
 	bool isReal() const;
-	bool isEqual() const;
+	bool isZero() const;
 
 	Quaternion conjugate() const;
 
@@ -210,12 +225,12 @@ inline Quaternion Quaternion::operator/(float scalar) const
 
 inline bool Quaternion::isReal() const
 {
-	return ::isEqual(x) && ::isEqual(y) && ::isEqual(z);
+	return ::isZero(x) && ::isZero(y) && ::isZero(z);
 }
 
-inline bool Quaternion::isEqual() const
+inline bool Quaternion::isZero() const
 {
-	return ::isEqual(w);
+	return ::isZero(w);
 }
 
 inline Quaternion Quaternion::conjugate() const

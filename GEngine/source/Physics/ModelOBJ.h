@@ -1,9 +1,9 @@
 #pragma once
 #include "Entity.h"
-#include "../Math/Vector3f.h"
-#include "../Render/Color4f.h"
-#include "../Render/Render.h"
-#include "../Render/MaterialMTL.h"
+#include "Math/Vector3f.h"
+#include "Render/Color4f.h"
+#include "Render/Render.h"
+#include "Render/MaterialMTL.h"
 
 
 class ModelOBJ : public Entity

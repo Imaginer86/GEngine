@@ -6,7 +6,7 @@
 #include <ctime>
 
 
-const float G = 118.57614113176565795195009712934 * 0.001 * 2.0f;////667.3848080808080808080f * 0.5f; //Gravi constant //Todo
+const float G = 118.57614113176565795195009712934f * 0.001f * 2.0f;////667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
 const float GM_PI = static_cast<float>(M_PI);
 
@@ -20,7 +20,7 @@ inline float radToDeg(float radians)
 	return (radians * 180.0f) / GM_PI;
 }
 
-inline bool isEqual(float f)
+inline bool isZero(float f)
 {
 	return (fabsf(f)) < std::numeric_limits<float>::epsilon();
 }

@@ -13,20 +13,21 @@ class Game
 {
 public:
 	Game()
-		:done(false)
-		,pause(false)
-		,drawDebugInfo(true)
-		,FPS(0)
-		//,lastTickCount(0)
-		,timeScale(1.0f)
-		,GraviForce(false)
-		,Collision(false)
+		:render(nullptr)
+		,input(nullptr)
 		,numEntites(0)
+		,timeScale(1.0f)
+		,FPS(0)
+		,done(false)
+		,pause(false)
+		//,lastTickCount(0)
+		,GraviForce(false)
+		,drawDebugInfo(true)
+		,Collision(false)
 		//,Enityes(nullptr)
-		,render(nullptr)
-		,input(nullptr)		
 	{
 	};
+	virtual ~Game() {};
 	virtual bool Init(const char* filename);
 	//void Input(int key, bool press);
 
@@ -46,14 +47,15 @@ public:
 
 
 //private:
-	bool done;
-	bool pause;
-	bool drawDebugInfo;	
-	size_t FPS;
-	//long long lastTickCount;
 	float timeScale;
+	size_t FPS;
+	//long long lastTickCount;	
 	bool GraviForce;
 	bool Collision;
+	bool done;
+	bool pause;
+	bool drawDebugInfo;
+
 
 	//std::mutex g_lock;
 

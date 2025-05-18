@@ -10,6 +10,21 @@ struct Vector3f
 
 	Vector3f():x(0.0f), y(0.0f), z(0.0f)	{}
 	Vector3f(float x_, float y_, float z_):x(x_) ,y(y_) ,z(z_)	{}
+
+	// Explicitly define the copy constructor
+	Vector3f(const Vector3f& other) : x(other.x), y(other.y), z(other.z) {}
+
+	// Explicitly define the copy assignment operator
+	Vector3f& operator=(const Vector3f& other)
+	{
+		if (this != &other) // Prevent self-assignment
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+		}
+		return *this;
+	}
 	~Vector3f()	{}
 
 	bool operator !=(const  Vector3f& v);
@@ -167,7 +182,7 @@ inline float Vector3f::unitize()								// unitize() normalizes this Vector3 tha
 {
 	float l = length();
 
-	if (isEqual(l))
+	if (isZero(l))
 		return 0.0f;
 
 	x /= l;
@@ -180,7 +195,7 @@ inline Vector3f Vector3f::unit() const								// unit() returns a new Vector3. T
 {
 	float l = length();
 
-	if (isEqual(l))
+	if (isZero(l))
 		return *this;
 
 	return Vector3f(x / l, y / l, z / l);

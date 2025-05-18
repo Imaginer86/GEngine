@@ -7,11 +7,11 @@
 #include <fstream>
 
 
-#include "../Physics/Entity.h"
-#include "../Physics/Ball.h"
-#include "../Physics/Rectangle.h"
-#include "../Physics/ModelOBJ.h"
-#include "../Options.h"
+#include "Physics/Entity.h"
+#include "Physics/Ball.h"
+#include "Physics/Rectangle.h"
+#include "Physics/ModelOBJ.h"
+#include "Options.h"
 
 namespace Core
 {
@@ -21,6 +21,8 @@ namespace Core
 	public:	
 		FileReader(const char* filename){ in.open(filename, std::ios::in); }
 		~FileReader(){ in.close(); }
+		FileReader(const FileReader&) = delete; // Explicitly delete the copy constructor
+		FileReader& operator=(const FileReader&) = delete; // Explicitly delete the assignment operator
 		bool isOpen() { return in.is_open(); }
 		bool isEof() {return in.eof(); }
 		void getStr(char* strc)
@@ -29,7 +31,7 @@ namespace Core
 			in >> str;
 			//strc = new char[str.length() + 1]; 
 			//strcpy_s(strc, str.length() + 1, str.c_str());
-			int i = 0;
+			size_t i = 0;
 			for (; i < str.length(); i++) strc[i] = str[i];
 			strc[i] = '\0';
 		}
@@ -127,7 +129,7 @@ namespace Core
 		in.close();
 
 		Entitys.resize(num_entitys);
-		int i = 0;
+		size_t i = 0;
 		for (auto entity : lEntitys) { Entitys[i] = entity; ++i; }
 
 		/*
@@ -168,7 +170,7 @@ namespace Core
 		for (; i <= (numEntititys + 1)/ 2; ++i)
 		{
 			Ball* entity = new Ball;
-			entity->m = randfD(minMR, maxMR);
+			entity->m = randfD(static_cast<float>(minMR), static_cast<float>(maxMR));
 			entity->r = 10.0f;// sqrtG(entity->m);// entity->m;// entity->m / 10.0f;
 			Vector3f s2 = size / 2.0f;
 			entity->pos = Vector3f(randfD(pos.x + s2.x / 2.0f, pos.x + s2.x), randfD(pos.y + s2.y / 2.0f, pos.y + s2.y), randfD(pos.z + s2.z / 2.0f, pos.z + s2.z));
@@ -182,7 +184,7 @@ namespace Core
 		for (; i < (numEntititys + 1); ++i)
 		{
 			Ball* entity = new Ball;
-			entity->m = randfD(minMR, maxMR);
+			entity->m = randfD(static_cast<float>(minMR), static_cast<float>(maxMR));
 			entity->r = 10.0f;// entity->m / 10.0f;
 			Vector3f s2 = size / 2.0f;
 			entity->pos = Vector3f(randfD(pos.x - s2.x / 2.0f, pos.x - s2.x), randfD(pos.y - s2.y / 2.0f, pos.y - s2.y), randfD(pos.z - s2.z / 2.0f, pos.z - s2.z));
