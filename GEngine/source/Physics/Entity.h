@@ -45,7 +45,7 @@ inline void Entity::applyForce(Vector3f _force)
 
 inline void Entity::init()
 {
-	force = {0, 0, 0};
+  	force = {0, 0, 0};
 	moved = false;
 }
 

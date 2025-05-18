@@ -32,9 +32,6 @@ public:
 		, light(true)
 		, textured(true)
 	{
-		//size_t lenght = strlen(option.name);
-		//title = new char[lenght+1];
-		//strcpy_s(title, sizeof(title), option.name.c_str());
 		strncpy_s(title, sizeof title, option.name, strlen(option.name));
 		if (height == 0) height = 1;
 	}
@@ -54,7 +51,6 @@ protected:
 	
 	float moveScale;
 	float rotateScale;
-	//void* ptr_wndProc;
 	char title[20];	
 
 	Vector4f gLightAmbient;

@@ -2,6 +2,8 @@
 #include "GMath.h"
 #include "Vector3f.h"
 
+#include <iostream>
+
 struct Quaternion
 {
 	float w, x, y, z;

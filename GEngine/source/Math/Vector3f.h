@@ -1,5 +1,6 @@
 #pragma once
 #include "GMath.h"
+
 #include <iostream>
 
 struct Vector3f
@@ -29,21 +30,21 @@ struct Vector3f
 
 	bool operator !=(const  Vector3f& v);
 	bool operator ==(const  Vector3f& v);
-	Vector3f operator+ (const Vector3f& v);	// operator+ is used to add two Vector3's. operator+ returns a new Vector3
-	const Vector3f operator+ (const Vector3f& v) const;
-	Vector3f operator- (const Vector3f& v);	// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
-	const Vector3f operator- (const Vector3f& v) const;
-	Vector3f operator* (float value);	// operator* is used to scale a Vector3 by a value. This value multiplies the Vector3's x, y and z.
-	const Vector3f operator* (float value) const;
-	Vector3f operator/ (float value);	// operator/ is used to scale a Vector3 by a value. This value divides the Vector3's x, y and z.
-	const Vector3f operator/ (float value) const;
+	//Vector3f operator+ (const Vector3f& v);	// operator+ is used to add two Vector3's. operator+ returns a new Vector3
+	Vector3f operator+ (const Vector3f& v) const;
+	//Vector3f operator- (const Vector3f& v);	// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
+	Vector3f operator- (const Vector3f& v) const;
+	//Vector3f operator* (float value);	// operator* is used to scale a Vector3 by a value. This value multiplies the Vector3's x, y and z.
+	Vector3f operator* (float value) const;
+	//Vector3f operator/ (float value);	// operator/ is used to scale a Vector3 by a value. This value divides the Vector3's x, y and z.
+	Vector3f operator/ (float value) const;
 
 	Vector3f& operator+= (const Vector3f& v);	// operator+= is used to add another Vector3 to this Vector3.
 	Vector3f& operator-= (const Vector3f& v);	// operator-= is used to subtract another Vector3 from this Vector3.
 	Vector3f& operator*= (float value);	// operator*= is used to scale this Vector3 by a value.
 	Vector3f& operator/= (float value);	// operator/= is used to scale this Vector3 by a value.
 
-	Vector3f operator- ();	// operator- is used to set this Vector3's x, y, and z to the negative of them.	
+	Vector3f operator- () const;	// operator- is used to set this Vector3's x, y, and z to the negative of them.	
 
 	Vector3f operator*(const Vector3f& v);	// cross product (vector product)
 	float dotProduct(const Vector3f& v);
@@ -86,6 +87,7 @@ inline bool Vector3f::operator==(const Vector3f& v)
 	return false;
 }
 
+/*
 inline Vector3f Vector3f::operator+ (const Vector3f& v)				// operator+ is used to add two Vector3's. operator+ returns a new Vector3
 {
 	return Vector3f(x + v.x, y + v.y, z + v.z);
@@ -100,18 +102,19 @@ inline Vector3f Vector3f::operator* (float value)			// operator* is used to scal
 {
 	return Vector3f(x * value, y * value, z * value);
 }
+*/
 
-inline const Vector3f Vector3f::operator* (float value) const
+inline Vector3f Vector3f::operator* (float value) const
 {
 	return Vector3f(x * value, y * value, z * value);
 }
 
-inline Vector3f Vector3f::operator/ (float value)			// operator/ is used to scale a Vector3 by a value. This value divides the Vector3's x, y and z.
-{
-	return Vector3f(x / value, y / value, z / value);
-}
+//inline Vector3f Vector3f::operator/ (float value)			// operator/ is used to scale a Vector3 by a value. This value divides the Vector3's x, y and z.
+//{
+	//return Vector3f(x / value, y / value, z / value);
+//}
 
-inline const Vector3f Vector3f::operator/ (float value) const
+inline Vector3f Vector3f::operator/ (float value) const
 {
 	return Vector3f(x / value, y / value, z / value);
 }
@@ -148,7 +151,7 @@ inline Vector3f& Vector3f::operator/= (float value)			// operator/= is used to s
 	return *this;
 }
 
-inline Vector3f Vector3f::operator- ()						// operator- is used to set this Vector3's x, y, and z to the negative of them.
+inline Vector3f Vector3f::operator- () const						// operator- is used to set this Vector3's x, y, and z to the negative of them.
 {
 	return Vector3f(-x, -y, -z);
 }
@@ -201,12 +204,12 @@ inline Vector3f Vector3f::unit() const								// unit() returns a new Vector3. T
 	return Vector3f(x / l, y / l, z / l);
 }
 
-inline const Vector3f Vector3f::operator+ (const Vector3f& rv) const				// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
+inline Vector3f Vector3f::operator+ (const Vector3f& rv) const				// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
 {
 	return Vector3f(x + rv.x, y + rv.y, z + rv.z);
 }
 
-inline const Vector3f Vector3f::operator- (const Vector3f& rv) const				// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
+inline Vector3f Vector3f::operator- (const Vector3f& rv) const				// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
 {
 	return Vector3f(x - rv.x, y - rv.y, z - rv.z);
 }

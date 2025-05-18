@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 
-
 #include "Physics/Entity.h"
 #include "Physics/Ball.h"
 #include "Physics/Rectangle.h"
