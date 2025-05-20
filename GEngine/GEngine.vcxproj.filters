@@ -14,6 +14,9 @@
     <ClCompile Include="source\Physics\ModelOBJ.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="source\Core\Time.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">

@@ -1,15 +1,10 @@
 #pragma once
-#include <chrono>
 
 namespace Core
 {
     // simulation of Windows GetTickCount()
-    inline long long   GetTickCount()
-    {
-        using namespace std::chrono;
-        return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
-    }
-
+    long long GetTickCount();
+    /*
     // Clock built upon Windows GetTickCount()
     struct TickCountClock
     {
@@ -24,4 +19,5 @@ namespace Core
             return time_point(duration(GetTickCount()));
         }
     };
+	*/// Clock built upon Windows GetTickCount64()
 }//namespace Core

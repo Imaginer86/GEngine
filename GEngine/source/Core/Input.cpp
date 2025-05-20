@@ -1,13 +1,9 @@
-#include "Game.h"
 #include "Input.h"
 
-#define GLEW_STATIC
-#include <GL/glew.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-
-
+#include "Game.h"
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -15,7 +11,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		if (action == GLFW_PRESS) Game::keys[key] = true;
 		else if (action == GLFW_RELEASE) Game::keys[key] = false;
 }
-
 
 bool Input::Init(void* window_)
 {

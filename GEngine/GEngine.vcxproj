@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Core\Input.cpp" />
+    <ClCompile Include="source\Core\Time.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\Physics\ModelOBJ.cpp" />
     <ClCompile Include="source\Render\MaterialMTL.cpp" />
