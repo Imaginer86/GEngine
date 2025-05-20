@@ -1,12 +1,5 @@
 #pragma once
 
-#include "Physics/Entity.h"
-#include "Physics/Ball.h"
-#include "Physics/Rectangle.h"
-#include "Physics/ModelOBJ.h"
-#include "Options.h"
-
-#define _USE_MATH_DEFINES
 #include <vector>
 #include <list>
 #include <string>
@@ -15,6 +8,14 @@
 #ifdef _DEBUG
 #include <iostream>
 #endif // _DEBUG
+
+
+#include "Physics/Entity.h"
+#include "Physics/Ball.h"
+#include "Physics/Rectangle.h"
+#include "Physics/ModelOBJ.h"
+#include "Options.h"
+
 
 
 namespace Core

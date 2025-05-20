@@ -1,5 +1,4 @@
 #pragma once
-//#define _USE_MATH_DEFINES
 //#include <string>
 #include "Math/Vector3f.h"
 #include "Math/Vector4f.h"

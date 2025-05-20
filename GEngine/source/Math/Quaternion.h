@@ -1,12 +1,14 @@
 #pragma once
-#include "GMath.h"
-#include "Vector3f.h"
-
 #ifdef _DEBUG
 #include <iostream>
 #else
 #include <fstream>
 #endif // _DEBUG
+
+#include "GMath.h"
+#include "Vector3f.h"
+
+
 
 struct Quaternion
 {

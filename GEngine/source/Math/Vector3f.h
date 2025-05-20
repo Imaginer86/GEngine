@@ -1,11 +1,12 @@
 #pragma once
-#include "GMath.h"
 
 #ifdef _DEBUG
 #include <iostream>
 #else
 #include <fstream>
 #endif // _DEBUG
+
+#include "GMath.h"
 
 struct Vector3f
 {

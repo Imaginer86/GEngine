@@ -1,13 +1,11 @@
-#define _USE_MATH_DEFINES
+#ifdef _DEBUG
 #include <iostream>
-
-#include "Game.h"
-
-#include "Math/GMath.h"
-#include "Math/Plane.h"
-#include "Math/Line.h"
+#endif // _DEBUG
 
 #include "GraviGame.h"
+//#include "Math/GMath.h"
+//#include "Math/Plane.h"
+//#include "Math/Line.h"
 
 int main ()
 {
@@ -33,11 +31,8 @@ int main ()
 	//Vector3f M1 = P2 * L;
 	//std::cout << M1 << std::endl;
 	*/
-
 	//srandG();
-
-	GraviGame game;		
-
+	GraviGame game;	
 	//if (game.Init("SolarSystem.dat"))
 	if (game.Init("ElasticImpact5.dat"))	
 	{
@@ -51,6 +46,5 @@ int main ()
 #endif	// _DEBUG
 		return 1;
 	}
-
 	return 0;
 }

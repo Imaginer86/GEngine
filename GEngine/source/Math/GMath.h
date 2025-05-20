@@ -1,5 +1,4 @@
 #pragma once
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <limits>
 #include <cstdlib>
@@ -8,7 +7,7 @@
 
 const float G = 118.57614113176565795195009712934f * 0.001f * 2.0f;////667.3848080808080808080f * 0.5f; //Gravi constant //Todo
 
-const float GM_PI = static_cast<float>(M_PI);
+const float GM_PI = 3.14159265358979323846f;   // pi
 
 inline float degToRad(float degrees)
 {
