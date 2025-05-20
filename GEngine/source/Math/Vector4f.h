@@ -1,5 +1,7 @@
 #pragma once
+#ifdef _DEBUG
 #include <iostream>
+#endif	// _DEBUG
 struct Vector4f
 {
 	float v[4];

@@ -12,7 +12,13 @@ public:
 
 	enum {Stoped, Left, Up, Right, Down} move;
 
-	Tank();
-	~Tank();
-	Tank(float m_, const Vector3f& pos_, const Quaternion& q_, const Vector3f& vel_, const ModelOBJ& model_);
+	Tank() {}
+	~Tank() {}
+	Tank(float m_, const Vector3f& pos_, const Vector3f& vel_, const Color4f& color_, const Quaternion& q_, const ModelOBJ& model_)
+		:Entity(m_, pos_, vel_, color_, q_)
+		, model(model_)
+		, move(Stoped)
+	{
+	}
+
 };

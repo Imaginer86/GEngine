@@ -1,7 +1,11 @@
 #pragma once
 #include "GMath.h"
 
+#ifdef _DEBUG
 #include <iostream>
+#else
+#include <fstream>
+#endif // _DEBUG
 
 struct Vector3f
 {
@@ -61,20 +65,32 @@ struct Vector3f
 
 const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
 
-
+#ifdef _DEBUG
 inline std::istream& operator>> (std::istream& is, Vector3f& v)
 {
 	is >> v.x >> v.y >> v.z;
 	return is;
 }
 
-
+inline std::ostream& operator<< (std::ostream& os, const Vector3f& v)
+{
+	os << v.x << " " << v.y << " " << v.z << " ";
+	return os;
+}
+#else
+inline std::istream& operator>> (std::istream& is, Vector3f& v)
+{
+	is >> v.x >> v.y >> v.z;
+	return is;
+}
 
 inline std::ostream& operator<< (std::ostream& os, const Vector3f& v)
 {
 	os << v.x << " " << v.y << " " << v.z << " ";
 	return os;
 }
+#endif // _DEBUG
+
 
 inline bool Vector3f::operator!=(const Vector3f& v) const
 {

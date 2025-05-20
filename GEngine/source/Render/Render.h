@@ -66,8 +66,8 @@ public:
 	void MoveCameraLR(float s);
 	void MoveCameraNF(float s);
 
-	float getMoveScale() { return moveScale; }
-	float getRotateScale() { return rotateScale; }
+	float getMoveScale() const { return moveScale; }
+	float getRotateScale() const { return rotateScale; }
 
 	void LightSwitch() { light = !light; LightUpdate(); }
 	void LightOn() { light = true; }

@@ -6,22 +6,29 @@
 
 struct Options
 {
-	char name[20];
-	size_t width;
-	size_t height;
-	float fovy;
-	float near;
-	float far;
 	Vector3f cameraPos;
-	float cameraAngle;
 	Vector3f cameraaxis;
-	bool fullscreen;
-	float moveScale;
-	float rotateScale;
-	bool light;
 	Vector4f lightAmbient;
 	Vector4f lightDiffuse;
 	Vector4f lightPosition;
+
+	char name[20];
+
+	float fovy;
+	float near;
+	float far;
+
+	float cameraAngle;
+
+	float moveScale;
+	float rotateScale;
+
+	size_t width;
+	size_t height;	
+	
+	bool fullscreen;
+	bool light;
+
 	bool graviForce;
 	bool collision;
 };

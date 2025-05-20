@@ -15,7 +15,7 @@ float angleX = 0.0f;
 float angleY = 0.0f;
 
 // Функція для завантаження текстури
-void loadTexture() {
+static void loadTexture() {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -39,7 +39,7 @@ void loadTexture() {
 }
 
 // Функція для налаштування GLUquadric і відображення сфери з текстурою
-void display() {
+static void display() {
     GLUquadric* quad = gluNewQuadric();
     gluQuadricTexture(quad, GL_TRUE);
 

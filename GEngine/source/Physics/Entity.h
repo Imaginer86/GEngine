@@ -5,19 +5,19 @@
 
 class Entity
 {
-public:
-	float	m;
+public:	
 	Vector3f  pos;
 	Quaternion	q;
 	Vector3f  vel;
 	Vector3f  force;
 	Color4f   color;
+	float	m;
 	bool moved;
 
 	Entity() :m(1.0f), pos(), q(), vel(), force(), color(), moved(false) {}
 	
-	Entity(float m_, const Vector3f& pos_, const Quaternion& q_, const Vector3f& vel_)
-		:m(m_), pos(pos_), q(q_), vel(vel_), moved(false) 
+	Entity(float m_, const Vector3f& pos_, const Vector3f& vel_, const Color4f& color_, const Quaternion& q_)
+		:m(m_), pos(pos_), vel(vel_), color(color_), q(q_), moved(false)
 	{}
 
 	virtual ~Entity() {}

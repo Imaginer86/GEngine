@@ -146,7 +146,7 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 	size_t quadN = 0;
 	std::list<Quad> QuadsL;
 
-	size_t matN;
+	size_t matN = 0;
 	std::list<MaterialMTL> MaterialsL;
 
 	std::string str;
@@ -183,7 +183,9 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 					NormalsL.push_back(n);
 					if (n == VETOR3f_ZERO) //TODO
 					{
+#ifdef _DEBUG
 						std::cerr << "Eror Load Normals Obj File " << fileName << std::endl;
+#endif // _DEBUG
 						continue;
 					}
 				}
@@ -203,13 +205,17 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 					NormalsL.push_back(t);
 					if (t == VETOR3f_ZERO)//TODO
 					{
+#ifdef _DEBUG
 						std::cerr << "Eror Load Textures UV Obj File " << fileName << std::endl;
+#endif // _DEBUG
 						continue;
 					}
 				}
 				else
 				{
+#ifdef _DEBUG
 					std::cerr << "Eror Load Obj File " << fileName << std::endl;
+#endif // _DEBUG
 					continue;
 				}
 			}			
@@ -225,8 +231,10 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 				//std::cout << mtlFileName << std::endl;
 				MaterialMTL material;
 				Materials = material.Load((std::string(directory) + '/' + mtlFileName).c_str(), materialN);
+#ifdef _DEBUG
 				if (Materials == nullptr)
 					std::cerr << "Error Load MAterial " << mtlFileName << std::endl;
+#endif // _DEBUG
 			}
 		}
 		else if (c == 'g')
@@ -248,7 +256,7 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 		{
 			if (isQuad)
 			{
-				Quad tQuad;
+				Quad tQuad = {};
 				quadN++;
 				char cc;
 				size_t cv, ct, cn;
@@ -268,7 +276,7 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 			}
 			else
 			{
-				Triangle tTriangle;
+				Triangle tTriangle = {};
 				triN++;
 				char cc;
 				size_t cv, ct, cn;
@@ -323,9 +331,11 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 	}
 	inFile.close();
 
+#ifdef _DEBUG
 	std::cout << "Vertexs: " << vertexN << " Normals: " << normalN << " Textures: " << texturesN << " Triangles: " << trianglesN << " Quads: " << quadsN << std::endl;
-	return true;
+#endif // _DEBUG
 
+	return true;
 }
 bool ModelOBJ::Save(const char* file)
 {
@@ -339,7 +349,7 @@ void ModelOBJ::Draw(Render* r)
 {
 	//r->LoadIdentity();
 	r->Translate(pos);
-	Color4f color(0.25f, 1.0f, 0.5f, 1.0f);
+	Color4f colorq(0.25f, 1.0f, 0.5f, 1.0f);
 	if (isQuad)
 	{
 		for (size_t i = 0; i < quadsN; ++i)
@@ -364,7 +374,7 @@ void ModelOBJ::Draw(Render* r)
 			Vector3f nc = Normals[ncq];
 			Vector3f nd = Normals[ndq];
 
-			r->drawQuad(a, b, c, d, na, color);
+			r->drawQuad(a, b, c, d, na, colorq);
 		}
 	}
 	else

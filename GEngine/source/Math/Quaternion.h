@@ -2,7 +2,11 @@
 #include "GMath.h"
 #include "Vector3f.h"
 
+#ifdef _DEBUG
 #include <iostream>
+#else
+#include <fstream>
+#endif // _DEBUG
 
 struct Quaternion
 {
@@ -60,7 +64,7 @@ struct Quaternion
 
 	void normalize();
 
-	Vector3f Normal(const Vector3f& p);
+	Vector3f Normal(const Vector3f& p) const;
 
 	
 	void fromAngleXYZ(const Vector3f& angle);
@@ -85,25 +89,44 @@ struct Quaternion
 
 //const Quaternion QIDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 
+#ifdef _DEBUG
 inline std::istream& operator>> (std::istream& is, Quaternion& q)
 {
 	float angle;
 	Vector3f axic;
-	is >> angle >>  axic;
+	is >> angle >> axic;
 	q.fromAngleAxis(angle, axic);
 	return is;
 }
 
-
-
 inline std::ostream& operator<< (std::ostream& os, const Quaternion& q)
 {
 	float angle;
-	Vector3f axic;	
+	Vector3f axic;
 	q.toAngleAxis(angle, axic);
 	os << angle << ": " << axic;
 	return os;
 }
+#else
+inline std::istream& operator>> (std::istream& is, Quaternion& q)
+{
+	float angle;
+	Vector3f axic;
+	is >> angle >> axic;
+	q.fromAngleAxis(angle, axic);
+	return is;
+}
+
+inline std::ostream& operator<< (std::ostream& os, const Quaternion& q)
+{
+	float angle;
+	Vector3f axic;
+	q.toAngleAxis(angle, axic);
+	os << angle << ": " << axic;
+	return os;
+}
+#endif // _DEBUG
+
 
 inline Quaternion operator*(float lhs, const Quaternion &rhs)
 {
@@ -343,7 +366,7 @@ inline void Quaternion::fromAngleAxis(float angle, const Vector3f &axis)
 	w = cos(halfTheta), x = axis.x * s, y = axis.y * s, z = axis.z * s;
 }
 
-inline Vector3f Quaternion::Normal(const Vector3f &p)
+inline Vector3f Quaternion::Normal(const Vector3f &p) const
 {
 	//Vector3f v(x, y, z);
 	//v.unitize();

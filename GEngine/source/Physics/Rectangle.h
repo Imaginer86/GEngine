@@ -7,6 +7,12 @@
 class Rectangle : public Entity
 {
 public:
+	Rectangle() :Entity(), w(1.f), h(1.0f) {}
+	Rectangle(float m_, float r_, const Vector3f& pos_, const Vector3f& vel_, const Color4f& color_, float w_, float h_, const Quaternion& q_)
+		:Entity(m_, pos_, vel_, color_, q_)
+		, w(w_)
+		, h(h_)
+	{}
 	//Plane plane;
 	float w;
 	float h;

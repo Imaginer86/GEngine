@@ -10,6 +10,10 @@
 #include "Physics/ModelOBJ.h"
 #include "Physics/Collision.h"
 
+#ifdef _DEBUG
+#include <iostream>
+#endif // _DEBUG
+
 bool* Game::keys = nullptr;
 
 //const size_t numEntites = 2;// 51;
@@ -17,18 +21,19 @@ bool* Game::keys = nullptr;
 
 bool Game::Init(const char* filename)
 {
+#ifdef _DEBUG
+	std::cout << "Game::Init" << std::endl;
+#endif // _DEBUG	
 
 	if (!Game::Entityes.empty()) {
+#ifdef _DEBUG
 		std::cerr << "Can't Init - game.Entities not empty" << std::endl;
+#endif // _DEBUG
 		return 1;
 	}
 
-	//size_t numE = Core::LoadEntitys("ElasticImpact.dat", game.Entityes);
 	Game::numEntites = Core::LoadEntitys(filename, Game::Entityes);
-	//size_t numE = Core::LoadEntitys("EarthMoon.dat", game.Entityes);
-	//size_t numE = Core::LoadEntitys("Axics.dat", game.Entityes);
-
-
+	
 	/*
 	game.Entityes.resize(1);
 	Ball* entity = new Ball;
@@ -42,7 +47,9 @@ bool Game::Init(const char* filename)
 	size_t numE = Core::LoadRandomEntitys(400, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, game.Entityes);
 	if (numE <= 1)
 	{
+#ifdef _DEBUG	
 		std::cerr << "Can't LoadEntity" << std::endl;
+#endif // _DEBUG
 		return 1;
 	}*/
 
@@ -50,7 +57,9 @@ bool Game::Init(const char* filename)
 	Options option;
 	if (!Core::LoadOptions("options.ini", option))
 	{
+#ifdef _DEBUG
 		std::cerr << "Can't LoadOptions" << std::endl;
+#endif // _DEBUG
 		return 1;
 	}
 
@@ -63,13 +72,22 @@ bool Game::Init(const char* filename)
 	GraviForce = option.graviForce;
 	keys = new bool[512];
 	for (int i = 0; i < 512; ++i) keys[i] = false;
-	std::cout << "Game::Init" << std::endl;
 	render = new RenderGL(option);
-	if (!render) { std::cerr << "Failed to Create render" << std::endl;  return false; }
+	if (!render) {
+#ifdef _DEBUG
+		std::cerr << "Failed to Create render" << std::endl;
+#endif // _DEBUG		
+		return false; 
+	}
 	input = new Input();
 	void* window = render->Init();
 	input->Init(window);
-	if (!input) { std::cerr << "Failed to Init Input" << std::endl;  return false; }
+	if (!input) { 
+#ifdef _DEBUG
+		std::cerr << "Failed to Init Input" << std::endl;
+#endif // _DEBUG
+		return false; 
+	}
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 	return true;
 }
@@ -111,7 +129,7 @@ void Game::Update(float dt)
 					float dr = raxis.length2();
 					float r = (static_cast<Ball*>(Entityes[i])->r + static_cast<Ball*>(Entityes[j])->r);
 					r = r * r;
-					if (dr <= r) ElasticImpactBalls(static_cast<Ball*>(Entityes[i]), static_cast<Ball*>(Entityes[j]), dt);
+					if (dr <= r) ElasticImpactBalls(static_cast<Ball*>(Entityes[i]), static_cast<Ball*>(Entityes[j]));
 					/*
 					{
 						//std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
@@ -126,21 +144,25 @@ void Game::Update(float dt)
 							std::cout << "m after impact: " << Entityes[i]->m << ". Vel After: " << Entityes[i]->vel << std::endl;
 							Entityes.erase(Entityes.begin() + j);
 						}
+#ifdef _DEBUG
 						else std::cerr << "Erorr: collision with not a balls!" << std::endl;
+#endif // _DEBUG
 						
 						
 						if (ElasticImpact(*Entityes[i], *Entityes[j], dt))
 						{
 
 						}
-						else std::cerr << "Erorr: collision with not a balls!" << std::endl;						
+#ifdef _DEBUG
+						else std::cerr << "Erorr: collision with not a balls!" << std::endl;
+#endif // _DEBUG
 					}
 				*/
 				}
 				else if ((Entityes[i]->isBall() && Entityes[j]->isRectangle()) || (Entityes[i]->isRectangle() && Entityes[j]->isBall()))
 				{
-					Ball* ball;
-					Rectangle* rec;
+					Ball* ball = nullptr;
+					Rectangle* rec = nullptr;
 					if (Entityes[i]->isBall() && Entityes[j]->isRectangle())
 					{
 						ball = static_cast<Ball*>(Entityes[i]);
@@ -151,13 +173,19 @@ void Game::Update(float dt)
 						ball = static_cast<Ball*>(Entityes[j]);
 						rec = static_cast<Rectangle*>(Entityes[i]);
 					}
-					float dr, r;
+					if (ball != nullptr && rec != nullptr)
 					{
-						Plane l = rec->getPlane();
-						dr = l.distance(ball->pos);
-						r = ball->r;
-						if (dr <= r) ElasticImpactBallRec(ball, rec, dt);
-					}
+						float dr, r;
+						{
+							Plane l = rec->getPlane();
+							dr = l.distance(ball->pos);
+							r = ball->r;
+							if (dr <= r) ElasticImpactBallRec(ball, rec);
+						}
+					} 
+#ifdef _DEBUG
+					else std::cerr << "Erorr: collision with not a balls!" << std::endl;
+#endif // _DEBUG
 				}
 			}
 	}

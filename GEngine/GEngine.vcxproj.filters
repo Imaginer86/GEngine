@@ -4,9 +4,6 @@
     <ClCompile Include="source\Core\Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="source\Physics\Tank.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
     <ClCompile Include="source\Render\MaterialMTL.cpp">
       <Filter>Render</Filter>
     </ClCompile>

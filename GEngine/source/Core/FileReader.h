@@ -1,16 +1,21 @@
 #pragma once
-#define _USE_MATH_DEFINES
-#include <vector>
-#include <list>
-#include <string>
-#include <iostream>
-#include <fstream>
 
 #include "Physics/Entity.h"
 #include "Physics/Ball.h"
 #include "Physics/Rectangle.h"
 #include "Physics/ModelOBJ.h"
 #include "Options.h"
+
+#define _USE_MATH_DEFINES
+#include <vector>
+#include <list>
+#include <string>
+#include <fstream>
+
+#ifdef _DEBUG
+#include <iostream>
+#endif // _DEBUG
+
 
 namespace Core
 {
@@ -55,13 +60,17 @@ namespace Core
 		}
 		else
 		{
+#ifdef _DEBUG
 			std::cerr << "Can't Find The Height Map!" << std::endl; //MessageBox(NULL, "Can't Find The Height Map!", "Error", MB_OK);
+#endif // _DEBUG
 			return false;
 		}
 
 		if (in.eof())
 		{
+#ifdef _DEBUG
 			std::cerr << "Failed To Get Data!" << std::endl;// MessageBox(NULL, "Failed To Get Data!", "Error", MB_OK);
+#endif // _DEBUG
 			return false;
 		}
 		in.close();
@@ -109,13 +118,15 @@ namespace Core
 				in >> path >> fileName >> isQuad >> isNoTextIndex;				
 				if (!entity->Load(path.c_str(), fileName.c_str(), isQuad, isNoTextIndex))
 				{
+#ifdef _DEBUG
 					std::cerr << "Can't load obj" << std::endl;
+#endif // _DEBUG
 					return 0;
 				}
 				entity->Save((path + '/' + fileName + ".objm").c_str());
 				lEntitys.push_back(entity);
 			}
-			else if (name == "SBall" || name == "SataticBall") {
+			else if (name == "TBall" || name == "TexturedBall") {
 				/*!!!Todo*/
 				num_entitys++;
 				std::string textureName;
@@ -224,9 +235,13 @@ namespace Core
 			else if (pName == "light_position") options.lightPosition = fr.getVector4f();
 			else if (pName == "gravi_force") options.graviForce = fr.getBool();
 			else if (pName == "collision") options.collision = fr.getBool();
-			else { std::cerr << "Wrong options data: " << pName << std:: endl; return false;} 
-			
-			
+			else 
+			{ 
+#ifdef _DEBUG
+				std::cerr << "Wrong options data: " << pName << std:: endl; 
+#endif // _DEBUG
+				return false;
+			} 			
 		}
 		return true;
 	}

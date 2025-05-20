@@ -30,10 +30,12 @@ float rot = 0.0f;
 //#pragma comment(lib, "GLu32.lib")
 
 
-void error_callback(int error, const char* description)
+static void error_callback(int error, const char* description)
 {
 	//fprintf(stderr, "Error: %s\n", description);
+#ifdef _DEBUG
 	std::cerr << description << std::endl << "Error code: " << error << std::endl;
+#endif // _DEBUG
 }
 
 
@@ -62,10 +64,11 @@ void* RenderGL::Init()
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
+#ifdef _DEBUG
 		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
+#endif // _DEBUG		
 		return nullptr;
 	}
-
 
 	Resize(width, height);
 

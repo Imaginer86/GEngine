@@ -56,9 +56,11 @@ inline Vector3f Plane::unit()
 	if (isNotZero(length))
 		return Vector3f(A / length, B / length, C / length);
 	else
-	{
-		return Vector3f();
+	{		
+#ifdef _DEBUG
 		std::cout << "Plane::unit() - length is zero" << std::endl;
+#endif // _DEBUG		
+		return Vector3f();
 	}
 }
 
