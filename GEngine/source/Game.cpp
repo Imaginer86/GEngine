@@ -108,9 +108,10 @@ void Game::Update(float dt)
 				if (Entityes[i]->isBall() && Entityes[j]->isBall())
 				{
 					Vector3f raxis = Entityes[i]->pos - Entityes[j]->pos;
-					float dr = raxis.length();
+					float dr = raxis.length2();
 					float r = (static_cast<Ball*>(Entityes[i])->r + static_cast<Ball*>(Entityes[j])->r);
-					if (dr <= r) ElasticImpact(Entityes[i], Entityes[j], dt);
+					r = r * r;
+					if (dr <= r) ElasticImpactBalls(static_cast<Ball*>(Entityes[i]), static_cast<Ball*>(Entityes[j]), dt);
 					/*
 					{
 						//std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
@@ -138,20 +139,25 @@ void Game::Update(float dt)
 				}
 				else if ((Entityes[i]->isBall() && Entityes[j]->isRectangle()) || (Entityes[i]->isRectangle() && Entityes[j]->isBall()))
 				{
-					float dr, r;
+					Ball* ball;
+					Rectangle* rec;
 					if (Entityes[i]->isBall() && Entityes[j]->isRectangle())
 					{
-						Plane l = static_cast<Rectangle*>(Entityes[j])->getPlane();
-						dr = l.distance(Entityes[i]->pos);
-						r = static_cast<Ball*>(Entityes[i])->r;
+						ball = static_cast<Ball*>(Entityes[i]);
+						rec = static_cast<Rectangle*>(Entityes[j]);
 					}
-					else
+					else if (Entityes[i]->isRectangle() && Entityes[j]->isBall())
 					{
-						Plane l = static_cast<Rectangle*>(Entityes[i])->getPlane();
-						dr = l.distance(Entityes[j]->pos);
-						r = static_cast<Ball*>(Entityes[j])->r;
+						ball = static_cast<Ball*>(Entityes[j]);
+						rec = static_cast<Rectangle*>(Entityes[i]);
 					}
-					if (dr <= r) ElasticImpact(Entityes[i], Entityes[j], dt);
+					float dr, r;
+					{
+						Plane l = rec->getPlane();
+						dr = l.distance(ball->pos);
+						r = ball->r;
+						if (dr <= r) ElasticImpactBallRec(ball, rec, dt);
+					}
 				}
 			}
 	}
@@ -163,10 +169,10 @@ void Game::Update(float dt)
 			for (size_t j = 0; j < numEntites; j++)
 				if (i != j && isNotZero(Entityes[i]->m) && isNotZero(Entityes[j]->m))
 				{
-					float r2 = (Entityes[i]->pos - Entityes[j]->pos).lenght2();
+					float r2 = (Entityes[i]->pos - Entityes[j]->pos).length2();
 					float f = G * Entityes[i]->m * Entityes[j]->m / r2;
 					Vector3f force = (Entityes[j]->pos - Entityes[i]->pos).unit() * f;
-					if (isNotZero(force.lenght2()))
+					if (isNotZero(force.length2()))
 					{
 						Entityes[i]->applyForce(force);
 						//Entityes[j]->applyForce(-force);

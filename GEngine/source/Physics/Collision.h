@@ -22,49 +22,37 @@ inline void ElasticImpactBalls(Ball* A, Ball* B, float dt)
 	float dt0 = (dr - r) / v;
 	A->move(dt0);
 	B->move(dt0);
-	A->move(dt + dt0);
-	B->move(dt + dt0);
 	A->vel = v1r + u1p;
 	B->vel = v2r + u2p;
+	A->move(-dt0);
+	B->move(-dt0);
+
+
+	//A->move(dt + dt0);
+	//B->move(dt + dt0);
 }
-inline void ElasticImpactBallRec(Entity* A, Entity* B, float dt)
-{
-	Ball* ball;
-	Rectangle* rec;
- 	if (A->isBall() && B->isRectangle())
-	{
-		ball = static_cast<Ball*>(A);
-		rec = static_cast<Rectangle*>(B);
-	}
-	else if (A->isRectangle() && B->isBall())
-	{
-		ball = static_cast<Ball*>(B);
-		rec = static_cast<Rectangle*>(A);
-	}
-	else
-	{
-		std::cerr << "Warnning ElasticImpactBallRec: incorrect entity input" << std::endl;
-		return;
-	}
-	
+inline void ElasticImpactBallRec(Ball* ball, Rectangle* rec, float dt)
+{	
 	Plane P = rec->getPlane();
+	std::cout << "ElasticImpactBallRec:" << std::endl;
 	std::cout << P.unit() << std::endl;
 	std::cout << ball->vel << std::endl;
 	Vector3f O = P * ball->vel;
+	std::cout << O << std::endl;
 	float Dsc = (ball->pos - O).length();
-	float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();//TODO
-	float Tc = Dsc * dt / Dsc;
-	ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
+	//float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();//TODO
+	//float Tc = Dsc * dt / Dsc;
+	//ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
 	ball->vel =  P.unit() * (((-ball->vel).dotProduct(P.unit())) * 2) + ball->vel;
-	ball->pos = ball->pos + ball->vel * (dt - Tc);
+	//ball->pos = ball->pos + ball->vel * (dt - Tc);
 	std::cout << ball->vel << std::endl;
 }
 
-inline void ElasticImpact(Entity* A, Entity* B, float dt)
-{
-	if (A->isBall() && B->isBall())	ElasticImpactBalls(static_cast<Ball*>(A), static_cast<Ball*>(B), dt);
-	if ((A->isBall() && B->isRectangle()) || (A->isRectangle() && B->isBall()))	ElasticImpactBallRec(A, B, dt);
-}
+//inline void ElasticImpact(Entity* A, Entity* B, float dt)
+//{
+	//if (A->isBall() && B->isBall())	ElasticImpactBalls(static_cast<Ball*>(A), static_cast<Ball*>(B), dt);
+	//if ((A->isBall() && B->isRectangle()) || (A->isRectangle() && B->isBall()))	ElasticImpactBallRec(A, B, dt);
+//}
 
 inline bool InElasticImpact(Entity* A, Entity* B)
 {

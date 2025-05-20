@@ -28,8 +28,8 @@ struct Vector3f
 	}
 	~Vector3f()	{}
 
-	bool operator !=(const  Vector3f& v);
-	bool operator ==(const  Vector3f& v);
+	bool operator !=(const  Vector3f& v) const;
+	bool operator ==(const  Vector3f& v) const;
 	//Vector3f operator+ (const Vector3f& v);	// operator+ is used to add two Vector3's. operator+ returns a new Vector3
 	Vector3f operator+ (const Vector3f& v) const;
 	//Vector3f operator- (const Vector3f& v);	// operator- is used to take difference of two Vector3's. operator- returns a new Vector3
@@ -46,11 +46,11 @@ struct Vector3f
 
 	Vector3f operator- () const;	// operator- is used to set this Vector3's x, y, and z to the negative of them.	
 
-	Vector3f operator*(const Vector3f& v);	// cross product (vector product)
-	float dotProduct(const Vector3f& v);
+	Vector3f operator*(const Vector3f& v) const;// cross product (vector product)
+	float dotProduct(const Vector3f& v) const;
 
 	float length() const;	// length() returns the length of this Vector3
-	float lenght2() const;
+	float length2() const;
 	float unitize();	// unitize() normalizes this Vector3 that its direction remains the same but its length is 1.
 	Vector3f unit() const;	// unit() returns a new Vector3. The returned value is a unitized version of this Vector3.
 
@@ -76,12 +76,12 @@ inline std::ostream& operator<< (std::ostream& os, const Vector3f& v)
 	return os;
 }
 
-inline bool Vector3f::operator!=(const Vector3f& v)
+inline bool Vector3f::operator!=(const Vector3f& v) const
 {
 	return x != v.x || y != v.y || z != v.z;
 }
 
-inline bool Vector3f::operator==(const Vector3f& v)
+inline bool Vector3f::operator==(const Vector3f& v) const
 {
 	x == v.x && y == v.y && z == v.z;
 	return false;
@@ -157,7 +157,7 @@ inline Vector3f Vector3f::operator- () const						// operator- is used to set th
 }
 
 // cross product (vector product)
-inline Vector3f Vector3f::operator*(const Vector3f& v)
+inline Vector3f Vector3f::operator*(const Vector3f& v) const
 {
 	Vector3f res;
 	res.x = this->y*v.z - this->z*v.y;
@@ -166,7 +166,7 @@ inline Vector3f Vector3f::operator*(const Vector3f& v)
 	return res;
 }
 
-inline float Vector3f::dotProduct(const Vector3f& v)
+inline float Vector3f::dotProduct(const Vector3f& v) const
 {
 	return this->x*v.x + this->y*v.y + this->z*v.z;
 }
@@ -176,7 +176,7 @@ inline float Vector3f::length()	const							// length() returns the length of th
 	return sqrtf(x*x + y*y + z*z);
 };
 
-inline float Vector3f::lenght2() const
+inline float Vector3f::length2() const
 {
 	return x*x + y*y + z*z;
 }

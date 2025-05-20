@@ -56,7 +56,10 @@ inline Vector3f Plane::unit()
 	if (isNotZero(length))
 		return Vector3f(A / length, B / length, C / length);
 	else
-		return Vector3f();	
+	{
+		return Vector3f();
+		std::cout << "Plane::unit() - length is zero" << std::endl;
+	}
 }
 
 inline float Plane::distance(const Vector3f& p)
