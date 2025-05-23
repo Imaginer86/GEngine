@@ -31,7 +31,7 @@ int main ()
 	//Vector3f M1 = P2 * L;
 	//std::cout << M1 << std::endl;
 	*/
-	//srandG();
+	srandG();
 	GraviGame game;	
 	//if (game.Init("SolarSystem.dat"))
 	//if (game.Init("ElasticImpact5.dat"))	

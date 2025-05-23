@@ -184,7 +184,7 @@ namespace Core
 			entity->r = 10.0f;// sqrtG(entity->m);// entity->m;// entity->m / 10.0f;
 			Vector3f s2 = size / 2.0f;
 			entity->pos = Vector3f(randfD(pos.x - s2.x / 2.0f, pos.x + s2.x), randfD(pos.y - s2.y / 2.0f, pos.y + s2.y), randfD(pos.z - s2.z / 2.0f, pos.z + s2.z));
-			entity->vel = Vector3f(0.0f, 0.0f, randfD(vel.z / 2.0f, vel.z));
+			entity->vel = Vector3f(randfD(-vel.x, vel.x), randfD(-vel.y, vel.y), randfD(-vel.z, vel.z));
 			entity->color = Color4f(randf(), randf(), randf(), 1.0f);
 			Entitys.push_back(entity);
 		}
