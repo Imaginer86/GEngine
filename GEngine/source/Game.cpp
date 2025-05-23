@@ -35,14 +35,13 @@ bool Game::Init(const char* filename)
 	if (filename == "RANDOM") {
 		Ball* blackHole = new Ball;
 		blackHole->m = 50000000.0f;
-		blackHole->r = 250;// sqrtG(blackHole->m);
+		blackHole->r = 150;// sqrtG(blackHole->m);
 		blackHole->pos = Vector3f(0.0f, 0.0f, 0.0f);
 		blackHole->vel = Vector3f(0.0f, 0.0f, 0.0f);
 		blackHole->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
 		Entityes.push_back(blackHole);
 		//blackHole->isBlackHole = true;
 		numEntites = Core::LoadRandomEntitys(100, Vector3f(0.0f, 0.0f, 0.0f), 500.0f, 1000.0f, Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, Entityes);
-		numEntites++;
 	}
 	else {
 		numEntites = Core::LoadEntitys(filename, Entityes);

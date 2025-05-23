@@ -45,6 +45,7 @@
     <ClInclude Include="source\Render\RenderGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Core\FileReader.cpp" />
     <ClCompile Include="source\Core\Input.cpp" />
     <ClCompile Include="source\Core\Time.cpp" />
     <ClCompile Include="source\Game.cpp" />

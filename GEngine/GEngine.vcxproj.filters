@@ -17,6 +17,9 @@
     <ClCompile Include="source\Core\Time.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="source\Core\FileReader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">
