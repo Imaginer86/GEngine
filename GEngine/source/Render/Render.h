@@ -37,26 +37,6 @@ public:
 	}
 	virtual ~Render() {}
 
-protected:
-	Camera	camera;
-
-	bool	fullscreen;
-	bool	light;
-	bool	textured;
-	size_t width;
-	size_t height;
-	float fovy;
-	float near;
-	float far;
-	
-	float moveScale;
-	float rotateScale;
-	char title[20];	
-
-	Vector4f gLightAmbient;
-	Vector4f gLightDiffuse;
-	Vector4f gLightPosition;
-public:
 	//Render(InitData& initData);
 	//virtual ~Render() {/* delete[] title; */};
 
@@ -121,6 +101,25 @@ protected:
 	//virtual bool createWindow() = 0;
 	virtual void TextureUpdate() = 0;
 	virtual void LightUpdate() = 0;
+
+	Camera	camera;
+
+	bool	fullscreen;
+	bool	light;
+	bool	textured;
+	size_t width;
+	size_t height;
+	float fovy;
+	float near;
+	float far;
+
+	float moveScale;
+	float rotateScale;
+	char title[20];
+
+	Vector4f gLightAmbient;
+	Vector4f gLightDiffuse;
+	Vector4f gLightPosition;
 };
 
 /*

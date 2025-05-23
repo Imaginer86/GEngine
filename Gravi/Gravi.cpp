@@ -33,7 +33,7 @@ int main ()
 	*/
 	srandG();
 	GraviGame game;	
-	//if (game.Init("SolarSystem.dat"))
+	//if (game.Init("2Balls.dat"))
 	//if (game.Init("ElasticImpact5.dat"))	
 	if (game.Init("RANDOM"))
 	{

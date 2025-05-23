@@ -29,11 +29,20 @@ bool Game::Init(const char* filename)
 #ifdef _DEBUG
 		std::cerr << "Can't Init - game.Entities not empty" << std::endl;
 #endif // _DEBUG
-		return 1;
+		return false;
 	}
 
 	if (filename == "RANDOM") {
-		numEntites = Core::LoadRandomEntitys(100, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, Entityes);
+		Ball* blackHole = new Ball;
+		blackHole->m = 50000000.0f;
+		blackHole->r = 250;// sqrtG(blackHole->m);
+		blackHole->pos = Vector3f(0.0f, 0.0f, 0.0f);
+		blackHole->vel = Vector3f(0.0f, 0.0f, 0.0f);
+		blackHole->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
+		Entityes.push_back(blackHole);
+		//blackHole->isBlackHole = true;
+		numEntites = Core::LoadRandomEntitys(100, Vector3f(0.0f, 0.0f, 0.0f), 500.0f, 1000.0f, Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, Entityes);
+		numEntites++;
 	}
 	else {
 		numEntites = Core::LoadEntitys(filename, Entityes);
@@ -47,23 +56,21 @@ bool Game::Init(const char* filename)
 	entity->vel = Vector3f();
 	entity->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
 	Entityes[0] = entity;
-	*/
-
-	
+	*/	
 	
 	if (numEntites == 0)
 	{
 #ifdef _DEBUG	
 		std::cerr << "Can't LoadEntity" << std::endl;
 #endif // _DEBUG
-		return 1;
+		return false;
 	}
 
 	if (Game::Entityes.empty()) {
 #ifdef _DEBUG
 		std::cerr << "Can't Init - game.Entities empty after Load" << std::endl;
 #endif // _DEBUG
-		return 1;
+		return false;
 	}
 
 
@@ -73,7 +80,7 @@ bool Game::Init(const char* filename)
 #ifdef _DEBUG
 		std::cerr << "Can't LoadOptions" << std::endl;
 #endif // _DEBUG
-		return 1;
+		return false;
 	}
 
 	//Enityes = new Entity[numEntites];
@@ -143,6 +150,7 @@ void Game::Update(float dt)
 					float r = (static_cast<Ball*>(Entityes[i])->r + static_cast<Ball*>(Entityes[j])->r);
 					r = r * r;
 					if (dr <= r) ElasticImpactBalls(static_cast<Ball*>(Entityes[i]), static_cast<Ball*>(Entityes[j]));
+				
 					/*
 					{
 						//std::cout << "Collision " << i << " vs " << j << ". Vel Before: " << Entityes[i]->vel << " vs " << Entityes[j]->vel << "m: " << Entityes[i]->m << " m: " << Entityes[j]->m << std::endl;
@@ -171,6 +179,7 @@ void Game::Update(float dt)
 #endif // _DEBUG
 					}
 				*/
+
 				}
 				else if ((Entityes[i]->isBall() && Entityes[j]->isRectangle()) || (Entityes[i]->isRectangle() && Entityes[j]->isBall()))
 				{
