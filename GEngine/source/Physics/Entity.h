@@ -20,6 +20,23 @@ public:
 		:m(m_), pos(pos_), vel(vel_), color(color_), q(q_), moved(false)
 	{}
 
+	// Explicitly define the copy constructor
+	Entity(const Entity& other) : m(other.m), pos(other.pos), q(other.q), vel(other.vel) , force(other.force), color(other.color), moved(other.moved) {}
+
+	// Explicitly define the copy assignment operator
+	Entity& operator=(const Entity& other)	{
+		if (this != &other) {
+			m = other.m;
+			pos = other.pos;
+			q = other.q;
+			vel = other.vel;
+			force = other.force;
+			color = other.color;
+			moved = other.moved;
+		}
+		return *this;
+	}
+
 	virtual ~Entity() {}
 
 	void applyForce(Vector3f _force);

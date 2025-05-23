@@ -176,22 +176,22 @@ namespace Core
 
 	size_t LoadRandomEntitys(size_t numEntititys, const Vector3f& pos, const Vector3f& size, const Vector3f& vel, size_t minMR, size_t maxMR, std::vector<Entity*>& Entitys)
 	{
-		Entitys.resize(numEntititys + 1);
-		size_t i = 1;
-		for (; i <= (numEntititys + 1)/ 2; ++i)
+		//Entitys.resize(numEntititys + 1);		
+		for (size_t i = 0; i < numEntititys ; ++i)
 		{
 			Ball* entity = new Ball;
 			entity->m = randfD(static_cast<float>(minMR), static_cast<float>(maxMR));
 			entity->r = 10.0f;// sqrtG(entity->m);// entity->m;// entity->m / 10.0f;
 			Vector3f s2 = size / 2.0f;
-			entity->pos = Vector3f(randfD(pos.x + s2.x / 2.0f, pos.x + s2.x), randfD(pos.y + s2.y / 2.0f, pos.y + s2.y), randfD(pos.z + s2.z / 2.0f, pos.z + s2.z));
+			entity->pos = Vector3f(randfD(pos.x - s2.x / 2.0f, pos.x + s2.x), randfD(pos.y - s2.y / 2.0f, pos.y + s2.y), randfD(pos.z - s2.z / 2.0f, pos.z + s2.z));
 			entity->vel = Vector3f(0.0f, 0.0f, randfD(vel.z / 2.0f, vel.z));
 			entity->color = Color4f(randf(), randf(), randf(), 1.0f);
-			Entitys[i] = entity;
+			Entitys.push_back(entity);
 		}
 		//return numEntititys;
 		//--i;
 
+		/*
 		for (; i < (numEntititys + 1); ++i)
 		{
 			Ball* entity = new Ball;
@@ -203,7 +203,8 @@ namespace Core
 			entity->color = Color4f(randf(), randf(), randf(), 1.0f);
 			Entitys[i] = entity;
 		}
-		return numEntititys + 1;
+		*/
+		return numEntititys;
 
 	}
 

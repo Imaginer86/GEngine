@@ -32,26 +32,39 @@ bool Game::Init(const char* filename)
 		return 1;
 	}
 
-	Game::numEntites = Core::LoadEntitys(filename, Game::Entityes);
-	
+	if (filename == "RANDOM") {
+		numEntites = Core::LoadRandomEntitys(100, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, Entityes);
+	}
+	else {
+		numEntites = Core::LoadEntitys(filename, Entityes);
+	}
 	/*
-	game.Entityes.resize(1);
+	Entityes.resize(1);
 	Ball* entity = new Ball;
 	entity->m = 5000.0f;
 	entity->r = 250;// sqrtG(entity->m);
 	entity->pos = Vector3f();
 	entity->vel = Vector3f();
 	entity->color = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
-	game.Entityes[0] = entity;
+	Entityes[0] = entity;
+	*/
 
-	size_t numE = Core::LoadRandomEntitys(400, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1000.0f, 1000.0f, 1000.0f), Vector3f(100.0f, 100.0f, 100.0f), 1.0f, 10.0f, game.Entityes);
-	if (numE <= 1)
+	
+	
+	if (numEntites == 0)
 	{
 #ifdef _DEBUG	
 		std::cerr << "Can't LoadEntity" << std::endl;
 #endif // _DEBUG
 		return 1;
-	}*/
+	}
+
+	if (Game::Entityes.empty()) {
+#ifdef _DEBUG
+		std::cerr << "Can't Init - game.Entities empty after Load" << std::endl;
+#endif // _DEBUG
+		return 1;
+	}
 
 
 	Options option;

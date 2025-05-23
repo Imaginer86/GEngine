@@ -9,5 +9,14 @@ public:
 		:Entity(m_,pos_, vel_, color_, q_ )
 		,r(r_)
 	{}
+	Ball(const Ball& other) :Entity(other), r(other.r) {}
+	Ball& operator=(const Ball& other) {
+		if (this != &other) {
+
+			Entity::operator=(other);
+			r = other.r;
+		}
+		return *this;
+	}
 	virtual bool isBall() { return true; }
 };
