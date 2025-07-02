@@ -1,5 +1,5 @@
 #pragma once
-//#include <string>
+#include <string>
 #include "Math/Vector3f.h"
 #include "Math/Vector4f.h"
 
@@ -11,7 +11,7 @@ struct Options
 	Vector4f lightDiffuse;
 	Vector4f lightPosition;
 
-	char name[20];
+	std::string name;
 
 	float fovy;
 	float near;

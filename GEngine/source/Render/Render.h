@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "Options.h"
 #include "Math/GMath.h"
 #include "Math/Vector3f.h"
@@ -29,10 +31,10 @@ public:
 		, camera(option.cameraPos, option.cameraAngle, option.cameraaxis)
 		, moveScale(option.moveScale)
 		, rotateScale(option.rotateScale)
+		, title(option.name)
 		, light(true)
 		, textured(true)
 	{
-		strncpy_s(title, sizeof title, option.name, strlen(option.name));
 		if (height == 0) height = 1;
 	}
 	virtual ~Render() {}
@@ -115,7 +117,7 @@ protected:
 
 	float moveScale;
 	float rotateScale;
-	char title[20];
+	std::string title;
 
 	Vector4f gLightAmbient;
 	Vector4f gLightDiffuse;

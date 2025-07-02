@@ -249,7 +249,7 @@ void Game::Draw()
 		//}
 		//else
 		//{
-			if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+			if (Entityes[i]->isBall())	render->drawSphereT(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
 			if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->q, Entityes[i]->color);
 			if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
 		//}

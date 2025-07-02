@@ -172,13 +172,9 @@ bool Core::LoadOptions(const char* filename, Options& options)
 	if (!fr.isOpen()) return false;
 
 	while (!fr.isEof())
-	{
-		char pcName[20];// = new char[100];
-		fr.getStr(pcName);
-		std::string pName(pcName);
-		//delete[] pcName;
-
-		if (pName == "name") fr.getStr(options.name);
+	{		
+		std::string pName = fr.getStr(); 
+		if (pName == "name") options.name = fr.getStr();
 		else if (pName == "width") options.width = fr.getNumber();
 		else if (pName == "height") options.height = fr.getNumber();
 		else if (pName == "fovy") options.fovy = fr.getFloat();

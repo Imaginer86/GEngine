@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <vector>
+#include <string>
 
 #include "Physics/Entity.h"
 #include "Physics/Ball.h"
@@ -27,15 +28,11 @@ namespace Core
 		FileReader& operator=(const FileReader&) = delete; // Explicitly delete the assignment operator
 		bool isOpen() { return in.is_open(); }
 		bool isEof() {return in.eof(); }
-		void getStr(char* strc)
+		std::string getStr()
 		{
 			std::string str;
 			in >> str;
-			//strc = new char[str.length() + 1]; 
-			//strcpy_s(strc, str.length() + 1, str.c_str());
-			size_t i = 0;
-			for (; i < str.length(); i++) strc[i] = str[i];
-			strc[i] = '\0';
+			return str;
 		}
 		Vector3f getVector3f() { Vector3f v; in >> v; return v; }
 		Vector4f getVector4f() { Vector4f v; in >> v; return v; }
