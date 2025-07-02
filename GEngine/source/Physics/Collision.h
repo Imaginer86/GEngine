@@ -39,17 +39,17 @@ inline void ElasticImpactBallRec(Ball* ball, Rectangle* rec)
 	//float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();//TODO
 	//float Tc = Dsc * dt / Dsc;
 	//ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	std::cout << "ElasticImpactBallRec:" << std::endl;
 	std::cout << P.unit() << std::endl;
 	std::cout << ball->vel << std::endl;
 	std::cout << O << std::endl;
-#endif // _DEBUG
+	#endif // _DEBUG
 	ball->vel =  P.unit() * (((-ball->vel).dotProduct(P.unit())) * 2) + ball->vel;
 	//ball->pos = ball->pos + ball->vel * (dt - Tc);
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	std::cout << ball->vel << std::endl;
-#endif // _DEBUG	
+	#endif // _DEBUG	
 }
 
 //inline void ElasticImpact(Entity* A, Entity* B, float dt)

@@ -16,17 +16,17 @@ bool Core::LoadRawFile(const char* fileName, char* pHeightMap)
 	}
 	else
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Can't Find The Height Map!" << std::endl; //MessageBox(NULL, "Can't Find The Height Map!", "Error", MB_OK);
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 
 	if (inRaw.eof())
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Failed To Get Data!" << std::endl;// MessageBox(NULL, "Failed To Get Data!", "Error", MB_OK);
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 	inRaw.close();
@@ -74,9 +74,9 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				inEntitys >> path >> fileName >> isQuad >> isNoTextIndex;
 				if (!entity->Load(path.c_str(), fileName.c_str(), isQuad, isNoTextIndex))
 				{
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					std::cerr << "Can't load obj" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 					return 0;
 				}
 				entity->Save((path + '/' + fileName + ".objm").c_str());
@@ -197,9 +197,9 @@ bool Core::LoadOptions(const char* filename, Options& options)
 		else if (pName == "collision") options.collision = fr.getBool();
 		else
 		{
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			std::cerr << "Wrong options data: " << pName << std::endl;
-#endif // _DEBUG
+			#endif // _DEBUG
 			return false;
 		}
 	}

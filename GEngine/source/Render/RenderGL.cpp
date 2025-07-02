@@ -33,9 +33,9 @@ float rot = 0.0f;
 static void error_callback(int error, const char* description)
 {
 	//fprintf(stderr, "Error: %s\n", description);
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	std::cerr << description << std::endl << "Error code: " << error << std::endl;
-#endif // _DEBUG
+	#endif // _DEBUG
 }
 
 
@@ -64,9 +64,9 @@ void* RenderGL::Init()
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cout << "Error: " << glewGetErrorString(err) << std::endl;
-#endif // _DEBUG		
+		#endif // _DEBUG		
 		return nullptr;
 	}
 

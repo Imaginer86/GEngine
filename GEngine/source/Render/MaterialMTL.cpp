@@ -35,9 +35,9 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 				if (!isContinue)	sstr >> mtlName;
 				std::cout << mtlName << std::endl;
 			}
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			else std::cerr << "Error Load MTL n" << std::endl;
-#endif // _DEBUG
+			#endif // _DEBUG
 			*/
 			std::string strstr;
 			do
@@ -55,9 +55,9 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 						//std::cout << mtl.name << std::endl;
 						isContinue = true;
 					}
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Error load MTL n";
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 				else if (cc == 'N')
 				{
@@ -65,9 +65,9 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 					sstrstr >> ccc;
 					if (ccc == 's')	sstrstr >> mtl.Ns;
 					else if (ccc == 'i')	sstrstr >> mtl.Ni;
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Eror Load MTL N" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 				else if (cc == 'd') sstrstr >> mtl.d;
 				else if (cc == 'T')
@@ -76,18 +76,18 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 					sstrstr >> ccc;
 					if (ccc == 'r')	sstrstr >> mtl.Tr;
 					else if (ccc == 'f') sstrstr >> mtl.Tf.x >> mtl.Tf.y >> mtl.Tf.z;
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Eror Load MTL T" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 				else if (cc == 'i')
 				{
 					char cc1, cc2, cc3, cc4;
 					sstrstr >> cc1 >> cc2 >> cc3 >> cc4;
 					if (cc1 == 'l' && cc2 == 'l' && cc3 == 'u' && cc4 == 'm')	sstrstr >> mtl.illum;
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Eror Load MTL illum" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 				else if (cc == 'K')
 				{
@@ -97,9 +97,9 @@ MaterialMTL::MTL* MaterialMTL::Load(const char* fileName, size_t& matN)
 					else if (ccc == 'd') sstrstr >> mtl.Kd.x >> mtl.Kd.y >> mtl.Kd.z;
 					else if (ccc == 's') sstrstr >> mtl.Ks.x >> mtl.Ks.y >> mtl.Ks.z;
 					else if (ccc == 'e') sstrstr >> mtl.Ke.x >> mtl.Ke.y >> mtl.Ke.z;
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Eror Load MTL K" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 
 			} while (getline(inFile, strstr));

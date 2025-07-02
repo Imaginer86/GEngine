@@ -18,3 +18,9 @@ Pirates/x64/
 /GEngine/GEngine/x64
 /Test/x64/Debug
 /Test/x64/Debug
+Pool/Pool.vcxproj.filters
+Pool/Pool.vcxproj.user
+/Pool/x64/Debug
+/Pool/x64/Release
+/Test/x64/Debug
+/Test/x64/Debug

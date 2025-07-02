@@ -183,9 +183,9 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 					NormalsL.push_back(n);
 					if (n == VETOR3f_ZERO) //TODO
 					{
-#ifdef _DEBUG
+						#ifdef _DEBUG
 						std::cerr << "Eror Load Normals Obj File " << fileName << std::endl;
-#endif // _DEBUG
+						#endif // _DEBUG
 						continue;
 					}
 				}
@@ -205,17 +205,17 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 					NormalsL.push_back(t);
 					if (t == VETOR3f_ZERO)//TODO
 					{
-#ifdef _DEBUG
+						#ifdef _DEBUG
 						std::cerr << "Eror Load Textures UV Obj File " << fileName << std::endl;
-#endif // _DEBUG
+						#endif // _DEBUG
 						continue;
 					}
 				}
 				else
 				{
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					std::cerr << "Eror Load Obj File " << fileName << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 					continue;
 				}
 			}			
@@ -231,10 +231,10 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 				//std::cout << mtlFileName << std::endl;
 				MaterialMTL material;
 				Materials = material.Load((std::string(directory) + '/' + mtlFileName).c_str(), materialN);
-#ifdef _DEBUG
+				#ifdef _DEBUG
 				if (Materials == nullptr)
 					std::cerr << "Error Load MAterial " << mtlFileName << std::endl;
-#endif // _DEBUG
+				#endif // _DEBUG
 			}
 		}
 		else if (c == 'g')
@@ -331,9 +331,9 @@ bool ModelOBJ::Load(const char* directory, const char* fileName, bool isQuads_, 
 	}
 	inFile.close();
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	std::cout << "Vertexs: " << vertexN << " Normals: " << normalN << " Textures: " << texturesN << " Triangles: " << trianglesN << " Quads: " << quadsN << std::endl;
-#endif // _DEBUG
+	#endif // _DEBUG
 
 	return true;
 }

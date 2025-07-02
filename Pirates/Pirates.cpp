@@ -108,9 +108,9 @@ int main()
 	}
 	else
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Can't game.Init" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return 1;
 	}
 

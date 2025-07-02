@@ -21,14 +21,14 @@ bool* Game::keys = nullptr;
 
 bool Game::Init(const char* filename)
 {
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	std::cout << "Game::Init" << std::endl;
-#endif // _DEBUG	
+	#endif // _DEBUG	
 
 	if (!Game::Entityes.empty()) {
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Can't Init - game.Entities not empty" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 
@@ -59,16 +59,16 @@ bool Game::Init(const char* filename)
 	
 	if (numEntites == 0)
 	{
-#ifdef _DEBUG	
+		#ifdef _DEBUG	
 		std::cerr << "Can't LoadEntity" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 
 	if (Game::Entityes.empty()) {
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Can't Init - game.Entities empty after Load" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 
@@ -76,9 +76,9 @@ bool Game::Init(const char* filename)
 	Options option;
 	if (!Core::LoadOptions("options.ini", option))
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Can't LoadOptions" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false;
 	}
 
@@ -93,18 +93,18 @@ bool Game::Init(const char* filename)
 	for (int i = 0; i < 512; ++i) keys[i] = false;
 	render = new RenderGL(option);
 	if (!render) {
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Failed to Create render" << std::endl;
-#endif // _DEBUG		
+		#endif // _DEBUG		
 		return false; 
 	}
 	input = new Input();
 	void* window = render->Init();
 	input->Init(window);
 	if (!input) { 
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		std::cerr << "Failed to Init Input" << std::endl;
-#endif // _DEBUG
+		#endif // _DEBUG
 		return false; 
 	}
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
@@ -164,18 +164,18 @@ void Game::Update(float dt)
 							std::cout << "m after impact: " << Entityes[i]->m << ". Vel After: " << Entityes[i]->vel << std::endl;
 							Entityes.erase(Entityes.begin() + j);
 						}
-#ifdef _DEBUG
+						#ifdef _DEBUG
 						else std::cerr << "Erorr: collision with not a balls!" << std::endl;
-#endif // _DEBUG
+						#endif // _DEBUG
 						
 						
 						if (ElasticImpact(*Entityes[i], *Entityes[j], dt))
 						{
 
 						}
-#ifdef _DEBUG
+						#ifdef _DEBUG
 						else std::cerr << "Erorr: collision with not a balls!" << std::endl;
-#endif // _DEBUG
+						#endif // _DEBUG
 					}
 				*/
 
@@ -204,9 +204,9 @@ void Game::Update(float dt)
 							if (dr <= r) ElasticImpactBallRec(ball, rec);
 						}
 					} 
-#ifdef _DEBUG
+					#ifdef _DEBUG
 					else std::cerr << "Erorr: collision with not a balls!" << std::endl;
-#endif // _DEBUG
+					#endif // _DEBUG
 				}
 			}
 	}
