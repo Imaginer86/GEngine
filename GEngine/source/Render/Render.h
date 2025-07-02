@@ -96,7 +96,7 @@ public:
 	virtual void drawBox(const Vector3f& pos, const Vector3f& size, const Quaternion& rotation, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 	virtual void drawSphere(const Vector3f& pos, const float r, const Quaternion& q, const Color4f& color) const = 0;
-	virtual void drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const = 0;
+	virtual void drawSphereT(const Vector3f& pos, const Quaternion& q, const float r, const Color4f& color) const = 0;
 	virtual void drawVBO() const = 0;
 	//virtual void drawSphere(const Vector3f& pos, const float r, const Color4f& color) const = 0;
 protected:

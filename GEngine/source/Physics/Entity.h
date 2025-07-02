@@ -7,7 +7,7 @@ class Entity
 {
 public:	
 	Vector3f  pos;
-	Quaternion	q;
+	Quaternion	q;//todo: Use Quaternion for orientation
 	Vector3f  vel;
 	Vector3f  force;
 	Color4f   color;

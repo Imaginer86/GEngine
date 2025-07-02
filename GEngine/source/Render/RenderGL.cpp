@@ -756,7 +756,7 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	//gluDeleteQuadric(quadratic);
 }
 
-void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& color) const
+void RenderGL::drawSphereT(const Vector3f& pos, const Quaternion& q, const float r, const Color4f& color) const
 {
 
 	//GLUquadricObj* quad = gluNewQuadric();
@@ -768,9 +768,9 @@ void RenderGL::drawSphereT(const Vector3f& pos, const float r, const Color4f& co
 	glPushMatrix();
 
 	glTranslatef(pos.x, pos.y, pos.z);
-	glRotatef(90, 1, 0, 0);
-	glRotatef(rot, 0, 0, 1);
-	rot += 1;
+	float angle = q.GetAngle();
+	Vector3f axis = q.GetAxis();
+	glRotatef(angle, axis.x, axis.y, axis.z);	
 	glColor4f(color.r, color.g, color.b, color.a);
 
 	gluSphere(quadratic, r, 64, 64);
