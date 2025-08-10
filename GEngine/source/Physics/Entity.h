@@ -7,32 +7,32 @@ class Entity
 {
 public:	
 	Vector3f  pos;
-	Quaternion	q;//todo: Use Quaternion for orientation
+	Quaternion	rot;
+	Quaternion	rotvel;
 	Vector3f  vel;
 	Vector3f  force;
 	Color4f   color;
 	float	m;
-	bool moved;
 
-	Entity() :m(1.0f), pos(), q(), vel(), force(), color(), moved(false) {}
+	Entity() :m(1.0f), pos(), rot(), rotvel(), vel(), force(), color() {}
 	
-	Entity(float m_, const Vector3f& pos_, const Vector3f& vel_, const Color4f& color_, const Quaternion& q_)
-		:m(m_), pos(pos_), vel(vel_), color(color_), q(q_), moved(false)
+	Entity(float m_, const Vector3f& pos_, const Vector3f& vel_, const Color4f& color_, const Quaternion& q_, const Quaternion& rotvel_)
+		:m(m_), pos(pos_), vel(vel_), color(color_), rot(q_), rotvel(rotvel_)
 	{}
 
 	// Explicitly define the copy constructor
-	Entity(const Entity& other) : m(other.m), pos(other.pos), q(other.q), vel(other.vel) , force(other.force), color(other.color), moved(other.moved) {}
+	Entity(const Entity& other) : m(other.m), pos(other.pos), rot(other.rot), rotvel(other.rotvel), vel(other.vel) , force(other.force), color(other.color) {}
 
 	// Explicitly define the copy assignment operator
 	Entity& operator=(const Entity& other)	{
 		if (this != &other) {
 			m = other.m;
 			pos = other.pos;
-			q = other.q;
+			rot = other.rot;
+			rotvel = other.rotvel;
 			vel = other.vel;
 			force = other.force;
 			color = other.color;
-			moved = other.moved;
 		}
 		return *this;
 	}
@@ -63,21 +63,25 @@ inline void Entity::applyForce(Vector3f _force)
 inline void Entity::init()
 {
   	force = {0, 0, 0};
-	moved = false;
 }
 
 inline void Entity::simulate(float dt)
 {
-	if (isNotZero(m))
-	{
-		vel += (force / m) * dt;  // Изменение в скорости добавляем к текущей скорости. Изменение пропорционально ускорению (сила/масса) и изменению времени	
-		move(dt);
-	}
+	vel += (force / m) * dt;
+	//todo
+	float angle;
+	Vector3f axis;
+	angle = rotvel.GetAngle();
+	axis = rotvel.GetAxis();
+	angle *= dt;
+	Quaternion deltaRot;
+	deltaRot.fromAngleAxis(angle, axis);
+	rot *= deltaRot;
+	rot.normalize();
 }
 
 inline void Entity::move(float dt)
 {
-	pos += vel * dt;          // Изменение в положении добавляем к текущему положению. Изменение в положении Скорость*время
-	moved = true;
+	pos += vel * dt;
 }
 

@@ -231,8 +231,15 @@ void Game::Update(float dt)
 
 	for (size_t i = 0; i < numEntites; i++) Entityes[i]->simulate(dt);
 
-	for (size_t i = 0; i < numEntites; i++) 
-		if (!Entityes[i]->moved) Entityes[i]->move(dt); 
+	for (size_t i = 0; i < numEntites; i++)
+		Entityes[i]->move(dt); 
+
+	//TTT
+	float angle;
+	Vector3f axis;
+	std::cerr << "Quaternion: " << Entityes[0]->rot.w << " " << Entityes[0]->rot.x << " " << Entityes[0]->rot.y << " " << Entityes[0]->rot.z << std::endl;
+	Entityes[0]->rot.toAngleAxis(angle, axis);
+	std::cerr << "Rot: " << angle << " " << axis.x << " " << axis.y << " " << axis.z << std::endl;
 }
 
 void Game::Draw()
@@ -249,8 +256,8 @@ void Game::Draw()
 		//}
 		//else
 		//{
-			if (Entityes[i]->isBall())	render->drawSphereT(Entityes[i]->pos, Entityes[i]->q, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
-			if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->q, Entityes[i]->color);
+			if (Entityes[i]->isBall())	render->drawSphereT(Entityes[i]->pos, Entityes[i]->rot, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+			if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->rot, Entityes[i]->color);
 			if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
 		//}
 	}

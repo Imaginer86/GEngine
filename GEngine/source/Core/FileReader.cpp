@@ -53,6 +53,28 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
 				lEntitys.push_back(entity);
 			}
+			else if (name == "TBall" || name == "TexturedBall") {
+				/*!!!Todo*/
+				num_entitys++;
+				std::string textureName;
+				inEntitys >> textureName;
+				Ball* entity = new Ball;
+				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				lEntitys.push_back(entity);
+			}
+			else if (name == "RBall" || name == "QBall")
+			{
+				num_entitys++;
+				Ball* entity = new Ball;
+				Vector3f axic;
+				float angle;
+				Vector3f axicR;
+				float angleR;
+				inEntitys >> entity->m >> entity->r >>entity->pos >> entity->vel >> angle >> axic >> angleR >> axicR >> entity->color;
+				entity->rot = Quaternion(angle, axic);
+				entity->rotvel = Quaternion(angleR, axicR);
+				lEntitys.push_back(entity);
+			}
 			else if (name == "Rectangle" || name == "Rec") //Fus
 			{
 				num_entitys++;
@@ -60,7 +82,7 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				Vector3f axic;
 				float angle;
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> angle >> axic >> entity->w >> entity->h >> entity->color;
-				entity->q = Quaternion(angle, axic);
+				entity->rot = Quaternion(angle, axic);
 				lEntitys.push_back(entity);
 			}
 			else if (name == "Model")
@@ -80,15 +102,6 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 					return 0;
 				}
 				entity->Save((path + '/' + fileName + ".objm").c_str());
-				lEntitys.push_back(entity);
-			}
-			else if (name == "TBall" || name == "TexturedBall") {
-				/*!!!Todo*/
-				num_entitys++;
-				std::string textureName;
-				inEntitys >> textureName;
-				Ball* entity = new Ball;
-				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
 				lEntitys.push_back(entity);
 			}
 			else return 0;

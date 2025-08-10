@@ -327,6 +327,7 @@ inline Vector3f Quaternion::GetAxis() const
 	float sinHalfThetaSq = 1.0f - w * w;
 	float invSinHalfTheta = sqrtf(sinHalfThetaSq);
 	Vector3f axis(x * invSinHalfTheta, y * invSinHalfTheta, z * invSinHalfTheta);
+	axis.unitize(); // Ensure the axis is normalized
 	return axis;
 }
 
@@ -334,7 +335,7 @@ inline float Quaternion::GetAngle() const
 {
 	float sinHalfThetaSq = 1.0f - w * w;
 	float angle = 2.0f * atan2f(sqrt(sinHalfThetaSq), w);
-	return angle;
+	return radToDeg(angle);
 }
 
 
