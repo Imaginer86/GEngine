@@ -46,6 +46,7 @@ public:
 	void simulate(float dt);
 
 	void move(float dt);
+	void rotate(float dt);
 
 	virtual void draw() {}
 
@@ -68,7 +69,16 @@ inline void Entity::init()
 inline void Entity::simulate(float dt)
 {
 	vel += (force / m) * dt;
-	//todo
+}
+
+inline void Entity::move(float dt)
+{
+	pos += vel * dt;
+}
+
+inline void Entity::rotate(float dt)
+{ 
+	//Todo optimize  SLEPR?
 	float angle;
 	Vector3f axis;
 	angle = rotvel.GetAngle();
@@ -79,9 +89,3 @@ inline void Entity::simulate(float dt)
 	rot *= deltaRot;
 	rot.normalize();
 }
-
-inline void Entity::move(float dt)
-{
-	pos += vel * dt;
-}
-

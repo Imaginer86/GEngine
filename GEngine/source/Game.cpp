@@ -232,7 +232,10 @@ void Game::Update(float dt)
 	for (size_t i = 0; i < numEntites; i++) Entityes[i]->simulate(dt);
 
 	for (size_t i = 0; i < numEntites; i++)
-		Entityes[i]->move(dt); 
+	{
+		Entityes[i]->move(dt);
+		Entityes[i]->rotate(dt);
+	}
 
 	//TTT
 	float angle;

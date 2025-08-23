@@ -75,6 +75,7 @@ void* RenderGL::Init()
 	// Load image
 	int texture_width, texture_height, nrChannels;
 	unsigned char* data = stbi_load("data/EarthMap.png", &texture_width, &texture_height, &nrChannels, 0);
+	//unsigned char* data = stbi_load("data/ball8.png", &texture_width, &texture_height, &nrChannels, 0);
 	if (data)
 	{
 		// Создание текстуры
