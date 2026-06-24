@@ -20,6 +20,9 @@
     <ClCompile Include="source\Core\FileReader.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="source\Render\TextureManager.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Core\FileReader.h">
@@ -90,6 +93,9 @@
     <ClInclude Include="source\Physics\Rectangle.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="source\Render\TextureManager.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -118,5 +124,6 @@
     <None Include="source\Shaders\Wave.cg">
       <Filter>Shaders</Filter>
     </None>
+    <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
 </Project>

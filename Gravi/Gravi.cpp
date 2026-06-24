@@ -31,11 +31,13 @@ int main ()
 	//Vector3f M1 = P2 * L;
 	//std::cout << M1 << std::endl;
 	*/
-	srandG();
+	//srandG();
+	
 	GraviGame game;	
 	//if (game.Init("2Balls.dat"))
 	//if (game.Init("ElasticImpact5.dat"))	
-	if (game.Init("RANDOM"))
+	//if (game.Init("RANDOM"))
+	if (game.Init("SolarSystem.dat"))	
 	{
 		game.Run();
 		game.End();

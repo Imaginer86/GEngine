@@ -1,5 +1,7 @@
 #include "RenderGL.h"
 
+#include "TextureManager.h"
+
 #include "Game.h"
 #include "Core/Input.h"
 
@@ -9,8 +11,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
 
 
 
@@ -23,7 +25,8 @@ GLFWwindow* window;
 GLuint  base;      // База списка отображения для фонта
 GLUquadricObj* quadratic;
 
-GLuint texture[1];
+//GLuint texture[1];
+//TextureManager& textureManager;
 
 float rot = 0.0f;
 //#pragma comment(lib, "OpenGL32.lib")
@@ -71,7 +74,9 @@ void* RenderGL::Init()
 	}
 
 	Resize(width, height);
+	
 
+	/*
 	// Load image
 	int texture_width, texture_height, nrChannels;
 	unsigned char* data = stbi_load("data/EarthMap.png", &texture_width, &texture_height, &nrChannels, 0);
@@ -90,8 +95,7 @@ void* RenderGL::Init()
 	}
 	else
 		return nullptr;
-
-
+	*/
 
 	//buildFont();
 
@@ -127,6 +131,7 @@ void* RenderGL::Init()
 void RenderGL::DeInit()
 {
 	gluDeleteQuadric(quadratic);
+	TextureManager::instance().clear();
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
 	glfwDestroyWindow(window);
 
@@ -757,14 +762,18 @@ void RenderGL::drawSphere(const Vector3f & pos, const float r, const Color4f & c
 	//gluDeleteQuadric(quadratic);
 }
 
-void RenderGL::drawSphereT(const Vector3f& pos, const Quaternion& q, const float r, const Color4f& color) const
+void RenderGL::drawSphereT(const Vector3f& pos, const Quaternion& q, const float r, const Color4f& color, const std::string& texName) const
 {
 
 	//GLUquadricObj* quad = gluNewQuadric();
 	//gluQuadricTexture(quad, GL_TRUE);
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, TextureManager::instance().get(texName).id);
+	if (TextureManager::instance().contains(texName))
+	{
+		TextureManager::instance().bind(texName);
+	}
 
 	glPushMatrix();
 
@@ -776,7 +785,7 @@ void RenderGL::drawSphereT(const Vector3f& pos, const Quaternion& q, const float
 
 	gluSphere(quadratic, r, 64, 64);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 	
 	
 	glPopMatrix();

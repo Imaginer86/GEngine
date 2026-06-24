@@ -1,5 +1,11 @@
 #include "Game.h"
+
+#ifdef _DEBUG
+#include <iostream>
+#endif // _DEBUG
+
 #include "Render/RenderGL.h"
+#include "Render/TextureManager.h"
 #include "Core/FileReader.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
@@ -10,9 +16,7 @@
 #include "Physics/ModelOBJ.h"
 #include "Physics/Collision.h"
 
-#ifdef _DEBUG
-#include <iostream>
-#endif // _DEBUG
+
 
 bool* Game::keys = nullptr;
 
@@ -32,7 +36,9 @@ bool Game::Init(const char* filename)
 		return false;
 	}
 
-	if (filename == "RANDOM") {
+	std::string strFilename = filename;
+
+	if (strFilename == "RANDOM") {
 		Ball* blackHole = new Ball;
 		blackHole->m = 50000000.0f;
 		blackHole->r = 150;// sqrtG(blackHole->m);
@@ -107,6 +113,13 @@ bool Game::Init(const char* filename)
 		#endif // _DEBUG
 		return false; 
 	}
+
+	for (size_t i = 0; i < numEntites; i++)
+	{
+		if (Entityes[i]->texName != "")
+			TextureManager::instance().load(Entityes[i]->texName, "data");
+	}
+
 	//if (!LoadRawFile("data/Terrain.raw", Tera::MAP_SIZE*Tera::MAP_SIZE, tera.HeightMap)) return false;
 	return true;
 }
@@ -238,11 +251,11 @@ void Game::Update(float dt)
 	}
 
 	//TTT
-	float angle;
-	Vector3f axis;
-	std::cerr << "Quaternion: " << Entityes[0]->rot.w << " " << Entityes[0]->rot.x << " " << Entityes[0]->rot.y << " " << Entityes[0]->rot.z << std::endl;
-	Entityes[0]->rot.toAngleAxis(angle, axis);
-	std::cerr << "Rot: " << angle << " " << axis.x << " " << axis.y << " " << axis.z << std::endl;
+	//float angle;
+	//Vector3f axis;
+	//std::cerr << "Quaternion: " << Entityes[0]->rot.w << " " << Entityes[0]->rot.x << " " << Entityes[0]->rot.y << " " << Entityes[0]->rot.z << std::endl;
+	//Entityes[0]->rot.toAngleAxis(angle, axis);
+	//std::cerr << "Rot: " << angle << " " << axis.x << " " << axis.y << " " << axis.z << std::endl;
 }
 
 void Game::Draw()
@@ -259,7 +272,8 @@ void Game::Draw()
 		//}
 		//else
 		//{
-			if (Entityes[i]->isBall())	render->drawSphereT(Entityes[i]->pos, Entityes[i]->rot, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
+			if (Entityes[i]->isBall())	render->drawSphereT(Entityes[i]->pos, Entityes[i]->rot, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color, Entityes[i]->texName);
+			//if (Entityes[i]->isBall())	render->drawSphere(Entityes[i]->pos, static_cast<Ball*>(Entityes[i])->r, Entityes[i]->color);
 			if (Entityes[i]->isRectangle()) render->drawQuad(Entityes[i]->pos, static_cast<Rectangle*>(Entityes[i])->w, static_cast<Rectangle*>(Entityes[i])->h, Entityes[i]->rot, Entityes[i]->color);
 			if (Entityes[i]->isModel())	dynamic_cast<ModelOBJ*>(Entityes[i])->Draw(render);
 		//}

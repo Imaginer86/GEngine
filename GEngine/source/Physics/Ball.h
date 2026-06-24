@@ -5,8 +5,8 @@ class Ball : public Entity {
 public:
 	float	r;
 	Ball() :Entity(), r(0.f) {}
-	Ball(float m_, const Vector3f& pos_, const Vector3f& vel_, float r_, const Color4f& color_, const Quaternion& q_, const Quaternion& q_vel)
-		:Entity(m_,pos_, vel_, color_, q_, q_vel )
+	Ball(float m_, const Vector3f& pos_, const Vector3f& vel_, float r_, const Color4f& color_, const Quaternion& q_, const Quaternion& q_vel, const std::string& texName_)
+		:Entity(m_,pos_, vel_, color_, q_, q_vel, texName_)
 		,r(r_)
 	{}
 	Ball(const Ball& other) :Entity(other), r(other.r) {}

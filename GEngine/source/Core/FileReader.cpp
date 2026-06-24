@@ -51,15 +51,14 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				num_entitys++;
 				Ball* entity = new Ball;
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				entity->texName = "";
 				lEntitys.push_back(entity);
 			}
 			else if (name == "TBall" || name == "TexturedBall") {
 				/*!!!Todo*/
 				num_entitys++;
-				std::string textureName;
-				inEntitys >> textureName;
 				Ball* entity = new Ball;
-				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color >> entity->texName;
 				lEntitys.push_back(entity);
 			}
 			else if (name == "RBall" || name == "QBall")
