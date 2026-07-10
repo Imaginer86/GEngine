@@ -51,11 +51,10 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				num_entitys++;
 				Ball* entity = new Ball;
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
-				entity->texName = "";
+				//entity->texName = "";
 				lEntitys.push_back(entity);
 			}
 			else if (name == "TBall" || name == "TexturedBall") {
-				/*!!!Todo*/
 				num_entitys++;
 				Ball* entity = new Ball;
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color >> entity->texName;
@@ -82,6 +81,13 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				float angle;
 				inEntitys >> entity->m >> entity->pos >> entity->vel >> angle >> axic >> entity->w >> entity->h >> entity->color;
 				entity->rot = Quaternion(angle, axic);
+				lEntitys.push_back(entity);
+			}
+			else if (name == "TExturedRectangle" || name == "TRec") //Fus
+			{
+				num_entitys++;
+				Rectangle* entity = new Rectangle;
+				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->w >> entity->h >> entity->color >> entity->texName;
 				lEntitys.push_back(entity);
 			}
 			else if (name == "Model")

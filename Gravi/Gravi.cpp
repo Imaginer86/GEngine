@@ -37,7 +37,7 @@ int main ()
 	//if (game.Init("2Balls.dat"))
 	//if (game.Init("ElasticImpact5.dat"))	
 	//if (game.Init("RANDOM"))
-	if (game.Init("SolarSystem.dat"))	
+	if (game.Init("Rectangle.dat"))	
 	{
 		game.Run();
 		game.End();

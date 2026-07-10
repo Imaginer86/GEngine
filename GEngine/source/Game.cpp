@@ -116,7 +116,7 @@ bool Game::Init(const char* filename)
 
 	for (size_t i = 0; i < numEntites; i++)
 	{
-		if (Entityes[i]->texName != "")
+		if (Entityes[i]->texName != "" && Entityes[i]->texName != "T")
 			TextureManager::instance().load(Entityes[i]->texName, "data");
 	}
 
