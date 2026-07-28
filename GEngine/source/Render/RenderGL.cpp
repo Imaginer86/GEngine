@@ -113,6 +113,15 @@ void* RenderGL::Init()
 
 	//TextureUpdate();
 
+	/*
+	GLfloat matAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat matDiffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiffuse);
+	*/
+	glEnable(GL_COLOR_MATERIAL);
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, gLightAmbient.v);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, gLightDiffuse.v);
 	glLightfv(GL_LIGHT0, GL_POSITION, gLightPosition.v);
@@ -492,7 +501,7 @@ void RenderGL::beginDraw() const
 
 	float angle = camera.q.GetAngle();
 	Vector3f axis = camera.q.GetAxis();
-	glRotatef(radToDeg(angle), axis.x, axis.y, axis.z);
+	glRotatef(angle, axis.x, axis.y, axis.z);
 	glTranslatef(-camera.pos.x, -camera.pos.y, -camera.pos.z);
 
 	//gluLookAt(camera.pos.x, camera.pos.y,-camera.pos.z, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);

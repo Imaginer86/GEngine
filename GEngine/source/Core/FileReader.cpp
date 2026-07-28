@@ -117,34 +117,6 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 	size_t i = 0;
 	for (auto entity : lEntitys) { Entitys[i] = entity; ++i; }
 
-	/*
-	in.open(filename, std::ios::in);
-	if (in.is_open())
-	{
-	in >> num_entitys;
-	if (num_entitys > 0)
-	Entitys.resize(num_entitys);
-	//Entitys = new Entity[num_entitys];
-
-	std::string name;
-	for (size_t i = 0; i < num_entitys; ++i)
-	{
-	Ball* entity = new Ball;
-	in >> name;
-	if (name != "Ball")
-	{
-	//delete[] Entitys;
-	//return 0;
-	num_entitys = 0;
-	break;
-	}
-	in >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
-	Entitys[i] = entity;
-	}
-	in.close();
-	}
-	else return 0;
-	*/
 	return num_entitys;
 }
 

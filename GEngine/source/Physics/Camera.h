@@ -27,6 +27,7 @@ inline void Camera::Move(const Vector3f& s)
 inline void Camera::Rotate(const Quaternion& q_)
 {
 	q *= q_;
+	q.normalize();
 }
 
 inline void Camera::MoveUD(float s)

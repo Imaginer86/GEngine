@@ -29,3 +29,7 @@ Pool/Pool.vcxproj.user
 *.tlog
 *.tlog
 /Test/x64/Debug
+Pirates/Pirates.exe
+Pirates/Pirates.exe
+Pool/Pool.exe
+/Test/x64
