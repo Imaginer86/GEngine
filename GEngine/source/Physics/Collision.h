@@ -4,6 +4,8 @@
 #include "Ball.h"
 #include "Rectangle.h"
 
+const float GRestitution = 0.8f; // Coefficient of restitution
+
 inline void ElasticImpactBalls(Ball* A, Ball* B)
 {
 	Vector3f raxis = A->pos - B->pos;
@@ -31,22 +33,28 @@ inline void ElasticImpactBalls(Ball* A, Ball* B)
 	//A->move(dt + dt0);
 	//B->move(dt + dt0);
 }
-inline void ElasticImpactBallRec(Ball* ball, Rectangle* rec)
-{	
+inline void ElasticImpactBallRec(Ball* ball, Rectangle* rec, float dt)
+{	//TODO: check if the ball is moving towards the rectangle, if not, return
 	Plane P = rec->getPlane();
 	Vector3f O = P * ball->vel;
+	float dis = P.distance(ball->pos);
+	float dr = ball->r - dis;
+	Vector3f normal = P.unit();
+	//ball->pos = ball->pos + normal * dr;
+	float dtt = dr / (dis + dr);
+	ball->pos -= ball->vel * dtt;
 	//float Dsc = (ball->pos - O).length();
 	//float Dst = (ball->pos - (ball->pos - ball->vel * dt)).length();//TODO
-	//float Tc = Dsc * dt / Dsc;
+	//float Tc = Dsc * dt / Dst;
 	//ball->pos = ball->pos - ball->vel * dt + ball->vel * Tc;
 	#ifdef _DEBUG
 	std::cout << "ElasticImpactBallRec:" << std::endl;
 	std::cout << P.unit() << std::endl;
 	std::cout << ball->vel << std::endl;
-	std::cout << O << std::endl;
+	//std::cout << O << std::endl;
 	#endif // _DEBUG
-	ball->vel =  P.unit() * (((-ball->vel).dotProduct(P.unit())) * 2) + ball->vel;
-	//ball->pos = ball->pos + ball->vel * (dt - Tc);
+	ball->vel = ball->vel - normal * ( ball->vel.dotProduct(normal) * (1 + GRestitution));
+	ball->pos = ball->pos + ball->vel * (dt - dtt);
 	#ifdef _DEBUG
 	std::cout << ball->vel << std::endl;
 	#endif // _DEBUG	

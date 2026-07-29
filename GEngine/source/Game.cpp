@@ -95,6 +95,7 @@ bool Game::Init(const char* filename)
 	timeScale = 1.0f;
 	Collision = option.collision;
 	GraviForce = option.graviForce;
+	gravity = option.gravity;
 	keys = new bool[512];
 	for (int i = 0; i < 512; ++i) keys[i] = false;
 	render = new RenderGL(option);
@@ -214,7 +215,7 @@ void Game::Update(float dt)
 							Plane l = rec->getPlane();
 							dr = l.distance(ball->pos);
 							r = ball->r;
-							if (dr <= r) ElasticImpactBallRec(ball, rec);
+							if (dr < r) ElasticImpactBallRec(ball, rec, dt);
 						}
 					} 
 					#ifdef _DEBUG
@@ -240,6 +241,12 @@ void Game::Update(float dt)
 						//Entityes[j]->applyForce(-force);
 					}
 				}
+	}
+
+	if (!gravity.isZero())
+	{
+		for (size_t i = 0; i < numEntites; i++)
+			if(Entityes[i]->isBall())Entityes[i]->applyForce(gravity * Entityes[i]->m);
 	}
 
 	for (size_t i = 0; i < numEntites; i++) Entityes[i]->simulate(dt);

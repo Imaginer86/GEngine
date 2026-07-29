@@ -62,6 +62,8 @@ struct Vector3f
 	//std::istream& operator>> (std::istream& is);
 
 	//std::ostream& operator<< (std::ostream& os);
+
+	bool isZero() const { return ::isZero(x) && ::isZero(y) && ::isZero(z); }
 };
 
 const Vector3f VETOR3f_ZERO = Vector3f(0.0f, 0.0f, 0.0f);
@@ -202,7 +204,7 @@ inline float Vector3f::unitize()								// unitize() normalizes this Vector3 tha
 {
 	float l = length();
 
-	if (isZero(l))
+	if (::isZero(l))
 		return 0.0f;
 
 	x /= l;
@@ -215,7 +217,7 @@ inline Vector3f Vector3f::unit() const								// unit() returns a new Vector3. T
 {
 	float l = length();
 
-	if (isZero(l))
+	if (::isZero(l))
 		return *this;
 
 	return Vector3f(x / l, y / l, z / l);

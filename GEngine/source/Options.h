@@ -7,6 +7,7 @@ struct Options
 {
 	Vector3f cameraPos;
 	Vector3f cameraaxis;
+	Vector3f gravity;
 	Vector4f lightAmbient;
 	Vector4f lightDiffuse;
 	Vector4f lightPosition;

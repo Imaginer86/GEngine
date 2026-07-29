@@ -50,14 +50,14 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 			{
 				num_entitys++;
 				Ball* entity = new Ball;
-				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color;
+				inEntitys >> entity->m >> entity->r >> entity->pos >> entity->vel  >> entity->color;
 				//entity->texName = "";
 				lEntitys.push_back(entity);
 			}
 			else if (name == "TBall" || name == "TexturedBall") {
 				num_entitys++;
 				Ball* entity = new Ball;
-				inEntitys >> entity->m >> entity->pos >> entity->vel >> entity->r >> entity->color >> entity->texName;
+				inEntitys >> entity->m >>	entity->r >> entity->pos >> entity->vel >> entity->color >> entity->texName;
 				lEntitys.push_back(entity);
 			}
 			else if (name == "RBall" || name == "QBall")
@@ -69,6 +69,19 @@ size_t Core::LoadEntitys(const char* filename, std::vector<Entity*>& Entitys)
 				Vector3f axicR;
 				float angleR;
 				inEntitys >> entity->m >> entity->r >>entity->pos >> entity->vel >> angle >> axic >> angleR >> axicR >> entity->color;
+				entity->rot = Quaternion(angle, axic);
+				entity->rotvel = Quaternion(angleR, axicR);
+				lEntitys.push_back(entity);
+			}
+			else if (name == "TRBall" || name == "TexRotBall")
+			{
+				num_entitys++;
+				Ball* entity = new Ball;
+				Vector3f axic;
+				float angle;
+				Vector3f axicR;
+				float angleR;
+				inEntitys >> entity->m >> entity->r >> entity->pos >> entity->vel >> angle >> axic >> angleR >> axicR >> entity->color >> entity->texName;
 				entity->rot = Quaternion(angle, axic);
 				entity->rotvel = Quaternion(angleR, axicR);
 				lEntitys.push_back(entity);
@@ -180,6 +193,7 @@ bool Core::LoadOptions(const char* filename, Options& options)
 		else if (pName == "light_diffuse") options.lightDiffuse = fr.getVector4f();
 		else if (pName == "light_position") options.lightPosition = fr.getVector4f();
 		else if (pName == "gravi_force") options.graviForce = fr.getBool();
+		else if (pName == "gravity") options.gravity = fr.getVector3f();
 		else if (pName == "collision") options.collision = fr.getBool();
 		else
 		{

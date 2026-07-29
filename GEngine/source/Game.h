@@ -46,7 +46,8 @@ public:
 	static bool* keys;
 
 
-//private:
+private:
+	Vector3f gravity;
 	float timeScale;
 	size_t FPS;
 	//long long lastTickCount;	

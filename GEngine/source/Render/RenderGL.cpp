@@ -111,7 +111,7 @@ void* RenderGL::Init()
 
 	//glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-	//TextureUpdate();
+	TextureUpdate();
 
 	/*
 	GLfloat matAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
